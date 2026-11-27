@@ -144,13 +144,13 @@ class _Header extends StatelessWidget {
             children: [
               Semantics(
                 header: true,
-                child: Text(
-                  l.appTitle,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w900,
-                    color: DrColors.indigo,
-                    letterSpacing: 0.5,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    l.appTitle,
+                    maxLines: 1,
+                    style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: DrColors.indigo),
                   ),
                 ),
               ),

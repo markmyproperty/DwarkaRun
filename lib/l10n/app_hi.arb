@@ -83,5 +83,8 @@
   "gameOverMoat": "छपाक! महल की खाई में गिर गए",
   "seasonLabel": "सीज़न {number}",
   "seasonJambudvipa": "जम्बूद्वीप",
-  "seasonJambudvipaBlurb": "अयोध्या से डूबी द्वारका तक, दस महान लोक"
+  "seasonJambudvipaBlurb": "अयोध्या से डूबी द्वारका तक, दस महान लोक",
+  "trenchStart": "समुद्री खाई! मूँगे की कगारों पर रहो",
+  "coralBridgeStart": "मूँगे का पुल! महल की ओर दौड़ो",
+  "gameOverTrench": "अरे! गहरी खाई में गिर गए"
 }

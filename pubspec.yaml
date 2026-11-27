@@ -90,3 +90,13 @@ flutter:
     - assets/images/lanka/env/
     - assets/images/lanka/monuments/
     - assets/images/lanka/props/
+    - assets/images/sunken/backgrounds/
+    - assets/images/sunken/buildings/
+    - assets/images/sunken/env/
+    - assets/images/sunken/monuments/
+    - assets/images/sunken/props/
+    - assets/images/finale/backgrounds/
+    - assets/images/finale/buildings/
+    - assets/images/finale/env/
+    - assets/images/finale/monuments/
+    - assets/images/finale/props/

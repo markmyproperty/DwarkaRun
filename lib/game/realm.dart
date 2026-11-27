@@ -34,9 +34,9 @@ class RealmPalette {
   final Color stoneDark;
 }
 
-/// What the gaps in a gapped stretch are: a river, an ice crevasse or a
-/// palace moat.
-enum GapStyle { river, crevasse, moat }
+/// What the gaps in a gapped stretch are: a river, an ice crevasse, a
+/// palace moat or a deep sea trench.
+enum GapStyle { river, crevasse, moat, trench }
 
 /// One stage of the adventure. The order of the values is the final stage
 /// order from the master brief; do not reorder.
@@ -257,42 +257,63 @@ enum Realm {
   ),
   sunkenDwarka(
     id: 'sunken',
-    targetMetres: 1900,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    targetMetres: 1800,
+    playable: true,
+    waterFrom: 0.48,
+    bridgeFrom: 0.85,
+    gapStyle: GapStyle.trench,
+    obstacles: [
+      ObstacleKind.seaUrchin,
+      ObstacleKind.jellyfish,
+      ObstacleKind.coralBlock,
+      ObstacleKind.reefRubble,
+      ObstacleKind.coralColumn,
+      ObstacleKind.seaGate,
+      ObstacleKind.whirlpool,
+    ],
     palette: RealmPalette(
-      skyTop: Color(0xFF0F4C6E),
-      skyBottom: Color(0xFF3FA3B8),
-      haze: Color(0xFF6FC0CC),
-      ground: Color(0xFF1E6F7A),
-      groundFar: Color(0xFF2E8C93),
-      pathA: Color(0xFFD9C08A),
-      pathB: Color(0xFFCBB07A),
-      pathEdge: Color(0xFF9C8455),
-      foliageDark: Color(0xFF1F5E5A),
-      foliageLight: Color(0xFF5C9F99),
-      stone: Color(0xFFE3C98F),
-      stoneDark: Color(0xFFB39A62),
+      skyTop: Color(0xFF4FA6B5),
+      skyBottom: Color(0xFFBFE6E3),
+      haze: Color(0xFFA8DCDC),
+      ground: Color(0xFFE9D7B0),
+      groundFar: Color(0xFFD3E6D8),
+      pathA: Color(0xFFEAD8B2),
+      pathB: Color(0xFFE0CBA2),
+      pathEdge: Color(0xFFD9AE58),
+      foliageDark: Color(0xFF3E8C84),
+      foliageLight: Color(0xFF8FD0C4),
+      stone: Color(0xFFEAD8B2),
+      stoneDark: Color(0xFFC8B088),
     ),
   ),
   finalLegend(
     id: 'finale',
-    targetMetres: 2000,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    targetMetres: 1800,
+    playable: true,
+    waterFrom: 0.45,
+    bridgeFrom: 0.84,
+    gapStyle: GapStyle.moat,
+    obstacles: [
+      ObstacleKind.goldenCube,
+      ObstacleKind.lanternBeam,
+      ObstacleKind.goldenColumn,
+      ObstacleKind.seaUrchin,
+      ObstacleKind.fallingMasonry,
+      ObstacleKind.goldGate,
+    ],
     palette: RealmPalette(
-      skyTop: Color(0xFF2A2468),
-      skyBottom: Color(0xFFF4C98A),
-      haze: Color(0xFFF7DDB0),
-      ground: Color(0xFFD9AE58),
-      groundFar: Color(0xFFF2D58F),
-      pathA: Color(0xFFF2C94C),
-      pathB: Color(0xFFE5B83A),
-      pathEdge: Color(0xFFC7952A),
-      foliageDark: Color(0xFF5C9F99),
-      foliageLight: Color(0xFF87C7D8),
-      stone: Color(0xFFFFF4DC),
-      stoneDark: Color(0xFFE6CFA0),
+      skyTop: Color(0xFF8CC9E0),
+      skyBottom: Color(0xFFFCE6B8),
+      haze: Color(0xFFFBE7C4),
+      ground: Color(0xFFF2DFB4),
+      groundFar: Color(0xFFF6E8C8),
+      pathA: Color(0xFFF7F4EE),
+      pathB: Color(0xFFEDE4D2),
+      pathEdge: Color(0xFFD9AE58),
+      foliageDark: Color(0xFF3E8C84),
+      foliageLight: Color(0xFF8FD0C4),
+      stone: Color(0xFFF7F4EE),
+      stoneDark: Color(0xFFD9AE58),
     ),
   );
 
@@ -335,6 +356,8 @@ enum Realm {
   bool get hasCrevasse => hasRiver && gapStyle == GapStyle.crevasse;
 
   bool get hasMoat => hasRiver && gapStyle == GapStyle.moat;
+
+  bool get hasTrench => hasRiver && gapStyle == GapStyle.trench;
 
   /// Metres at which open water starts (infinity on dry land).
   double get waterStart => waterFrom == null ? double.infinity : (waterFrom! * targetMetres).roundToDouble();

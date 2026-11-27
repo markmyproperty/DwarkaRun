@@ -100,7 +100,41 @@ enum ObstacleKind {
     sprite: 'lanka/props/collapsing_palace_pillar',
     spriteWidth: 1.6,
   ),
-  closingGate(Clearance.lane, height: 2.6, depth: 0.8, sprite: 'lanka/props/closing_golden_gate', spriteWidth: 2.5);
+  closingGate(Clearance.lane, height: 2.6, depth: 0.8, sprite: 'lanka/props/closing_golden_gate', spriteWidth: 2.5),
+
+  // Dwarka: The Sunken Kingdom (fantasy, under the sea).
+  seaUrchin(Clearance.jump, height: 0.7, depth: 1.0, sprite: 'sunken/props/coral_urchin', spriteWidth: 1.9),
+  reefRubble(Clearance.jump, height: 0.6, depth: 1.2, sprite: 'sunken/props/pearl_treasure', spriteWidth: 1.8),
+  jellyfish(Clearance.slide, height: 1.1, depth: 0.5, sprite: 'sunken/props/jellyfish'),
+  coralBlock(Clearance.lane, height: 2.0, depth: 1.4, sprite: 'sunken/props/coral_block', spriteWidth: 2.3),
+  coralColumn(
+    Clearance.lane,
+    height: 2.6,
+    depth: 1.0,
+    sprite: 'sunken/props/collapsing_coral_column',
+    spriteWidth: 2.2,
+  ),
+  seaGate(Clearance.lane, height: 2.6, depth: 0.8, sprite: 'sunken/props/closing_sea_gate', spriteWidth: 2.5),
+  whirlpool(Clearance.lane, height: 2.0, depth: 1.2, speed: 4, sprite: 'sunken/props/whirlpool', spriteWidth: 2.2),
+
+  // Dwarka Run: The Final Legend.
+  goldenCube(Clearance.jump, height: 0.9, depth: 1.0, sprite: 'finale/props/golden_block', spriteWidth: 1.5),
+  lanternBeam(Clearance.slide, height: 1.1, depth: 0.5, sprite: 'finale/props/golden_lantern'),
+  goldenColumn(
+    Clearance.lane,
+    height: 2.8,
+    depth: 1.0,
+    sprite: 'finale/props/collapsing_golden_column',
+    spriteWidth: 2.2,
+  ),
+  fallingMasonry(
+    Clearance.lane,
+    height: 2.6,
+    depth: 1.2,
+    sprite: 'finale/props/falling_gold_masonry',
+    spriteWidth: 2.6,
+  ),
+  goldGate(Clearance.lane, height: 2.6, depth: 0.8, sprite: 'finale/props/closing_golden_gate', spriteWidth: 2.6);
 
   const ObstacleKind(
     this.clearance, {

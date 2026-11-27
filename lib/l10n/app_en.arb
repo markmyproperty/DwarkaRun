@@ -188,5 +188,8 @@
   "seasonLabel": "Season {number}",
   "seasonJambudvipa": "Jambudvīpa",
   "seasonJambudvipaBlurb": "Ten legendary worlds, from Ayodhya to the sunken city of Dwarka",
-  "@seasonLabel": {"placeholders": {"number": {"type": "int"}}}
+  "@seasonLabel": {"placeholders": {"number": {"type": "int"}}},
+  "trenchStart": "The sea trench! Keep to the coral ledges",
+  "coralBridgeStart": "The coral bridge! Race for the palace",
+  "gameOverTrench": "Whoosh! Down into the trench"
 }

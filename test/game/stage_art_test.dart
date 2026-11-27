@@ -6,9 +6,16 @@ import 'package:dwarka_run/game/stage_art.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const packStages = [Realm.pharaoh, Realm.himalayan, Realm.vijayanagar, Realm.lanka];
+  const packStages = [
+    Realm.pharaoh,
+    Realm.himalayan,
+    Realm.vijayanagar,
+    Realm.lanka,
+    Realm.sunkenDwarka,
+    Realm.finalLegend,
+  ];
 
-  test('stages 3 to 5 and 7 are playable and dressed from their own art packs', () {
+  test('stages 3 to 5, 7, 9 and 10 are playable and dressed from their own art packs', () {
     for (final realm in packStages) {
       expect(realm.playable, isTrue, reason: realm.id);
       final art = StageArt.of(realm);

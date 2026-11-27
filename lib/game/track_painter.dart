@@ -177,13 +177,31 @@ class TrackPainter {
       final z0 = math.max(z, near);
       final z1 = z + tile;
       final even = ((z / tile).floor() & 1) == 0;
-      if (realm.hasCrevasse) {
+      if (realm.hasCrevasse || realm.hasTrench) {
         if (z + tile > sim.waterStart) {
-          // An ice crevasse under the path: snowy lips, blue ice walls and
-          // a deep, dark floor.
-          _quad(canvas, cam, -pathHalfWidth - 0.9, pathHalfWidth + 0.9, z0, z1, const Color(0xFFDCE8F3));
-          _quad(canvas, cam, -pathHalfWidth - 0.5, pathHalfWidth + 0.5, z0, z1, even ? _iceWall : _iceWallB);
-          _quad(canvas, cam, -pathHalfWidth + 0.4, pathHalfWidth - 0.4, z0, z1, even ? _iceDeep : _iceDeepB);
+          // A chasm under the path: an ice crevasse (snowy lips, blue ice
+          // walls) or a sea trench (sandy lips, teal walls), with a deep,
+          // dark floor.
+          final ice = realm.hasCrevasse;
+          _quad(canvas, cam, -pathHalfWidth - 0.9, pathHalfWidth + 0.9, z0, z1, ice ? _iceLip : _trenchLip);
+          _quad(
+            canvas,
+            cam,
+            -pathHalfWidth - 0.5,
+            pathHalfWidth + 0.5,
+            z0,
+            z1,
+            ice ? (even ? _iceWall : _iceWallB) : (even ? _trenchWall : _trenchWallB),
+          );
+          _quad(
+            canvas,
+            cam,
+            -pathHalfWidth + 0.4,
+            pathHalfWidth - 0.4,
+            z0,
+            z1,
+            ice ? (even ? _iceDeep : _iceDeepB) : (even ? _trenchDeep : _trenchDeepB),
+          );
           z -= tile;
           continue;
         }
@@ -235,6 +253,12 @@ class TrackPainter {
   static const Color _waterBand = Color(0x1AFFFFFF);
   static const Color _moat = Color(0xFF6FB7CC);
   static const Color _moatB = Color(0xFF79BFD3);
+  static const Color _iceLip = Color(0xFFDCE8F3);
+  static const Color _trenchLip = Color(0xFFE6D2A6);
+  static const Color _trenchWall = Color(0xFF4E9AA5);
+  static const Color _trenchWallB = Color(0xFF55A2AC);
+  static const Color _trenchDeep = Color(0xFF1F5662);
+  static const Color _trenchDeepB = Color(0xFF235C68);
   static const Color _iceWall = Color(0xFF7FA9CF);
   static const Color _iceWallB = Color(0xFF7AA3C9);
   static const Color _iceDeep = Color(0xFF34557A);
@@ -254,6 +278,10 @@ class TrackPainter {
       }
       if (realm.hasMoat) {
         _paintMoatPlatform(canvas, cam, x, z0, z1, p);
+        continue;
+      }
+      if (realm.hasTrench) {
+        _paintCoralPlatform(canvas, cam, x, z0, z1, p);
         continue;
       }
       switch (p.kind) {
@@ -307,6 +335,34 @@ class TrackPainter {
     _quad(canvas, cam, x - 1.08, x + 1.08, z0, z1, rim);
     _quad(canvas, cam, x - 0.94, x + 0.94, z0, z1, top);
     _seams(canvas, cam, x, 0.94, z0, z1, p.kind == PlatformKind.bridge ? 1.0 : 2.0, const Color(0x44A0703A));
+    if (p.z0 >= cam.camZ + 0.8) {
+      final s0 = cam.scaleAt(p.z0);
+      _fill.color = rim;
+      canvas.drawRect(
+        Rect.fromLTRB(cam.sx(x - 1.08, p.z0), cam.sy(0, p.z0), cam.sx(x + 1.08, p.z0), cam.sy(0, p.z0) + 0.32 * s0),
+        _fill,
+      );
+    }
+  }
+
+  /// Over a sea trench: coral-rimmed sand platforms, long reef ledges and
+  /// the coral bridge.
+  void _paintCoralPlatform(Canvas canvas, TrackCamera cam, double x, double z0, double z1, Platform p) {
+    final Color rim, top;
+    switch (p.kind) {
+      case PlatformKind.plank:
+        rim = const Color(0xFFE88E7A);
+        top = p.variant < 0.5 ? const Color(0xFFF0D9B0) : const Color(0xFFEBD2A4);
+      case PlatformKind.boat:
+        rim = const Color(0xFF8FD0C4);
+        top = const Color(0xFFE3CFA6);
+      case PlatformKind.bridge:
+        rim = const Color(0xFFD9867A);
+        top = const Color(0xFFF3B9B0);
+    }
+    _quad(canvas, cam, x - 1.08, x + 1.08, z0, z1, rim);
+    _quad(canvas, cam, x - 0.92, x + 0.92, z0, z1, top);
+    _seams(canvas, cam, x, 0.92, z0, z1, 2.2, const Color(0x33A0703A));
     if (p.z0 >= cam.camZ + 0.8) {
       final s0 = cam.scaleAt(p.z0);
       _fill.color = rim;
@@ -825,6 +881,10 @@ class TrackPainter {
         _paintMandapaBeam(canvas, cx, gy, s, halfW);
       case ObstacleKind.flamingArrows:
         _paintArrows(canvas, cx, gy, s, halfW, t);
+      case ObstacleKind.jellyfish:
+        _paintJellyfish(canvas, cx, gy, s, halfW, t);
+      case ObstacleKind.lanternBeam:
+        _paintLanternBeam(canvas, cx, gy, s, halfW, t);
       // Stand-ins for the later art packs while they load.
       case ObstacleKind.sandBoulder:
       case ObstacleKind.snowBoulder:
@@ -835,6 +895,13 @@ class TrackPainter {
       case ObstacleKind.bladeTrap:
       case ObstacleKind.turretPillar:
       case ObstacleKind.closingGate:
+      case ObstacleKind.coralBlock:
+      case ObstacleKind.coralColumn:
+      case ObstacleKind.seaGate:
+      case ObstacleKind.whirlpool:
+      case ObstacleKind.goldenColumn:
+      case ObstacleKind.fallingMasonry:
+      case ObstacleKind.goldGate:
       case ObstacleKind.leaningPillar:
       case ObstacleKind.fallenLintel:
       case ObstacleKind.fallenRocks:
@@ -845,6 +912,9 @@ class TrackPainter {
       case ObstacleKind.stoneBlocks:
       case ObstacleKind.goldenBlock:
       case ObstacleKind.gardenPot:
+      case ObstacleKind.seaUrchin:
+      case ObstacleKind.reefRubble:
+      case ObstacleKind.goldenCube:
       case ObstacleKind.spikeTrap:
       case ObstacleKind.sandPit:
       case ObstacleKind.collapsingTiles:
@@ -878,6 +948,59 @@ class TrackPainter {
         canvas.drawLine(Offset(cx - halfW, y), Offset(cx + halfW, y - 0.1 * s), _stroke);
       }
     }
+  }
+
+  /// Draws the top [frac] of an image (cutting off a sand base), [width]
+  /// wide, with its bottom at [bottom].
+  bool _spriteTop(Canvas canvas, String name, double cx, double bottom, double width, double frac) {
+    final img = art[name];
+    if (img == null) return false;
+    final src = art.src(name)!;
+    final cut = Rect.fromLTWH(src.left, src.top, src.width, src.height * frac);
+    final h = width * cut.height / cut.width;
+    canvas.drawImageRect(img, cut, Rect.fromLTWH(cx - width / 2, bottom - h, width, h), _image);
+    return true;
+  }
+
+  /// A drift of jellyfish bobbing at head height: slide under them.
+  void _paintJellyfish(Canvas canvas, double cx, double gy, double s, double halfW, double t) {
+    final under = ObstacleKind.jellyfish.height * s;
+    for (var k = -1; k <= 1; k++) {
+      final bob = reduceMotion ? 0.0 : math.sin(t * 2.4 + k * 1.3) * 0.08 * s;
+      final jx = cx + k * halfW * 0.65;
+      final bottom = gy - under - bob - (k == 0 ? 0.25 * s : 0);
+      if (!_spriteTop(canvas, ObstacleKind.jellyfish.sprite!, jx, bottom, 0.95 * s, 0.82)) {
+        _fill.color = const Color(0xCCF8C8D4);
+        canvas.drawOval(Rect.fromLTRB(jx - 0.35 * s, bottom - 0.7 * s, jx + 0.35 * s, bottom - 0.3 * s), _fill);
+      }
+    }
+  }
+
+  /// Golden lanterns hung from a gilded beam across the lane: slide under.
+  void _paintLanternBeam(Canvas canvas, double cx, double gy, double s, double halfW, double t) {
+    final under = ObstacleKind.lanternBeam.height * s;
+    final top = gy - under - 1.0 * s;
+    _fill.color = const Color(0xFFD9AE58);
+    canvas.drawRect(Rect.fromLTWH(cx - halfW * 1.15, top, 0.22 * s, gy - top), _fill);
+    canvas.drawRect(Rect.fromLTWH(cx + halfW * 1.15 - 0.22 * s, top, 0.22 * s, gy - top), _fill);
+    for (var k = -1; k <= 1; k++) {
+      final sway = reduceMotion ? 0.0 : math.sin(t * 2 + k) * 0.03 * s;
+      final lx = cx + k * halfW * 0.62 + sway;
+      if (!_sprite(canvas, ObstacleKind.lanternBeam.sprite!, lx, gy - under + 0.04 * s, 0.62 * s)) {
+        _fill.color = const Color(0xFFFCE7A8);
+        canvas.drawOval(Rect.fromLTRB(lx - 0.2 * s, top + 0.2 * s, lx + 0.2 * s, gy - under), _fill);
+      }
+    }
+    _fill.color = const Color(0xFFF7F4EE);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTRB(cx - halfW * 1.3, top - 0.12 * s, cx + halfW * 1.3, top + 0.12 * s),
+        Radius.circular(0.06 * s),
+      ),
+      _fill,
+    );
+    _fill.color = const Color(0xFFD9AE58);
+    canvas.drawRect(Rect.fromLTRB(cx - halfW * 1.3, top + 0.06 * s, cx + halfW * 1.3, top + 0.12 * s), _fill);
   }
 
   /// A plain beam over the lane, used while art loads.
@@ -1266,9 +1389,10 @@ class TrackPainter {
   void _paintHero(Canvas canvas, TrackCamera cam, RunSimulation sim) {
     final z = sim.distance;
     final s = cam.scaleAt(z);
-    if (sim.fellInWater && realm.hasCrevasse) {
-      // Down into the crevasse: a puff of snow where the hero slipped.
-      _fill.color = const Color(0xDDFFFFFF);
+    if (sim.fellInWater && (realm.hasCrevasse || realm.hasTrench)) {
+      // Down into the chasm: a puff of snow, or of bubbles, where the hero
+      // slipped.
+      _fill.color = realm.hasTrench ? const Color(0xCCE6F7FA) : const Color(0xDDFFFFFF);
       final px = cam.sx(sim.x, z), py = cam.sy(0, z);
       for (var k = -1; k <= 1; k++) {
         canvas.drawCircle(Offset(px + k * 0.45 * s, py - (0.3 - 0.1 * k.abs()) * s), (0.42 - 0.1 * k.abs()) * s, _fill);

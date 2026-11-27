@@ -29,8 +29,9 @@ Each step lands as its own pull request.
 | 2 | Ganga Run (art pack part 2): ghats, a river crossing on boats and floating planks, and the bridge finale | Done |
 | 3 | Thar Desert Run (desert pack), Himalayan Run (ice crevasses and a rope bridge) and Vijayanagar Run, each from its own art pack | This version |
 | 4 | Lanka Run: a golden palace street, the palace moat on golden platforms and the fortress bridge. The rendered king run cycle as the hero | This version |
-| 5 | Dragon Valley and Indus Run | When their art packs arrive |
-| 6 | Relics, keys, missions, guardian chases and the shop | Later |
+| 5 | Dwarka: The Sunken Kingdom (a sea trench on coral ledges, the coral bridge) and Dwarka Run: The Final Legend (golden city, the harbour on golden platforms, the final bridge). Renamed to Odyssey of the Ages, Season 1: Jambudvīpa | This version |
+| 6 | Dragon Valley and Indus Run | When their art packs arrive |
+| 7 | Relics, keys, missions, guardian chases and the shop | Later |
 
 ## How to play
 

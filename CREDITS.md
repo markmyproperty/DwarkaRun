@@ -38,6 +38,14 @@ Supplied by the project owner, same style and terms. The pack's notes say it is 
 - Backdrop only: golden palace, tower, citadel, pavilion, terrace, courtyard, palace stairs, water palace and fortress bridge, island houses, palms and gardens. Braziers are palace lights on the kerb.
 - Kept for later: the palace sentinel guardian, the sun-jewel relic and the treasure chest.
 
+## Stage art packs: Dwarka: The Sunken Kingdom (stage 09) and The Final Legend (stage 10)
+
+Supplied by the project owner, same style and terms. The packs' notes describe them as mythology-inspired fantasy, not a claim about historical or archaeological Dwarka, with no deities, idols or sacred figures, empty doors and niches, and relics that are royal jewels, not religious icons. In `assets/images/sunken/` and `assets/images/finale/`.
+
+- Sunken Kingdom obstacles: sea urchin coral, a pearl pile, drifting jellyfish (slide), coral block, collapsing coral column, the closing sea gate and a drifting whirlpool. Backdrop only: submerged palaces, coral tower, citadel, pavilion, cave hall, tunnel, whirlpool basin and coral bridge.
+- Final Legend obstacles: golden cube, sea urchin coral, golden lanterns on a gilded beam (slide), collapsing golden column, falling gold masonry and the closing golden gate. Backdrop only: the golden city palace, spire, gate, terrace, sun court, treasury vault, relic chamber and the underwater palace, gateway and colonnade. The ceremonial urn is kerb decoration only.
+- Kept for later: both sea guardians, both relics, the chests and treasure.
+
 ## Logo
 
 `assets/images/brand/logo.webp`, the Android, iOS and web app icons: the "Odyssey of the Ages" logo, supplied by the project owner. Resized only (corners rounded for Android and the web).

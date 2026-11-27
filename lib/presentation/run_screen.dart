@@ -131,12 +131,14 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
           GapStyle.river => l.riverStart,
           GapStyle.crevasse => l.crevasseStart,
           GapStyle.moat => l.moatStart,
+          GapStyle.trench => l.trenchStart,
         });
       case RunEvent.bridgeStart:
         _showToast(switch (widget.realm.gapStyle) {
           GapStyle.river => l.bridgeStart,
           GapStyle.crevasse => l.ropeBridgeStart,
           GapStyle.moat => l.fortressBridgeStart,
+          GapStyle.trench => l.coralBridgeStart,
         });
       case RunEvent.crash:
         HapticFeedback.heavyImpact();

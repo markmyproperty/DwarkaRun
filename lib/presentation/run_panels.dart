@@ -193,6 +193,7 @@ class GameOverPanel extends StatelessWidget {
                     GapStyle.river => l.gameOverSplash,
                     GapStyle.crevasse => l.gameOverCrevasse,
                     GapStyle.moat => l.gameOverMoat,
+                    GapStyle.trench => l.gameOverTrench,
                   }
                 : l.gameOverTitle,
           ),
