@@ -7,7 +7,12 @@ enum Sfx { coin, gem, jump, slide, crash, boost, monkey, fanfare }
 /// uses [MusicAudio] (lib/audio/music_audio.dart); tests use [SilentAudio].
 abstract class GameAudio {
   /// Background music per stage id, as asset paths under `assets/`.
-  static const musicTracks = {'ayodhya': 'audio/ayodhya_run.mp3', 'ganga': 'audio/ganga_run.mp3'};
+  static const musicTracks = {
+    'ayodhya': 'audio/ayodhya_run.mp3',
+    'ganga': 'audio/ganga_run.mp3',
+    'pharaoh': 'audio/thar_desert_run.mp3',
+    'himalayan': 'audio/himalayan_run.mp3',
+  };
 
   bool get muted;
   set muted(bool value);

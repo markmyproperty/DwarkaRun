@@ -81,6 +81,8 @@ Background music, supplied by the project owner (re-encoded to 128 kbps MP3 for 
 |---|---|---|
 | Ayodhya Run | `assets/audio/ayodhya_run.mp3` | `ayodharun.mp3` |
 | Ganga Run | `assets/audio/ganga_run.mp3` | `gangarun.mp3` |
+| Thar Desert Run | `assets/audio/thar_desert_run.mp3` | `Thar Desert Run.mp3` |
+| Himalayan Run | `assets/audio/himalayan_run.mp3` | `Himalayan Run.mp3` |
 
 Playback uses the [audioplayers](https://pub.dev/packages/audioplayers) package (MIT). Sound effects are not recorded yet.
 
