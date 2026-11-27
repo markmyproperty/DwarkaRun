@@ -10,6 +10,12 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get titleMain => 'युगों की यात्रा';
+
+  @override
+  String get titleSub => 'ODYSSEY OF THE AGES';
+
+  @override
   String get appTitle => 'युगों की यात्रा';
 
   @override
@@ -512,6 +518,11 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get revive => 'फिर उठें';
+
+  @override
+  String reviveForCoins(int count) {
+    return '$count सिक्के देकर फिर उठें';
+  }
 
   @override
   String reviveFor(int count) {

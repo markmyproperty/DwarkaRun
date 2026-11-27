@@ -158,3 +158,9 @@ enum Upgrade {
 
 /// Gems a revive costs: 1, then 2, then 4 within one run.
 int reviveCost(int revivesSoFar) => 1 << revivesSoFar;
+
+/// Coins a revive costs instead of gems: always 100.
+const reviveCoinCost = 100;
+
+/// Revives allowed in one run.
+const maxRevives = 3;

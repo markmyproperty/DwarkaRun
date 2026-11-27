@@ -8,6 +8,7 @@ import '../audio/game_audio.dart';
 import 'dr_theme.dart';
 import 'home_screen.dart';
 import 'story_intro_screen.dart';
+import 'ui/game_title.dart';
 import 'ui/game_ui.dart';
 
 /// The opening: the MMYP Technologies logo on its own branded card, then a
@@ -52,7 +53,6 @@ class _LaunchScreenState extends State<LaunchScreen> with SingleTickerProviderSt
   void didChangeDependencies() {
     super.didChangeDependencies();
     precacheImage(const AssetImage('assets/images/brand/mmyp_logo.webp'), context);
-    precacheImage(const AssetImage('assets/images/brand/logo.webp'), context);
     precacheImage(const AssetImage('assets/images/backgrounds/ancient_city_background.webp'), context);
   }
 
@@ -151,13 +151,7 @@ class _LaunchScreenState extends State<LaunchScreen> with SingleTickerProviderSt
                       scale: 0.3 + 0.7 * titleIn,
                       child: Opacity(
                         opacity: _seg(t, _titleIn).clamp(0.0, 1.0),
-                        child: Image.asset(
-                          'assets/images/brand/logo.webp',
-                          key: const Key('launch.title'),
-                          width: 250,
-                          height: 250,
-                          errorBuilder: (_, _, _) => const SizedBox(width: 250, height: 250),
-                        ),
+                        child: GameTitle(key: const Key('launch.title'), width: 300, reduce: reduce),
                       ),
                     ),
                   ),
@@ -192,10 +186,10 @@ class _BrandCard extends StatelessWidget {
     final logo = Image.asset(
       'assets/images/brand/mmyp_logo.webp',
       key: const Key('launch.mmyp'),
-      width: 260,
-      height: 260,
+      width: 150,
+      height: 112,
       semanticLabel: 'MMYP Technologies',
-      errorBuilder: (_, _, _) => const SizedBox(width: 260, height: 260),
+      errorBuilder: (_, _, _) => const SizedBox(width: 150, height: 112),
     );
     return Stack(
       fit: StackFit.expand,

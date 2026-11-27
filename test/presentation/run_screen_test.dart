@@ -202,4 +202,18 @@ void main() {
     expect(find.byKey(const Key('gameover.panel')), findsOneWidget);
     expect(s.progress.gems, 1);
   });
+
+  testWidgets('with no gems, 100 coins buy a revive', (tester) async {
+    final s = await TestServices.create({'dr.tutorialDone': true, 'dr.wallet': 150});
+    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.ayodhya, seed: 3, intro: false)));
+    await tester.pump();
+    await pumpUntil(tester, find.byKey(const Key('revive.panel')));
+    await tester.tap(find.byKey(const Key('revive.coins')));
+    await tester.pump();
+    expect(s.progress.wallet, 50);
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.byKey(const Key('revive.panel')), findsNothing);
+  });
 }

@@ -58,6 +58,12 @@ abstract class GameAudio {
     'ganga': 'audio/ganga_run.mp3',
     'pharaoh': 'audio/thar_desert_run.mp3',
     'himalayan': 'audio/himalayan_run.mp3',
+    'vijayanagar': 'audio/vijayanagar_run.mp3',
+    'dragon': 'audio/dragon_valley_run.mp3',
+    'lanka': 'audio/lanka_run.mp3',
+    'indus': 'audio/indus_run.mp3',
+    'sunken': 'audio/sunken_kingdom_run.mp3',
+    'finale': 'audio/final_legend_run.mp3',
   };
 
   bool get muted;

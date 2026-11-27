@@ -8,6 +8,7 @@ import '../audio/game_audio.dart';
 import '../l10n/gen/app_localizations.dart';
 import 'dr_theme.dart';
 import 'home_screen.dart';
+import 'ui/game_title.dart';
 import 'ui/game_ui.dart';
 import 'ui/hero_runner.dart';
 
@@ -177,7 +178,7 @@ class _StoryIntroScreenState extends State<StoryIntroScreen> {
                         duration: const Duration(milliseconds: 900),
                         curve: Curves.elasticOut,
                         builder: (context, v, child) => Transform.scale(scale: v, child: child),
-                        child: Image.asset('assets/images/brand/logo.webp', width: 210, height: 210),
+                        child: GameTitle(width: 280, reduce: reduce),
                       ),
                     ],
                   ),

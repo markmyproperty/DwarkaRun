@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "titleMain": "ODYSSEY",
+  "titleSub": "OF THE AGES",
   "appTitle": "Odyssey of the Ages",
   "hubTagline": "A quest through ten legendary worlds",
   "hubNextStop": "NEXT STOP",
@@ -364,7 +366,9 @@
   "gemsLabel": "Gems",
   "missionsDone": "Missions completed",
   "revive": "Revive",
-  "reviveFor": "Revive for {count} gems",
+  "reviveForCoins": "Revive for {count} coins",
+  "@reviveForCoins": {"placeholders": {"count": {"type": "int"}}},
+  "reviveFor": "Revive for {count, plural, =1{1 gem} other{{count} gems}}",
   "@reviveFor": {
     "placeholders": {
       "count": {

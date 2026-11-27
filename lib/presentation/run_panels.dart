@@ -282,13 +282,17 @@ class RevivePanel extends StatefulWidget {
     super.key,
     required this.cost,
     required this.gems,
+    required this.coins,
     required this.onRevive,
+    required this.onReviveWithCoins,
     required this.onDecline,
   });
 
   final int cost;
   final int gems;
+  final int coins;
   final VoidCallback onRevive;
+  final VoidCallback onReviveWithCoins;
   final VoidCallback onDecline;
 
   static const time = Duration(seconds: 5);
@@ -340,8 +344,13 @@ class _RevivePanelState extends State<RevivePanel> with SingleTickerProviderStat
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const GemIcon(size: 48),
-                        StrokeText('${widget.cost}', size: 30, color: const Color(0xFF8BF0FF)),
+                        if (widget.cost <= widget.gems) ...[
+                          const GemIcon(size: 48),
+                          StrokeText('${widget.cost}', size: 30, color: const Color(0xFF8BF0FF)),
+                        ] else ...[
+                          const CoinIcon(size: 48),
+                          StrokeText('$reviveCoinCost', size: 30, color: GameColors.gold),
+                        ],
                       ],
                     ),
                   ],
@@ -349,13 +358,24 @@ class _RevivePanelState extends State<RevivePanel> with SingleTickerProviderStat
               ),
             ),
             const SizedBox(height: 16),
+            if (widget.cost <= widget.gems) ...[
+              GameButton(
+                key: const Key('revive.yes'),
+                label: l.reviveFor(widget.cost),
+                leading: const GemIcon(size: 26),
+                tone: GameTone.green,
+                height: 62,
+                onPressed: widget.onRevive,
+              ),
+              const SizedBox(height: 10),
+            ],
             GameButton(
-              key: const Key('revive.yes'),
-              label: l.reviveFor(widget.cost),
-              leading: const GemIcon(size: 26),
-              tone: GameTone.green,
-              height: 62,
-              onPressed: widget.cost <= widget.gems ? widget.onRevive : null,
+              key: const Key('revive.coins'),
+              label: l.reviveForCoins(reviveCoinCost),
+              leading: const CoinIcon(size: 26),
+              tone: GameTone.orange,
+              height: 56,
+              onPressed: reviveCoinCost <= widget.coins ? widget.onReviveWithCoins : null,
             ),
             const SizedBox(height: 8),
             TextButton(

@@ -198,12 +198,13 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
     });
   }
 
-  /// After a crash: offer a revive if the player has the gems, else end.
+  /// After a crash: offer a revive if the player has the gems or the coins,
+  /// else end.
   void _onCrashed() {
     if (!mounted || _phase == _Phase.gameOver || _phase == _Phase.complete) return;
     final progress = AppScope.read(context).progress;
     final cost = reviveCost(_game.sim.revives);
-    if (!_autopilot && _game.sim.revives < 3 && progress.gems >= cost) {
+    if (!_autopilot && _game.sim.revives < maxRevives && (progress.gems >= cost || progress.wallet >= reviveCoinCost)) {
       AppScope.read(context).audio.pauseMusic();
       setState(() => _phase = _Phase.revive);
     } else {
@@ -211,10 +212,12 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> _revive() async {
+  Future<void> _revive({bool withCoins = false}) async {
     final scope = AppScope.read(context);
-    final cost = reviveCost(_game.sim.revives);
-    if (!await scope.progress.spendGems(cost)) return;
+    final paid = withCoins
+        ? await scope.progress.spend(reviveCoinCost)
+        : await scope.progress.spendGems(reviveCost(_game.sim.revives));
+    if (!paid) return;
     if (!mounted) return;
     _game.revive();
     scope.audio.resumeMusic();
@@ -450,7 +453,9 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
                 RevivePanel(
                   cost: reviveCost(_game.sim.revives),
                   gems: scope.progress.gems,
+                  coins: scope.progress.wallet,
                   onRevive: _revive,
+                  onReviveWithCoins: () => _revive(withCoins: true),
                   onDecline: () => _finishRun(finished: false),
                 ),
               if (_phase == _Phase.gameOver || _phase == _Phase.complete)

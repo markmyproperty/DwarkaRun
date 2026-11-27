@@ -1,5 +1,7 @@
 {
   "@@locale": "hi",
+  "titleMain": "युगों की यात्रा",
+  "titleSub": "ODYSSEY OF THE AGES",
   "appTitle": "युगों की यात्रा",
   "hubTagline": "दस महान लोकों की खोज-यात्रा",
   "hubNextStop": "अगला पड़ाव",
@@ -148,6 +150,7 @@
   "gemsLabel": "रत्न",
   "missionsDone": "पूरे हुए मिशन",
   "revive": "फिर उठें",
+  "reviveForCoins": "{count} सिक्के देकर फिर उठें",
   "reviveFor": "{count} रत्न देकर फिर उठें",
   "homeLabel": "होम",
   "victoryTitle": "संसार पार!",

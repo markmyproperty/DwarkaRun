@@ -12,6 +12,7 @@ import 'menu_sheets.dart';
 import 'pickup_icons.dart';
 import 'realm_postcard.dart';
 import 'run_screen.dart';
+import 'ui/game_title.dart';
 import 'ui/game_ui.dart';
 import 'ui/hero_runner.dart';
 import 'unlock_overlay.dart';
@@ -172,14 +173,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       SizedBox(height: compact ? 2 : 8),
-                      _FloatingLogo(size: compact ? 96 : 132, reduce: reduce),
+                      _FloatingLogo(width: compact ? 230 : 290, reduce: reduce),
                       // ── hero and side buttons ──
                       Expanded(
                         child: Stack(
                           children: [
                             Align(
                               alignment: const Alignment(0, 0.95),
-                              child: _HeroStage(height: compact ? 190 : 250),
+                              child: _HeroStage(height: compact ? 180 : 240, reduce: reduce),
                             ),
                             Align(
                               alignment: Alignment.centerLeft,
@@ -310,10 +311,11 @@ class _WorldBackdropState extends State<_WorldBackdrop> with SingleTickerProvide
   );
 }
 
+/// The title wordmark, bobbing gently.
 class _FloatingLogo extends StatefulWidget {
-  const _FloatingLogo({required this.size, required this.reduce});
+  const _FloatingLogo({required this.width, required this.reduce});
 
-  final double size;
+  final double width;
   final bool reduce;
 
   @override
@@ -340,67 +342,177 @@ class _FloatingLogoState extends State<_FloatingLogo> with SingleTickerProviderS
   }
 
   @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _c,
+    builder: (context, child) =>
+        Transform.translate(offset: Offset(0, -3 + 6 * Curves.easeInOutSine.transform(_c.value)), child: child),
+    child: GameTitle(key: const Key('hub.logo'), width: widget.width, reduce: widget.reduce),
+  );
+}
+
+/// The hero on a carved stone dais, with slowly turning rays of sunlight
+/// behind him and drifting golden motes.
+class _HeroStage extends StatefulWidget {
+  const _HeroStage({required this.height, required this.reduce});
+
+  final double height;
+  final bool reduce;
+
+  @override
+  State<_HeroStage> createState() => _HeroStageState();
+}
+
+class _HeroStageState extends State<_HeroStage> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(seconds: 24));
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.reduce) {
+      _c.stop();
+    } else if (!_c.isAnimating) {
+      _c.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return AnimatedBuilder(
-      animation: _c,
-      builder: (context, child) => Transform.translate(
-        offset: Offset(0, -4 + 8 * Curves.easeInOutSine.transform(_c.value)),
-        child: Transform.rotate(angle: (_c.value - 0.5) * 0.03, child: child),
-      ),
-      child: Semantics(
-        header: true,
-        label: l.appTitle,
-        child: Image.asset(
-          'assets/images/brand/logo.webp',
-          key: const Key('hub.logo'),
-          height: widget.size,
-          width: widget.size,
-          errorBuilder: (_, _, _) => SizedBox(height: widget.size, width: widget.size),
-        ),
+    final height = widget.height;
+    return SizedBox(
+      key: const Key('hub.heroStage'),
+      height: height * 1.15,
+      width: height * 1.4,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        clipBehavior: Clip.none,
+        children: [
+          Positioned.fill(
+            child: AnimatedBuilder(
+              animation: _c,
+              builder: (context, _) => CustomPaint(painter: _RaysPainter(_c.value)),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: CustomPaint(size: Size(height * 0.95, height * 0.2), painter: _DaisPainter()),
+          ),
+          Positioned(
+            bottom: height * 0.1,
+            child: HeroRunner(height: height, fps: 12),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// The hero on a glowing disc of light.
-class _HeroStage extends StatelessWidget {
-  const _HeroStage({required this.height});
+class _RaysPainter extends CustomPainter {
+  _RaysPainter(this.t);
 
-  final double height;
+  final double t;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: height * 1.1,
-    child: Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Positioned(
-          bottom: 0,
-          child: Container(
-            width: height * 0.95,
-            height: height * 0.22,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(height),
-              gradient: const RadialGradient(colors: [Color(0xAAFFD34A), Color(0x33FF8A00), Color(0x00FF8A00)]),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: height * 0.18,
-          child: Container(
-            width: height * 0.8,
-            height: height * 0.8,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(colors: [Color(0x55FFF3B0), Color(0x00FFF3B0)]),
-            ),
-          ),
-        ),
-        HeroRunner(height: height, fps: 12),
-      ],
-    ),
-  );
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height * 0.5);
+    final r = size.width * 0.62;
+    canvas.drawCircle(
+      c,
+      r,
+      Paint()
+        ..shader = const RadialGradient(
+          colors: [Color(0x88FFF0B0), Color(0x33FFB23A), Color(0x00FFB23A)],
+          stops: [0, 0.45, 1],
+        ).createShader(Rect.fromCircle(center: c, radius: r)),
+    );
+    canvas.save();
+    canvas.translate(c.dx, c.dy);
+    canvas.rotate(t * 2 * math.pi);
+    const n = 14;
+    final ray = Paint()
+      ..shader = const RadialGradient(colors: [Color(0x55FFF6D0), Color(0x00FFF6D0)])
+          .createShader(Rect.fromCircle(center: Offset.zero, radius: r));
+    for (var i = 0; i < n; i++) {
+      final a = i * 2 * math.pi / n;
+      final p = Path()
+        ..moveTo(0, 0)
+        ..lineTo(math.cos(a - 0.08) * r, math.sin(a - 0.08) * r)
+        ..lineTo(math.cos(a + 0.08) * r, math.sin(a + 0.08) * r)
+        ..close();
+      canvas.drawPath(p, ray);
+    }
+    canvas.restore();
+    // Motes rising around the hero.
+    final mote = Paint();
+    for (var i = 0; i < 18; i++) {
+      final seed = i * 97.31;
+      final x = (math.sin(seed) * 0.5 + 0.5) * size.width;
+      final speed = 0.6 + (i % 5) * 0.15;
+      final y = size.height * (1 - ((t * 6 * speed + i / 18) % 1));
+      final fade = math.sin(((t * 6 * speed + i / 18) % 1) * math.pi);
+      mote.color = Color.fromRGBO(255, 226, 140, 0.8 * fade);
+      canvas.drawCircle(Offset(x + math.sin(t * 20 + i) * 6, y), 1.5 + (i % 3), mote);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _RaysPainter old) => old.t != t;
+}
+
+/// A round sandstone dais with a gold rim.
+class _DaisPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width, h = size.height;
+    final top = Rect.fromLTWH(0, 0, w, h * 0.62);
+    final side = Rect.fromLTWH(0, h * 0.31, w, h * 0.62);
+    canvas.drawOval(
+      side.shift(Offset(0, h * 0.12)),
+      Paint()
+        ..color = const Color(0x88000000)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+    );
+    canvas.drawOval(
+      side,
+      Paint()
+        ..shader = const LinearGradient(colors: [Color(0xFF6B3A1A), Color(0xFFB0703A), Color(0xFF6B3A1A)])
+            .createShader(side),
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(0, h * 0.31, w, h * 0.31),
+      Paint()
+        ..shader = const LinearGradient(colors: [Color(0xFF6B3A1A), Color(0xFFB0703A), Color(0xFF6B3A1A)])
+            .createShader(side),
+    );
+    canvas.drawOval(
+      top,
+      Paint()
+        ..shader = const RadialGradient(colors: [Color(0xFFFFE7B0), Color(0xFFE2B070), Color(0xFFB57C40)])
+            .createShader(top),
+    );
+    canvas.drawOval(
+      top.deflate(1.5),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3
+        ..color = const Color(0xFFFFC94A),
+    );
+    canvas.drawOval(
+      top.deflate(w * 0.12),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5
+        ..color = const Color(0x88A8662A),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _LevelBadge extends StatelessWidget {

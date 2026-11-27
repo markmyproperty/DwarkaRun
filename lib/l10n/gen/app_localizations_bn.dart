@@ -10,6 +10,12 @@ class AppLocalizationsBn extends AppLocalizations {
   AppLocalizationsBn([String locale = 'bn']) : super(locale);
 
   @override
+  String get titleMain => 'ODYSSEY';
+
+  @override
+  String get titleSub => 'OF THE AGES';
+
+  @override
   String get appTitle => 'Odyssey of the Ages';
 
   @override
@@ -514,8 +520,14 @@ class AppLocalizationsBn extends AppLocalizations {
   String get revive => 'Revive';
 
   @override
+  String reviveForCoins(int count) {
+    return 'Revive for $count coins';
+  }
+
+  @override
   String reviveFor(int count) {
-    return 'Revive for $count gems';
+    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count gems', one: '1 gem');
+    return 'Revive for $_temp0';
   }
 
   @override

@@ -101,6 +101,18 @@ abstract class AppLocalizations {
     Locale('ta'),
   ];
 
+  /// No description provided for @titleMain.
+  ///
+  /// In en, this message translates to:
+  /// **'ODYSSEY'**
+  String get titleMain;
+
+  /// No description provided for @titleSub.
+  ///
+  /// In en, this message translates to:
+  /// **'OF THE AGES'**
+  String get titleSub;
+
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
@@ -989,10 +1001,16 @@ abstract class AppLocalizations {
   /// **'Revive'**
   String get revive;
 
+  /// No description provided for @reviveForCoins.
+  ///
+  /// In en, this message translates to:
+  /// **'Revive for {count} coins'**
+  String reviveForCoins(int count);
+
   /// No description provided for @reviveFor.
   ///
   /// In en, this message translates to:
-  /// **'Revive for {count} gems'**
+  /// **'Revive for {count, plural, =1{1 gem} other{{count} gems}}'**
   String reviveFor(int count);
 
   /// No description provided for @homeLabel.
