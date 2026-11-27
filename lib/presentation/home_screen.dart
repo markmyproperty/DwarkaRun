@@ -270,7 +270,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-/// The selected world's art, drifting slowly from side to side.
+/// The home painting for the player's time of day: the sky palace in the
+/// morning, Ayodhya's golden dusk through the afternoon, the riverside
+/// palace at twilight and the courtyard of diyas at night.
+String homeArtFor(DateTime now) {
+  final h = now.hour;
+  final name = h >= 5 && h < 11
+      ? 'home_sky'
+      : h >= 11 && h < 17
+      ? 'home_dusk'
+      : h >= 17 && h < 20
+      ? 'home_twilight'
+      : 'home_night';
+  return 'assets/images/menu/$name.webp';
+}
+
+/// The home painting, drifting slowly from side to side.
 class _WorldBackdrop extends StatefulWidget {
   const _WorldBackdrop({required this.realm, required this.reduce});
 
@@ -310,13 +325,19 @@ class _WorldBackdropState extends State<_WorldBackdrop> with SingleTickerProvide
   Widget build(BuildContext context) => AnimatedSwitcher(
     duration: const Duration(milliseconds: 700),
     child: AnimatedBuilder(
-      key: ValueKey(widget.realm),
+      key: ValueKey(homeArtFor(DateTime.now())),
       animation: _c,
       builder: (context, child) => FractionalTranslation(
         translation: Offset((Curves.easeInOutSine.transform(_c.value) - 0.5) * 0.12, 0),
         child: Transform.scale(scale: 1.15, child: child),
       ),
-      child: RealmPostcard(realm: widget.realm, alignmentY: 0.1),
+      child: Image.asset(
+        homeArtFor(DateTime.now()),
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (_, _, _) => RealmPostcard(realm: widget.realm, alignmentY: 0.1),
+      ),
     ),
   );
 }

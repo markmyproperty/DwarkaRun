@@ -19,22 +19,25 @@ class RealmPostcard extends StatelessWidget {
     Realm.ganga: 'assets/images/backgrounds/coastal_background.webp',
   };
 
+  /// The world's portrait menu painting.
+  static String menuArt(Realm realm) => 'assets/images/menu/stage_${realm.id}.webp';
+
   @override
   Widget build(BuildContext context) {
     final painted = CustomPaint(painter: _PostcardPainter(realm.palette), size: Size.infinite);
-    final stage = StageArt.of(realm);
-    final asset = stage == null ? _art[realm] : 'assets/images/${stage.postcard}.webp';
     return ExcludeSemantics(
-      child: asset == null
-          ? painted
-          : Image.asset(
-              asset,
-              fit: BoxFit.cover,
-              alignment: Alignment(0, alignmentY),
-              width: double.infinity,
-              height: double.infinity,
-              errorBuilder: (_, _, _) => painted,
-            ),
+      child: Image.asset(
+        menuArt(realm),
+        fit: BoxFit.cover,
+        alignment: Alignment(0, alignmentY),
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (_, _, _) {
+          final stage = StageArt.of(realm);
+          final old = stage == null ? _art[realm] : 'assets/images/${stage.postcard}.webp';
+          return old == null ? painted : Image.asset(old, fit: BoxFit.cover, errorBuilder: (_, _, _) => painted);
+        },
+      ),
     );
   }
 }

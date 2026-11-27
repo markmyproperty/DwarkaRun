@@ -121,7 +121,7 @@ class _LaunchScreenState extends State<LaunchScreen> with SingleTickerProviderSt
                     child: Transform.scale(
                       scale: 1.18 - 0.12 * _seg(t, (_brandOut.$1, 1.0)),
                       child: Image.asset(
-                        'assets/images/backgrounds/ancient_city_background.webp',
+                        'assets/images/menu/splash.webp',
                         fit: BoxFit.cover,
                         alignment: Alignment(-0.2 + 0.4 * _seg(t, (_brandOut.$1, 1.0)), 0),
                         errorBuilder: (_, _, _) => const SizedBox(),
@@ -132,7 +132,7 @@ class _LaunchScreenState extends State<LaunchScreen> with SingleTickerProviderSt
                     opacity: worldIn,
                     child: const DecoratedBox(
                       decoration: BoxDecoration(
-                        gradient: RadialGradient(radius: 1.0, colors: [Color(0x33120A2E), Color(0xDD120A2E)]),
+                        gradient: RadialGradient(radius: 1.0, colors: [Color(0x00120A2E), Color(0x88120A2E)]),
                       ),
                     ),
                   ),

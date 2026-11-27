@@ -608,10 +608,11 @@ class CurrencyChip extends StatelessWidget {
 /// Deep night backdrop for menu screens, with soft light beams and drifting
 /// sparkles. Pass [art] to blur a world behind it.
 class GameBackdrop extends StatefulWidget {
-  const GameBackdrop({super.key, required this.child, this.art});
+  const GameBackdrop({super.key, required this.child, this.art, this.artOpacity = 0.35});
 
   final Widget child;
   final String? art;
+  final double artOpacity;
 
   @override
   State<GameBackdrop> createState() => _GameBackdropState();
@@ -652,16 +653,19 @@ class _GameBackdropState extends State<GameBackdrop> with SingleTickerProviderSt
       ),
       if (widget.art != null)
         Opacity(
-          opacity: 0.35,
+          opacity: widget.artOpacity,
           child: Image.asset(widget.art!, fit: BoxFit.cover, errorBuilder: (_, _, _) => const SizedBox()),
         ),
       if (widget.art != null)
-        const DecoratedBox(
+        DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0x99120A2E), Color(0xDD120A2E)],
+              colors: [
+                const Color(0xFF120A2E).withValues(alpha: 0.6 * (1 - widget.artOpacity) + 0.25),
+                const Color(0xFF120A2E).withValues(alpha: 0.85 * (1 - widget.artOpacity) + 0.3),
+              ],
             ),
           ),
         ),
@@ -737,7 +741,9 @@ class GameRoute<T> extends PageRouteBuilder<T> {
 }
 
 /// A modal sheet in the menu style, sliding up over a dimmed screen.
-Future<T?> showGameSheet<T>(BuildContext context, {required WidgetBuilder builder}) {
+/// [backdrop], an image under `assets/images/` without the extension, fills
+/// the screen behind the sheet.
+Future<T?> showGameSheet<T>(BuildContext context, {required WidgetBuilder builder, String? backdrop}) {
   AppScope.read(context).audio.play(Sfx.whoosh, volume: 0.7);
   return showGeneralDialog<T>(
     context: context,
@@ -745,7 +751,22 @@ Future<T?> showGameSheet<T>(BuildContext context, {required WidgetBuilder builde
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
     barrierColor: const Color(0xB3080418),
     transitionDuration: const Duration(milliseconds: 320),
-    pageBuilder: (context, _, _) => builder(context),
+    pageBuilder: (context, _, _) => backdrop == null
+        ? builder(context)
+        : Stack(
+            fit: StackFit.expand,
+            children: [
+              IgnorePointer(
+                child: Image.asset(
+                  'assets/images/$backdrop.webp',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => const SizedBox(),
+                ),
+              ),
+              const IgnorePointer(child: ColoredBox(color: Color(0x66080418))),
+              builder(context),
+            ],
+          ),
     transitionBuilder: (context, a, _, child) {
       final curved = CurvedAnimation(parent: a, curve: Curves.easeOutBack, reverseCurve: Curves.easeInCubic);
       return FadeTransition(

@@ -442,7 +442,8 @@ class MissionRow extends StatelessWidget {
 
 // ── shop ──
 
-Future<void> showShopSheet(BuildContext context) => showGameSheet<void>(context, builder: (_) => const _ShopSheet());
+Future<void> showShopSheet(BuildContext context) =>
+    showGameSheet<void>(context, builder: (_) => const _ShopSheet(), backdrop: 'menu/shop_vault');
 
 class _ShopSheet extends StatelessWidget {
   const _ShopSheet();
@@ -571,7 +572,8 @@ class _UpgradeRow extends StatelessWidget {
 
 // ── heroes ──
 
-Future<void> showHeroSheet(BuildContext context) => showGameSheet<void>(context, builder: (_) => const _HeroSheet());
+Future<void> showHeroSheet(BuildContext context) =>
+    showGameSheet<void>(context, builder: (_) => const _HeroSheet(), backdrop: 'menu/heroes_hall');
 
 class _HeroSheet extends StatefulWidget {
   const _HeroSheet();

@@ -136,6 +136,7 @@ flutter:
     - assets/images/vijayanagar/obstacles/
     - assets/images/vijayanagar/rewards/
     - assets/images/vijayanagar/vfx/
+    - assets/images/menu/
     - assets/lottie/
   fonts:
     - family: Lilita

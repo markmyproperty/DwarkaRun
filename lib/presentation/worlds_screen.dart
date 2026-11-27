@@ -63,6 +63,8 @@ class _WorldsScreenState extends State<WorldsScreen> {
     return Scaffold(
       backgroundColor: GameColors.night,
       body: GameBackdrop(
+        art: 'assets/images/menu/map.webp',
+        artOpacity: 0.9,
         child: SafeArea(
           child: Column(
             children: [

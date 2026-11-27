@@ -24,34 +24,14 @@ class _Shot {
 }
 
 final _shots = <_Shot>[
-  _Shot('assets/images/backgrounds/ancient_city_background.webp', (l) => l.intro1),
-  _Shot(
-    'assets/images/backgrounds/coastal_background.webp',
-    (l) => l.intro2,
-    from: Alignment(0.6, 0),
-    to: Alignment(-0.4, 0),
-  ),
-  _Shot('assets/images/pharaoh/backgrounds/pyramid_valley_background.webp', (l) => l.intro3),
-  _Shot(
-    'assets/images/himalayan/backgrounds/valley_background.webp',
-    (l) => l.intro3,
-    from: Alignment(0.4, 0),
-    to: Alignment(-0.4, 0),
-  ),
-  _Shot('assets/images/lanka/backgrounds/palace_valley_background.webp', (l) => l.intro4),
-  _Shot(
-    'assets/images/vijayanagar/backgrounds/temple_valley_background.webp',
-    (l) => l.intro4,
-    from: Alignment(0.5, 0),
-    to: Alignment(-0.3, 0),
-  ),
-  _Shot('assets/images/sunken/backgrounds/sunken_city_background.webp', (l) => l.intro5),
-  _Shot(
-    'assets/images/finale/backgrounds/golden_city_background.webp',
-    (l) => l.intro6,
-    from: Alignment(0.3, 0),
-    to: Alignment(-0.3, 0),
-  ),
+  _Shot('assets/images/menu/stage_ayodhya.webp', (l) => l.intro1, from: Alignment(0, -0.5), to: Alignment(0, 0.3)),
+  _Shot('assets/images/menu/stage_ganga.webp', (l) => l.intro2, from: Alignment(0, 0.3), to: Alignment(0, -0.5)),
+  _Shot('assets/images/menu/stage_pharaoh.webp', (l) => l.intro3, from: Alignment(0, -0.5), to: Alignment(0, 0.3)),
+  _Shot('assets/images/menu/stage_himalayan.webp', (l) => l.intro3, from: Alignment(0, 0.3), to: Alignment(0, -0.5)),
+  _Shot('assets/images/menu/stage_lanka.webp', (l) => l.intro4, from: Alignment(0, -0.5), to: Alignment(0, 0.3)),
+  _Shot('assets/images/menu/stage_vijayanagar.webp', (l) => l.intro4, from: Alignment(0, 0.3), to: Alignment(0, -0.5)),
+  _Shot('assets/images/menu/stage_sunken.webp', (l) => l.intro5, from: Alignment(0, -0.5), to: Alignment(0, 0.3)),
+  _Shot('assets/images/menu/stage_finale.webp', (l) => l.intro6, from: Alignment(0, 0.3), to: Alignment(0, -0.5)),
 ];
 
 /// The story introduction: a cinematic montage across the worlds with
