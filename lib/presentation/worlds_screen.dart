@@ -142,7 +142,10 @@ class _WorldsScreenState extends State<WorldsScreen> {
                                       ? GameTone.orange.face
                                       : GameTone.grey.face,
                                 ),
-                                border: Border.all(color: i == _page ? Colors.white : const Color(0x88FFFFFF), width: 2.5),
+                                border: Border.all(
+                                  color: i == _page ? Colors.white : const Color(0x88FFFFFF),
+                                  width: 2.5,
+                                ),
                               ),
                               child: done
                                   ? const Icon(Icons.check_rounded, color: Colors.white, size: 22)

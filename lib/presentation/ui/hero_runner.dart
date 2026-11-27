@@ -10,7 +10,9 @@ class HeroRunner extends StatefulWidget {
   final double fps;
   final bool shadow;
 
-  static List<String> get frames => [for (var i = 1; i <= 16; i++) 'assets/images/hero/run_${i.toString().padLeft(2, '0')}.webp'];
+  static List<String> get frames => [
+    for (var i = 1; i <= 16; i++) 'assets/images/hero/run_${i.toString().padLeft(2, '0')}.webp',
+  ];
 
   /// Loads every frame so the cycle never flickers on its first pass.
   static Future<void> precache(BuildContext context) =>

@@ -152,8 +152,7 @@ class _StageIntroOverlayState extends State<StageIntroOverlay> {
                   tween: Tween(begin: 0, end: 1),
                   duration: const Duration(milliseconds: 600),
                   curve: Curves.easeOutBack,
-                  builder: (context, v, child) =>
-                      Transform.translate(offset: Offset((1 - v) * -300, 0), child: child),
+                  builder: (context, v, child) => Transform.translate(offset: Offset((1 - v) * -300, 0), child: child),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
@@ -164,6 +163,7 @@ class _StageIntroOverlayState extends State<StageIntroOverlay> {
                       ),
                     ),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           '${l.seasonJambudvipa} · ${l.stageNumber(widget.realm.index + 1)}',
@@ -189,8 +189,10 @@ class _StageIntroOverlayState extends State<StageIntroOverlay> {
                 tween: Tween(begin: 1.8, end: 1),
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOutBack,
-                builder: (context, v, child) =>
-                    Opacity(opacity: (2 - v).clamp(0.0, 1.0), child: Transform.scale(scale: v, child: child)),
+                builder: (context, v, child) => Opacity(
+                  opacity: (2 - v).clamp(0.0, 1.0),
+                  child: Transform.scale(scale: v, child: child),
+                ),
                 child: StrokeText(
                   count == 0 ? l.countdownGo : '$count',
                   key: const Key('run.countdown'),
@@ -276,7 +278,13 @@ class PausePanel extends StatelessWidget {
 /// After a crash: spend gems to carry on. A ring runs down; when it empties
 /// or the player says no, the results show.
 class RevivePanel extends StatefulWidget {
-  const RevivePanel({super.key, required this.cost, required this.gems, required this.onRevive, required this.onDecline});
+  const RevivePanel({
+    super.key,
+    required this.cost,
+    required this.gems,
+    required this.onRevive,
+    required this.onDecline,
+  });
 
   final int cost;
   final int gems;
@@ -497,11 +505,7 @@ class ResultsPanel extends StatelessWidget {
                       value: '${r?.stats.coins ?? 0}',
                     ),
                     const SizedBox(width: 8),
-                    _StatTile(
-                      icon: const GemIcon(size: 26),
-                      label: l.gemsLabel,
-                      value: '${r?.stats.gems ?? 0}',
-                    ),
+                    _StatTile(icon: const GemIcon(size: 26), label: l.gemsLabel, value: '${r?.stats.gems ?? 0}'),
                   ],
                 ),
                 if (r != null && r.missions.isNotEmpty) ...[
@@ -627,7 +631,10 @@ class _StatTile extends StatelessWidget {
             const SizedBox(height: 2),
             FittedBox(
               fit: BoxFit.scaleDown,
-              child: Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
+              child: Text(
+                value,
+                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+              ),
             ),
             Text(
               label,
@@ -668,7 +675,10 @@ class NearMissPop extends StatelessWidget {
                     opacity: v < 0.7 ? 1 : (1 - (v - 0.7) / 0.3),
                     child: Transform.translate(
                       offset: Offset(0, -40 * v),
-                      child: Transform.scale(scale: 0.6 + 0.5 * Curves.elasticOut.transform(math.min(1, v * 2)), child: child),
+                      child: Transform.scale(
+                        scale: 0.6 + 0.5 * Curves.elasticOut.transform(math.min(1, v * 2)),
+                        child: child,
+                      ),
                     ),
                   ),
                   child: Column(

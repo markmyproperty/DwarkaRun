@@ -24,13 +24,33 @@ class _Shot {
 
 final _shots = <_Shot>[
   _Shot('assets/images/backgrounds/ancient_city_background.webp', (l) => l.intro1),
-  _Shot('assets/images/backgrounds/coastal_background.webp', (l) => l.intro2, from: Alignment(0.6, 0), to: Alignment(-0.4, 0)),
+  _Shot(
+    'assets/images/backgrounds/coastal_background.webp',
+    (l) => l.intro2,
+    from: Alignment(0.6, 0),
+    to: Alignment(-0.4, 0),
+  ),
   _Shot('assets/images/pharaoh/backgrounds/pyramid_valley_background.webp', (l) => l.intro3),
-  _Shot('assets/images/himalayan/backgrounds/valley_background.webp', (l) => l.intro3, from: Alignment(0.4, 0), to: Alignment(-0.4, 0)),
+  _Shot(
+    'assets/images/himalayan/backgrounds/valley_background.webp',
+    (l) => l.intro3,
+    from: Alignment(0.4, 0),
+    to: Alignment(-0.4, 0),
+  ),
   _Shot('assets/images/lanka/backgrounds/palace_valley_background.webp', (l) => l.intro4),
-  _Shot('assets/images/vijayanagar/backgrounds/temple_valley_background.webp', (l) => l.intro4, from: Alignment(0.5, 0), to: Alignment(-0.3, 0)),
+  _Shot(
+    'assets/images/vijayanagar/backgrounds/temple_valley_background.webp',
+    (l) => l.intro4,
+    from: Alignment(0.5, 0),
+    to: Alignment(-0.3, 0),
+  ),
   _Shot('assets/images/sunken/backgrounds/sunken_city_background.webp', (l) => l.intro5),
-  _Shot('assets/images/finale/backgrounds/golden_city_background.webp', (l) => l.intro6, from: Alignment(0.3, 0), to: Alignment(-0.3, 0)),
+  _Shot(
+    'assets/images/finale/backgrounds/golden_city_background.webp',
+    (l) => l.intro6,
+    from: Alignment(0.3, 0),
+    to: Alignment(-0.3, 0),
+  ),
 ];
 
 /// The story introduction: a cinematic montage across the worlds with
@@ -96,7 +116,12 @@ class _StoryIntroScreenState extends State<StoryIntroScreen> {
     if (!mounted) return;
     final nav = Navigator.of(context);
     if (widget.firstRun) {
-      nav.pushReplacement(GameRoute<void>(builder: (_) => const HomeScreen(), settings: const RouteSettings(name: '/home')));
+      nav.pushReplacement(
+        GameRoute<void>(
+          builder: (_) => const HomeScreen(),
+          settings: const RouteSettings(name: '/home'),
+        ),
+      );
     } else {
       nav.pop();
     }
@@ -164,8 +189,7 @@ class _StoryIntroScreenState extends State<StoryIntroScreen> {
                   tween: Tween(begin: -1, end: 0),
                   duration: const Duration(milliseconds: 1200),
                   curve: Curves.easeOutCubic,
-                  builder: (context, v, child) =>
-                      FractionalTranslation(translation: Offset(v * 2.5, 0), child: child),
+                  builder: (context, v, child) => FractionalTranslation(translation: Offset(v * 2.5, 0), child: child),
                   child: const HeroRunner(height: 230),
                 ),
               ),
@@ -293,6 +317,8 @@ class _KenBurnsState extends State<_KenBurns> with SingleTickerProviderStateMixi
         scale: 1.0 + 0.12 * v,
         child: Image.asset(
           widget.shot.art,
+          width: double.infinity,
+          height: double.infinity,
           fit: BoxFit.cover,
           alignment: Alignment.lerp(widget.shot.from, widget.shot.to, v)!,
           errorBuilder: (_, _, _) => const ColoredBox(color: GameColors.night),

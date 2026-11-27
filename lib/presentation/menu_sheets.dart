@@ -508,7 +508,10 @@ class _UpgradeRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
+                Text(
+                  name,
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800),
+                ),
                 Text(
                   l.upgradeSeconds(upgrade.seconds(level).toStringAsFixed(1)),
                   style: const TextStyle(color: GameColors.textDim, fontSize: 13, fontWeight: FontWeight.w700),
@@ -590,7 +593,10 @@ class _HeroSheet extends StatelessWidget {
               children: [
                 const Icon(Icons.check_rounded, color: Colors.white, size: 18),
                 const SizedBox(width: 4),
-                Text(l.heroSelected, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+                Text(
+                  l.heroSelected,
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                ),
               ],
             ),
           ),
@@ -613,7 +619,10 @@ class _HeroSheet extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          Text(l.heroComingSoon, style: const TextStyle(color: GameColors.textDim, fontWeight: FontWeight.w700)),
+          Text(
+            l.heroComingSoon,
+            style: const TextStyle(color: GameColors.textDim, fontWeight: FontWeight.w700),
+          ),
         ],
       ),
     );
@@ -652,7 +661,12 @@ class _SettingsSheet extends StatelessWidget {
             onPressed: () {
               final nav = Navigator.of(context);
               nav.maybePop();
-              nav.push(GameRoute<void>(builder: (_) => const StoryIntroScreen(), settings: const RouteSettings(name: '/story')));
+              nav.push(
+                GameRoute<void>(
+                  builder: (_) => const StoryIntroScreen(),
+                  settings: const RouteSettings(name: '/story'),
+                ),
+              );
             },
           ),
           const SizedBox(height: 16),
@@ -663,7 +677,10 @@ class _SettingsSheet extends StatelessWidget {
               children: [
                 Image.asset('assets/images/brand/mmyp_logo.webp', width: 34, height: 34),
                 const SizedBox(width: 8),
-                Text(l.creditsLine, style: const TextStyle(color: GameColors.textDim, fontWeight: FontWeight.w700)),
+                Text(
+                  l.creditsLine,
+                  style: const TextStyle(color: GameColors.textDim, fontWeight: FontWeight.w700),
+                ),
               ],
             ),
           ),
@@ -693,7 +710,10 @@ class SoundSettings extends StatelessWidget {
         const SizedBox(width: 8),
         SizedBox(
           width: 96,
-          child: Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+          child: Text(
+            label,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+          ),
         ),
         Expanded(
           child: Slider(key: key, value: value, onChanged: progress.muted ? null : onChanged),
@@ -716,7 +736,10 @@ class SoundSettings extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           value: progress.muted,
           activeThumbColor: GameColors.saffron,
-          title: Text(l.muteAll, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+          title: Text(
+            l.muteAll,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+          ),
           secondary: Icon(progress.muted ? Icons.volume_off_rounded : Icons.volume_up_rounded, color: Colors.white),
           onChanged: (v) {
             progress.setMuted(v);

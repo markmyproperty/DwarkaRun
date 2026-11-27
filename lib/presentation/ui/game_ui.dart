@@ -169,7 +169,12 @@ class _GameButtonState extends State<GameButton> {
       children: [
         if (widget.leading != null) ...[widget.leading!, SizedBox(width: h * 0.14)],
         if (widget.icon != null) ...[
-          Icon(widget.icon, color: Colors.white, size: fs * 1.25, shadows: const [Shadow(color: Color(0x88000000), offset: Offset(0, 2))]),
+          Icon(
+            widget.icon,
+            color: Colors.white,
+            size: fs * 1.25,
+            shadows: const [Shadow(color: Color(0x88000000), offset: Offset(0, 2))],
+          ),
           SizedBox(width: h * 0.14),
         ],
         Flexible(
@@ -320,10 +325,7 @@ class _RoundGameButtonState extends State<RoundGameButton> {
             right: s * 0.2,
             height: s * 0.24,
             child: DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(s),
-                color: const Color(0x55FFFFFF),
-              ),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(s), color: const Color(0x55FFFFFF)),
             ),
           ),
           widget.child ??
@@ -781,10 +783,7 @@ class GameSheet extends StatelessWidget {
                 key: sheetKey,
                 clipBehavior: Clip.none,
                 children: [
-                  GamePanel(
-                    padding: const EdgeInsets.fromLTRB(16, 44, 16, 18),
-                    child: child,
-                  ),
+                  GamePanel(padding: const EdgeInsets.fromLTRB(16, 44, 16, 18), child: child),
                   Positioned(
                     top: -22,
                     left: 0,

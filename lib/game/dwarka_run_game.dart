@@ -154,8 +154,7 @@ class DwarkaRunGame extends FlameGame {
   }
 
   /// Where the hero's chest is on screen now.
-  Offset get _heroChest =>
-      trackCamera.project(sim.x, sim.y + (sim.sliding ? 0.5 : 1.2), sim.distance);
+  Offset get _heroChest => trackCamera.project(sim.x, sim.y + (sim.sliding ? 0.5 : 1.2), sim.distance);
 
   void _handleEvent(RunEvent e) {
     if (!reduceMotion) {

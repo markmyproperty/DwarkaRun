@@ -97,16 +97,12 @@ class _UnlockOverlayState extends State<UnlockOverlay> with SingleTickerProvider
                     ),
                   ),
                 ),
-              if (after > 0 && !reduce)
-                Lottie.asset('assets/lottie/confetti.json', repeat: false, fit: BoxFit.cover),
+              if (after > 0 && !reduce) Lottie.asset('assets/lottie/confetti.json', repeat: false, fit: BoxFit.cover),
               SafeArea(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Opacity(
-                      opacity: _seg(t, 0.5, 0.7),
-                      child: RibbonTitle(l.newWorldUnlocked, size: 24),
-                    ),
+                    Opacity(opacity: _seg(t, 0.5, 0.7), child: RibbonTitle(l.newWorldUnlocked, size: 24)),
                     const SizedBox(height: 24),
                     Transform.scale(
                       scale: 0.3 + 0.7 * cardIn,
@@ -189,7 +185,11 @@ class _UnlockOverlayState extends State<UnlockOverlay> with SingleTickerProvider
                             Text(
                               widget.realm.blurb(l),
                               textAlign: TextAlign.center,
-                              style: const TextStyle(color: GameColors.textDim, fontSize: 16, fontWeight: FontWeight.w700),
+                              style: const TextStyle(
+                                color: GameColors.textDim,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ],
                         ),

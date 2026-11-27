@@ -50,7 +50,7 @@ class RunSimulation {
     this.boostSeconds = baseBoostSeconds,
     this.magnetSeconds = baseMagnetSeconds,
   }) : targetMetres = targetMetres ?? realm.targetMetres,
-      speed = gentleStart ? gentleSpeed : startSpeed {
+       speed = gentleStart ? gentleSpeed : startSpeed {
     final t = this.targetMetres;
     waterStart = realm.waterFrom == null ? double.infinity : (realm.waterFrom! * t).roundToDouble();
     bridgeStart = realm.bridgeFrom == null ? double.infinity : (realm.bridgeFrom! * t).roundToDouble();

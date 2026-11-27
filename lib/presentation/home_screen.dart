@@ -68,7 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _play(Realm realm) async {
     final scope = AppScope.read(context);
     await Navigator.of(context).push(
-      GameRoute<void>(builder: (_) => RunScreen(realm: realm), settings: const RouteSettings(name: '/run')),
+      GameRoute<void>(
+        builder: (_) => RunScreen(realm: realm),
+        settings: const RouteSettings(name: '/run'),
+      ),
     );
     if (!mounted) return;
     scope.audio.playMusic(scope.progress.selectedRealm.id);
@@ -83,7 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _openWorlds() async {
     final picked = await Navigator.of(context).push<Realm>(
-      GameRoute<Realm>(builder: (_) => const WorldsScreen(), settings: const RouteSettings(name: '/worlds')),
+      GameRoute<Realm>(
+        builder: (_) => const WorldsScreen(),
+        settings: const RouteSettings(name: '/worlds'),
+      ),
     );
     if (!mounted) return;
     if (picked != null) {
@@ -100,7 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final scope = AppScope.of(context);
     final progress = scope.progress;
     final realm = progress.selectedRealm;
-    final unlocked = [for (final r in Realm.values) if (progress.isUnlocked(r)) r];
+    final unlocked = [
+      for (final r in Realm.values)
+        if (progress.isUnlocked(r)) r,
+    ];
     final i = unlocked.indexOf(realm);
     final reduce = reduceMotionOf(context);
     // Get the selected world's art pack ready while the player is here.

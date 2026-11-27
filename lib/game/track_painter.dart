@@ -1180,19 +1180,6 @@ class TrackPainter {
     'buildings/ancient_b05',
     'buildings/ancient_b06',
   ];
-  static const _streetProps = ['props/ancient_torch', 'props/marigold_pot', 'props/golden_vase', 'props/stone_pillar'];
-  static const _streetPropWidth = [0.9, 1.3, 0.8, 0.7];
-
-  /// Monuments set well back from the street, as a backdrop. Temples and
-  /// shrines only ever appear here, never on the path.
-  static const _monuments = [
-    'monuments/dwarka_temple',
-    'monuments/royal_fort',
-    'monuments/golden_palace',
-    'monuments/temple_tower',
-    'monuments/stone_monument',
-  ];
-  static const _monumentWidth = [13.0, 26.0, 22.0, 9.0, 4.5];
 
   /// A sky image with two horizon bands (far hills, near skyline).
   bool _paintBandSky(Canvas canvas, TrackCamera cam, String skyName, String far, String near) {
@@ -1227,32 +1214,130 @@ class TrackPainter {
     }
   }
 
+  static const _cityMonuments = [
+    Piece('monuments/royal_fort', 24),
+    Piece('monuments/dwarka_temple', 13),
+    Piece('monuments/golden_palace', 20),
+    Piece('monuments/ancient_stepwell', 12),
+    Piece('monuments/temple_tower', 9),
+    Piece('monuments/royal_treasure_temple', 14),
+    Piece('monuments/stone_monument', 5),
+  ];
+  static const _cityWild = [
+    Piece('props/stone_arch', 4.5),
+    Piece('props/broken_pillar', 1.4),
+    Piece('monuments/lost_temple_ruins', 10),
+  ];
+  static const _cityKerb = [
+    Piece('props/ancient_torch', 0.9),
+    Piece('props/marigold_pot', 1.3),
+    Piece('props/golden_vase', 0.8),
+    Piece('props/stone_pillar', 0.7),
+    Piece('props/ancient_pot', 0.9),
+    Piece('props/wooden_crate', 1.1),
+  ];
+
   void _paintCityScenery(Canvas canvas, TrackCamera cam, int i) {
     final z = i * sceneryEvery;
-    final s = cam.scaleAt(z);
-    if (s <= 0) return;
+    if (cam.scaleAt(z) <= 0) return;
     for (final side in const [-1, 1]) {
-      // A monument now and then, far back from the street.
-      if ((i + (side > 0 ? 0 : 6)) % 12 == 0) {
-        final m = (i ~/ 12 + (side > 0 ? 1 : 0)) % _monuments.length;
-        final mx = side * (pathHalfWidth + 9 + _monumentWidth[m] / 2);
-        _sprite(canvas, _monuments[m], cam.sx(mx, z), cam.sy(0, z), _monumentWidth[m] * s);
-      }
-      // Shop-houses line the street.
+      _dressStreet(
+        canvas,
+        cam,
+        i,
+        z,
+        side,
+        buildings: _buildings,
+        bw: 7.2,
+        houseChance: 0.9,
+        monuments: _cityMonuments,
+        wild: _cityWild,
+        kerb: _cityKerb,
+      );
+    }
+  }
+
+  /// Dresses one side of one stretch of street, back to front: a big
+  /// monument on the skyline, wild scenery, a second row of houses, then
+  /// either a monument plaza right beside the road (every few stretches, so
+  /// the landmarks are close enough to admire) or a front row house, and
+  /// props along the kerb. Nothing is ever placed on the path itself.
+  void _dressStreet(
+    Canvas canvas,
+    TrackCamera cam,
+    int i,
+    double z,
+    int side, {
+    required List<String> buildings,
+    required double bw,
+    required double houseChance,
+    required List<Piece> monuments,
+    required List<Piece> wild,
+    required List<Piece> kerb,
+  }) {
+    final ahead = z - cam.camZ;
+    final detail = ahead < 115;
+    final slot = i + (side > 0 ? 0 : 3);
+    final plaza = monuments.isNotEmpty && slot % 6 == 0;
+    final afterPlaza = monuments.isNotEmpty && slot % 6 == 1;
+
+    // Skyline landmark, well back.
+    if (monuments.isNotEmpty && slot % 9 == 4) {
+      final m = monuments[(i ~/ 9 + (side > 0 ? 2 : 0)) % monuments.length];
+      final mz = z + 4;
+      _sprite(
+        canvas,
+        m.name,
+        cam.sx(side * (pathHalfWidth + 24 + m.width / 2), mz),
+        cam.sy(0, mz),
+        m.width * cam.scaleAt(mz),
+      );
+    }
+    // Wild scenery behind the houses.
+    final hw = _hash(i, side + 11);
+    if (wild.isNotEmpty && hw < 0.7) {
+      final p = wild[(hw * 17).floor() % wild.length];
+      final wz = z + 3.5;
+      final x = side * (pathHalfWidth + 2 + bw * 2 + p.width / 2 + _hash(i, side + 13) * 3);
+      _sprite(canvas, p.name, cam.sx(x, wz), cam.sy(0, wz), p.width * cam.scaleAt(wz));
+    }
+    // Second row of houses, staggered, so the street has depth.
+    if (!plaza && !afterPlaza && detail && _hash(i, side + 17) < 0.7) {
+      final b = buildings[(_hash(i, side + 19) * buildings.length).floor() % buildings.length];
+      final bz = z + 3.5;
+      _sprite(
+        canvas,
+        b,
+        cam.sx(side * (pathHalfWidth + 1.6 + bw * 1.5), bz),
+        cam.sy(0, bz),
+        bw * 1.05 * cam.scaleAt(bz),
+        pad: 0.04,
+      );
+    }
+    if (plaza) {
+      final m = monuments[(i ~/ 6 * 2 + (side > 0 ? 1 : 0)) % monuments.length];
+      final w = math.min(m.width, 20.0);
+      final mz = z + 2;
+      _sprite(canvas, m.name, cam.sx(side * (pathHalfWidth + 1.8 + w / 2), mz), cam.sy(0, mz), w * cam.scaleAt(mz));
+    } else if (!afterPlaza) {
       final h = _hash(i, side + 3);
-      if (h < 0.8) {
-        final b = (_hash(i, side + 5) * _buildings.length).floor() % _buildings.length;
-        final bx = side * (pathHalfWidth + 3.6);
-        if (!_sprite(canvas, _buildings[b], cam.sx(bx, z), cam.sy(0, z), 7.2 * s, pad: 0.04)) {
+      if (h < houseChance) {
+        final b = buildings[(_hash(i, side + 5) * buildings.length).floor() % buildings.length];
+        final bx = side * (pathHalfWidth + 1.0 + bw / 2);
+        if (!_sprite(canvas, b, cam.sx(bx, z), cam.sy(0, z), bw * cam.scaleAt(z), pad: 0.04)) {
           _ruin(canvas, cam, bx, z, h);
         }
       }
-      // Lamps, pots and pillars along the kerb: decoration only.
-      final hp = _hash(i, side + 9);
-      if (hp < 0.55) {
-        final p = (hp * 7).floor() % _streetProps.length;
-        final px = side * (pathHalfWidth + 0.9);
-        _sprite(canvas, _streetProps[p], cam.sx(px, z + 3), cam.sy(0, z + 3), _streetPropWidth[p] * cam.scaleAt(z + 3));
+    }
+    // Lamps, pots and pillars along the kerb: decoration only.
+    if (detail && kerb.isNotEmpty) {
+      for (final (k, off) in const [(0, 5.2), (1, 1.6)]) {
+        final hp = _hash(i * 2 + k, side + 9);
+        if (hp < 0.7) {
+          final p = kerb[(hp * 11).floor() % kerb.length];
+          final kz = z + off;
+          _sprite(canvas, p.name, cam.sx(side * (pathHalfWidth + 0.7), kz), cam.sy(0, kz), p.width * cam.scaleAt(kz));
+        }
       }
     }
   }
@@ -1273,12 +1358,12 @@ class TrackPainter {
     if (s <= 0) return;
     final gapped = z >= sim.waterStart - 4;
     for (final side in const [-1, 1]) {
-      // A monument now and then, far back.
-      if ((i + (side > 0 ? 0 : 6)) % 12 == 0) {
-        final m = st.monuments[(i ~/ 12 * 2 + (side > 0 ? 1 : 0)) % st.monuments.length];
-        _sprite(canvas, m.name, cam.sx(side * (pathHalfWidth + 12 + m.width / 2), z), cam.sy(0, z), m.width * s);
-      }
       final h = _hash(i, side + 3);
+      // Beside a gap, landmarks stand back across the water or ice.
+      if (gapped && (i + (side > 0 ? 0 : 4)) % 8 == 0) {
+        final m = st.monuments[(i ~/ 8 * 2 + (side > 0 ? 1 : 0)) % st.monuments.length];
+        _sprite(canvas, m.name, cam.sx(side * (pathHalfWidth + 9 + m.width / 2), z), cam.sy(0, z), m.width * s);
+      }
       if (z >= sim.bridgeStart && i.isEven) {
         _railPost(canvas, cam, side * (RunSimulation.laneWidth * 1.5 + 0.15), z);
       }
@@ -1291,28 +1376,19 @@ class TrackPainter {
         }
         continue;
       }
-      // Wild scenery behind the houses.
-      final hw = _hash(i, side + 11);
-      if (hw < 0.6) {
-        final p = st.wild[(hw * 17).floor() % st.wild.length];
-        final x = side * (pathHalfWidth + st.buildingWidth + 1 + p.width / 2 + _hash(i, side + 13) * 4);
-        _sprite(canvas, p.name, cam.sx(x, z + 3), cam.sy(0, z + 3), p.width * cam.scaleAt(z + 3));
-      }
-      // Houses along the path.
-      if (h < st.buildingChance) {
-        final b = st.buildings[(_hash(i, side + 5) * st.buildings.length).floor() % st.buildings.length];
-        final bx = side * (pathHalfWidth + 1.2 + st.buildingWidth / 2);
-        if (!_sprite(canvas, b, cam.sx(bx, z), cam.sy(0, z), st.buildingWidth * s, pad: 0.04)) {
-          _ruin(canvas, cam, bx, z, h);
-        }
-      }
-      // Lamps, vases and columns along the kerb: decoration only.
-      final hp = _hash(i, side + 9);
-      if (hp < 0.5) {
-        final p = st.kerb[(hp * 7).floor() % st.kerb.length];
-        final px = side * (pathHalfWidth + 0.8);
-        _sprite(canvas, p.name, cam.sx(px, z + 3), cam.sy(0, z + 3), p.width * cam.scaleAt(z + 3));
-      }
+      _dressStreet(
+        canvas,
+        cam,
+        i,
+        z,
+        side,
+        buildings: st.buildings,
+        bw: st.buildingWidth,
+        houseChance: math.max(st.buildingChance, 0.8),
+        monuments: st.monuments,
+        wild: st.wild,
+        kerb: st.kerb,
+      );
     }
   }
 

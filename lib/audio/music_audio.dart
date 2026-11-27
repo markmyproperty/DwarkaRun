@@ -11,7 +11,9 @@ import 'game_audio.dart';
 class MusicAudio extends GameAudio {
   MusicAudio({AudioPlayer? player}) : _player = player ?? AudioPlayer(playerId: 'music') {
     // Effects mix with the music instead of taking audio focus from it.
-    _guard(AudioPlayer.global.setAudioContext(AudioContextConfig(focus: AudioContextConfigFocus.mixWithOthers).build()));
+    _guard(
+      AudioPlayer.global.setAudioContext(AudioContextConfig(focus: AudioContextConfigFocus.mixWithOthers).build()),
+    );
     _guard(_player.setReleaseMode(ReleaseMode.loop));
     _guard(_player.setVolume(musicVolume));
   }
@@ -29,10 +31,8 @@ class MusicAudio extends GameAudio {
     }
   }
 
-  Future<AudioPool> _pool(Sfx s) => _pools.putIfAbsent(
-    s,
-    () => AudioPool.createFromAsset(path: s.asset, maxPlayers: s.voices, minPlayers: 1),
-  );
+  Future<AudioPool> _pool(Sfx s) =>
+      _pools.putIfAbsent(s, () => AudioPool.createFromAsset(path: s.asset, maxPlayers: s.voices, minPlayers: 1));
 
   @override
   bool get muted => _muted;

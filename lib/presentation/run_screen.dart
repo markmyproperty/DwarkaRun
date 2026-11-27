@@ -321,12 +321,8 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
 
   void _restart() {
     if (_phase == _Phase.paused) {
-      AppScope.read(context).analytics.runEnd(
-        realm: widget.realm.id,
-        reason: 'restart',
-        metres: _game.sim.metres,
-        coins: _game.sim.coins,
-      );
+      AppScope.read(context).analytics
+          .runEnd(realm: widget.realm.id, reason: 'restart', metres: _game.sim.metres, coins: _game.sim.coins);
     }
     setState(() {
       _attempt++;
@@ -458,13 +454,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
                   onDecline: () => _finishRun(finished: false),
                 ),
               if (_phase == _Phase.gameOver || _phase == _Phase.complete)
-                ResultsPanel(
-                  realm: widget.realm,
-                  result: _result,
-                  cause: _cause,
-                  onRetry: _restart,
-                  onHome: _back,
-                ),
+                ResultsPanel(realm: widget.realm, result: _result, cause: _cause, onRetry: _restart, onHome: _back),
             ],
           ),
         ),
@@ -484,7 +474,10 @@ class _Toast extends StatelessWidget {
       valueListenable: toast,
       builder: (context, text, _) => AnimatedSwitcher(
         duration: const Duration(milliseconds: 220),
-        transitionBuilder: (child, a) => ScaleTransition(scale: a, child: FadeTransition(opacity: a, child: child)),
+        transitionBuilder: (child, a) => ScaleTransition(
+          scale: a,
+          child: FadeTransition(opacity: a, child: child),
+        ),
         child: text == null
             ? const SizedBox.shrink()
             : Align(
