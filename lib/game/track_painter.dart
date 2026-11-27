@@ -187,6 +187,13 @@ class TrackPainter {
           z -= tile;
           continue;
         }
+      } else if (realm.hasMoat) {
+        if (z + tile > sim.waterStart) {
+          // The palace moat: open blue water with gentle bands.
+          _quad(canvas, cam, -40, 40, z0, z1, even ? _moat : _moatB);
+          z -= tile;
+          continue;
+        }
       } else if (realm.hasRiver) {
         // Gentle bands on the water, scrolling with the run.
         if (even) _quad(canvas, cam, -60, 60, z0, z1, _waterBand);
@@ -226,6 +233,8 @@ class TrackPainter {
   }
 
   static const Color _waterBand = Color(0x1AFFFFFF);
+  static const Color _moat = Color(0xFF6FB7CC);
+  static const Color _moatB = Color(0xFF79BFD3);
   static const Color _iceWall = Color(0xFF7FA9CF);
   static const Color _iceWallB = Color(0xFF7AA3C9);
   static const Color _iceDeep = Color(0xFF34557A);
@@ -241,6 +250,10 @@ class TrackPainter {
       final x = p.lane * RunSimulation.laneWidth;
       if (realm.hasCrevasse) {
         _paintIcePlatform(canvas, cam, x, z0, z1, p);
+        continue;
+      }
+      if (realm.hasMoat) {
+        _paintMoatPlatform(canvas, cam, x, z0, z1, p);
         continue;
       }
       switch (p.kind) {
@@ -273,6 +286,34 @@ class TrackPainter {
           _fill,
         );
       }
+    }
+  }
+
+  /// Over the palace moat: golden platforms, marble walkways and the
+  /// sandstone fortress bridge.
+  void _paintMoatPlatform(Canvas canvas, TrackCamera cam, double x, double z0, double z1, Platform p) {
+    final Color rim, top;
+    switch (p.kind) {
+      case PlatformKind.plank:
+        rim = const Color(0xFFD9AE58);
+        top = p.variant < 0.5 ? const Color(0xFFF6C9A6) : const Color(0xFFF2C09A);
+      case PlatformKind.boat:
+        rim = const Color(0xFFCDBFA8);
+        top = const Color(0xFFF7F4EE);
+      case PlatformKind.bridge:
+        rim = const Color(0xFFB8864A);
+        top = const Color(0xFFE6B67A);
+    }
+    _quad(canvas, cam, x - 1.08, x + 1.08, z0, z1, rim);
+    _quad(canvas, cam, x - 0.94, x + 0.94, z0, z1, top);
+    _seams(canvas, cam, x, 0.94, z0, z1, p.kind == PlatformKind.bridge ? 1.0 : 2.0, const Color(0x44A0703A));
+    if (p.z0 >= cam.camZ + 0.8) {
+      final s0 = cam.scaleAt(p.z0);
+      _fill.color = rim;
+      canvas.drawRect(
+        Rect.fromLTRB(cam.sx(x - 1.08, p.z0), cam.sy(0, p.z0), cam.sx(x + 1.08, p.z0), cam.sy(0, p.z0) + 0.32 * s0),
+        _fill,
+      );
     }
   }
 
@@ -782,6 +823,8 @@ class TrackPainter {
         _paintIcicles(canvas, cx, gy, s, halfW, t);
       case ObstacleKind.mandapaBeam:
         _paintMandapaBeam(canvas, cx, gy, s, halfW);
+      case ObstacleKind.flamingArrows:
+        _paintArrows(canvas, cx, gy, s, halfW, t);
       // Stand-ins for the later art packs while they load.
       case ObstacleKind.sandBoulder:
       case ObstacleKind.snowBoulder:
@@ -789,6 +832,9 @@ class TrackPainter {
         _fill.color = pal.stoneDark;
         canvas.drawCircle(Offset(cx, gy - 1.0 * s), 1.0 * s, _fill);
       case ObstacleKind.brokenColumn:
+      case ObstacleKind.bladeTrap:
+      case ObstacleKind.turretPillar:
+      case ObstacleKind.closingGate:
       case ObstacleKind.leaningPillar:
       case ObstacleKind.fallenLintel:
       case ObstacleKind.fallenRocks:
@@ -797,6 +843,8 @@ class TrackPainter {
         _fill.color = pal.stoneDark;
         canvas.drawRect(Rect.fromLTRB(cx - halfW * 0.8, gy - o.kind.height * s, cx + halfW * 0.8, gy), _fill);
       case ObstacleKind.stoneBlocks:
+      case ObstacleKind.goldenBlock:
+      case ObstacleKind.gardenPot:
       case ObstacleKind.spikeTrap:
       case ObstacleKind.sandPit:
       case ObstacleKind.collapsingTiles:
@@ -806,6 +854,29 @@ class TrackPainter {
       case ObstacleKind.graniteRubble:
         _fill.color = pal.stoneDark;
         canvas.drawRect(Rect.fromLTRB(cx - halfW, gy - o.kind.height * s, cx + halfW, gy), _fill);
+    }
+  }
+
+  /// A volley of flaming arrows flying at head height, between two golden
+  /// columns: slide under.
+  void _paintArrows(Canvas canvas, double cx, double gy, double s, double halfW, double t) {
+    final under = ObstacleKind.flamingArrows.height * s;
+    for (final side in const [-1, 1]) {
+      final px = cx + side * halfW * 1.15;
+      if (!_sprite(canvas, 'lanka/props/golden_column', px, gy, 0.62 * s)) {
+        _fill.color = const Color(0xFFD9AE58);
+        canvas.drawRect(Rect.fromLTRB(px - 0.12 * s, gy - under - 1.1 * s, px + 0.12 * s, gy), _fill);
+      }
+    }
+    final drift = reduceMotion ? 0.0 : math.sin(t * 6) * 0.04 * s;
+    if (!_sprite(canvas, ObstacleKind.flamingArrows.sprite!, cx + drift, gy - under + 0.05 * s, 2.0 * s, pad: 0.3)) {
+      _stroke
+        ..color = const Color(0xFFE8743B)
+        ..strokeWidth = math.max(1.5, 0.08 * s);
+      for (var k = 0; k < 3; k++) {
+        final y = gy - under - (0.2 + k * 0.25) * s;
+        canvas.drawLine(Offset(cx - halfW, y), Offset(cx + halfW, y - 0.1 * s), _stroke);
+      }
     }
   }
 
@@ -1230,6 +1301,8 @@ class TrackPainter {
 
     if (sim.boosting) _paintWings(canvas, cx, footY - 1.2 * s, s, sim.time);
 
+    if (_paintHeroSprite(canvas, sim, cx, footY, s)) return;
+
     if (sim.sliding && !sim.boosting) {
       _paintHeroSliding(canvas, cx, footY, s);
       return;
@@ -1312,6 +1385,51 @@ class TrackPainter {
     _fill.color = const Color(0xFF2A1A12);
     canvas.drawCircle(Offset(cx, headY - 0.02 * s), 0.16 * s, _fill);
     canvas.drawCircle(Offset(cx, headY - 0.2 * s), 0.08 * s, _fill);
+  }
+
+  static const _heroFrames = [
+    'hero/run_01',
+    'hero/run_02',
+    'hero/run_03',
+    'hero/run_04',
+    'hero/run_05',
+    'hero/run_06',
+    'hero/run_07',
+    'hero/run_08',
+    'hero/run_09',
+    'hero/run_10',
+    'hero/run_11',
+    'hero/run_12',
+    'hero/run_13',
+    'hero/run_14',
+    'hero/run_15',
+    'hero/run_16',
+  ];
+
+  /// The rendered 16-frame run cycle, when its frames are loaded. In the
+  /// air the hero holds a flight frame; sliding is the run pose crouched low.
+  bool _paintHeroSprite(Canvas canvas, RunSimulation sim, double cx, double footY, double s) {
+    final int frame;
+    if (sim.state == RunState.crashed) {
+      frame = 0;
+    } else if (sim.y > 0.05 || sim.boosting) {
+      frame = 6;
+    } else if (sim.sliding) {
+      frame = 2;
+    } else {
+      // About two strides a second, a little quicker as the run speeds up.
+      final cycles = sim.time * (1.7 + sim.speed * 0.035);
+      frame = ((cycles * 16).floor()) % 16;
+    }
+    final name = _heroFrames[frame];
+    final img = art[name];
+    if (img == null) return false;
+    final src = art.src(name)!;
+    final crouch = sim.sliding && !sim.boosting && sim.state != RunState.crashed;
+    final h = 2.0 * s * (crouch ? 0.6 : 1.0);
+    final w = 2.0 * s * src.width / src.height;
+    canvas.drawImageRect(img, src, Rect.fromLTWH(cx - w / 2, footY - h, w, h), _image);
+    return true;
   }
 
   void _paintHeroSliding(Canvas canvas, double cx, double footY, double s) {

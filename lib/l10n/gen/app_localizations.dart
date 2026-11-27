@@ -571,6 +571,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Whoosh! Down the crevasse'**
   String get gameOverCrevasse;
+
+  /// No description provided for @moatStart.
+  ///
+  /// In en, this message translates to:
+  /// **'The palace moat! Hop across the golden platforms'**
+  String get moatStart;
+
+  /// No description provided for @fortressBridgeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'The fortress bridge! Race to the citadel'**
+  String get fortressBridgeStart;
+
+  /// No description provided for @gameOverMoat.
+  ///
+  /// In en, this message translates to:
+  /// **'Splash! Into the palace moat'**
+  String get gameOverMoat;
 }
 
 class _AppLocalizationsDelegate

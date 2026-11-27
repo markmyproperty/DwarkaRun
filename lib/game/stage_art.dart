@@ -70,6 +70,7 @@ class StageArt {
     for (final p in kerb) p.name,
     for (final p in gapWild) p.name,
     ...extra,
+    if (realm == Realm.lanka) 'lanka/props/golden_column',
     for (final o in realm.obstacles)
       if (o.sprite != null) o.sprite!,
   };
@@ -77,6 +78,50 @@ class StageArt {
   static StageArt? of(Realm realm) => _byRealm[realm];
 
   static const _byRealm = {
+    Realm.lanka: StageArt(
+      sky: 'lanka/backgrounds/sky_lanka',
+      farBand: 'lanka/backgrounds/tropical_hills',
+      nearBand: 'lanka/backgrounds/skyline_lanka',
+      postcard: 'lanka/backgrounds/palace_valley_background',
+      buildings: [
+        'lanka/buildings/lanka_b01',
+        'lanka/buildings/lanka_b02',
+        'lanka/buildings/lanka_b03',
+        'lanka/buildings/lanka_b04',
+        'lanka/buildings/lanka_b05',
+        'lanka/buildings/lanka_b06',
+      ],
+      monuments: [
+        Piece('lanka/monuments/golden_palace', 24),
+        Piece('lanka/monuments/golden_tower', 7),
+        Piece('lanka/monuments/island_citadel', 22),
+        Piece('lanka/monuments/royal_pavilion', 20),
+        Piece('lanka/monuments/grand_palace_gate', 12),
+        Piece('lanka/monuments/garden_terrace', 18),
+        Piece('lanka/monuments/palace_courtyard', 22),
+        Piece('lanka/monuments/palace_stairs', 14),
+      ],
+      wild: [
+        Piece('lanka/env/palm_cluster', 4.5),
+        Piece('lanka/env/tropical_foliage', 3.6),
+        Piece('lanka/env/flowering_shrubs', 5),
+        Piece('lanka/env/garden_hedge', 6),
+        Piece('lanka/env/palace_fountain', 4.5),
+        Piece('lanka/env/palm_cluster', 5.5),
+      ],
+      kerb: [
+        Piece('lanka/props/flaming_brazier', 1.1),
+        Piece('lanka/props/golden_column', 0.8),
+        Piece('lanka/env/grass_scrub', 1.4),
+      ],
+      gapWild: [
+        Piece('lanka/env/coastal_rocks', 6),
+        Piece('lanka/monuments/water_palace', 22),
+        Piece('lanka/env/palm_cluster', 4.5),
+        Piece('lanka/monuments/fortress_bridge', 20),
+        Piece('lanka/env/coastal_rocks', 4),
+      ],
+    ),
     Realm.pharaoh: StageArt(
       sky: 'pharaoh/backgrounds/sky_egypt',
       farBand: 'pharaoh/backgrounds/desert_hills',

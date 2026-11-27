@@ -68,6 +68,7 @@ flutter:
     - assets/images/props/
     - assets/images/river/
     - assets/audio/
+    - assets/images/hero/
     - assets/images/pharaoh/backgrounds/
     - assets/images/pharaoh/buildings/
     - assets/images/pharaoh/env/
@@ -83,3 +84,8 @@ flutter:
     - assets/images/vijayanagar/env/
     - assets/images/vijayanagar/monuments/
     - assets/images/vijayanagar/props/
+    - assets/images/lanka/backgrounds/
+    - assets/images/lanka/buildings/
+    - assets/images/lanka/env/
+    - assets/images/lanka/monuments/
+    - assets/images/lanka/props/

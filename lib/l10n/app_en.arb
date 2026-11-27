@@ -181,5 +181,8 @@
   "gameOverSplash": "Splash! Into the river",
   "crevasseStart": "Ice crevasses! Keep to the ice and jump the gaps",
   "ropeBridgeStart": "The rope bridge! Run across before the wind rises",
-  "gameOverCrevasse": "Whoosh! Down the crevasse"
+  "gameOverCrevasse": "Whoosh! Down the crevasse",
+  "moatStart": "The palace moat! Hop across the golden platforms",
+  "fortressBridgeStart": "The fortress bridge! Race to the citadel",
+  "gameOverMoat": "Splash! Into the palace moat"
 }

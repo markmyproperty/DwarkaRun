@@ -277,4 +277,13 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get gameOverCrevasse => 'अरे! दरार में फिसल गए';
+
+  @override
+  String get moatStart => 'महल की खाई! सुनहरे चबूतरों पर कूदते चलो';
+
+  @override
+  String get fortressBridgeStart => 'क़िले का पुल! गढ़ तक दौड़ो';
+
+  @override
+  String get gameOverMoat => 'छपाक! महल की खाई में गिर गए';
 }

@@ -282,4 +282,13 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get gameOverCrevasse => 'Whoosh! Down the crevasse';
+
+  @override
+  String get moatStart => 'The palace moat! Hop across the golden platforms';
+
+  @override
+  String get fortressBridgeStart => 'The fortress bridge! Race to the citadel';
+
+  @override
+  String get gameOverMoat => 'Splash! Into the palace moat';
 }

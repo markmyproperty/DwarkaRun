@@ -77,5 +77,8 @@
   "gameOverSplash": "छपाक! नदी में गिर गए",
   "crevasseStart": "बर्फ़ की दरारें! बर्फ़ पर रहो और दरारें कूदो",
   "ropeBridgeStart": "रस्सी का पुल! हवा तेज़ होने से पहले पार करो",
-  "gameOverCrevasse": "अरे! दरार में फिसल गए"
+  "gameOverCrevasse": "अरे! दरार में फिसल गए",
+  "moatStart": "महल की खाई! सुनहरे चबूतरों पर कूदते चलो",
+  "fortressBridgeStart": "क़िले का पुल! गढ़ तक दौड़ो",
+  "gameOverMoat": "छपाक! महल की खाई में गिर गए"
 }

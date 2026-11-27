@@ -30,6 +30,18 @@ Supplied by the project owner as one zip per stage (stage 03, 04 and 05), in the
 
 Licence: owned by the project, as for the first pack. Temples, shrines, stupas, the stone chariot and the sacred relics are never obstacles. The guardians and relics in these packs are kept for the guardian chases and relic hunt in a later version.
 
+## Lanka Run art pack (stage 07)
+
+Supplied by the project owner, same style and terms. The pack's notes say it is a palace-and-fortress stage with no deities or sacred figures, empty niches, and lotus only as ornament. In `assets/images/lanka/`.
+
+- Obstacles: golden block, garden pot, flaming arrows between golden columns (slide), the fortress blade trap, a collapsing turret pillar and the closing palace gate.
+- Backdrop only: golden palace, tower, citadel, pavilion, terrace, courtyard, palace stairs, water palace and fortress bridge, island houses, palms and gardens. Braziers are palace lights on the kerb.
+- Kept for later: the palace sentinel guardian, the sun-jewel relic and the treasure chest.
+
+## Hero run cycle
+
+`assets/images/hero/run_01` to `run_16`: a 16-frame run cycle of an original crowned king, supplied by the project owner. Its notes say it was modelled, rigged and rendered from scratch in Blender 4.2 (GPL; rendered images carry no licence restriction), with no third-party model, rig, animation or texture. Cropped and converted to WebP. The code-drawn traveller remains as the stand-in while the frames load.
+
 ## Code-drawn art
 
 These parts are original and drawn in code by this project, with no image files:

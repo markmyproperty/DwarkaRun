@@ -41,11 +41,13 @@ class ProgressRepository extends ChangeNotifier {
   }
 
   /// The realm the Play button starts: the next one if this build can run
-  /// it, otherwise the latest playable realm.
+  /// it, otherwise the latest playable realm before it. The route is never
+  /// skipped, so a stage still waiting for its art holds the player back.
   Realm get playRealm {
     final next = nextRealm;
     if (next != null && next.playable) return next;
-    return Realm.values.lastWhere((r) => r.playable);
+    final upTo = next?.index ?? Realm.values.length;
+    return Realm.values.take(upTo).lastWhere((r) => r.playable, orElse: () => Realm.values.first);
   }
 
   bool get yatraComplete => nextRealm == null;

@@ -18,7 +18,7 @@ class ArtLibrary {
 
   /// Every image the game uses, by path under `assets/images/` without the
   /// `.webp` extension.
-  static const names = [
+  static final names = [
     'backgrounds/sky_india',
     'backgrounds/skyline_dwarka',
     'backgrounds/temple_hills',
@@ -50,6 +50,7 @@ class ArtLibrary {
     'river/sea_pillar',
     'river/water_splash',
     'river/coastal_lamp',
+    for (var i = 1; i <= 16; i++) 'hero/run_${i.toString().padLeft(2, '0')}',
   ];
 
   final Map<String, ui.Image> _images = {};

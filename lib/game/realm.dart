@@ -34,8 +34,9 @@ class RealmPalette {
   final Color stoneDark;
 }
 
-/// What the gaps in a gapped stretch are: open water or an ice crevasse.
-enum GapStyle { river, crevasse }
+/// What the gaps in a gapped stretch are: a river, an ice crevasse or a
+/// palace moat.
+enum GapStyle { river, crevasse, moat }
 
 /// One stage of the adventure. The order of the values is the final stage
 /// order from the master brief; do not reorder.
@@ -206,21 +207,31 @@ enum Realm {
   ),
   lanka(
     id: 'lanka',
-    targetMetres: 1800,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    targetMetres: 1700,
+    playable: true,
+    waterFrom: 0.45,
+    bridgeFrom: 0.84,
+    gapStyle: GapStyle.moat,
+    obstacles: [
+      ObstacleKind.goldenBlock,
+      ObstacleKind.flamingArrows,
+      ObstacleKind.gardenPot,
+      ObstacleKind.bladeTrap,
+      ObstacleKind.turretPillar,
+      ObstacleKind.closingGate,
+    ],
     palette: RealmPalette(
-      skyTop: Color(0xFF6FC1E0),
-      skyBottom: Color(0xFFFCE7B0),
-      haze: Color(0xFFFBE2B8),
-      ground: Color(0xFF6FAF6A),
-      groundFar: Color(0xFF8CC47E),
-      pathA: Color(0xFFF2C94C),
-      pathB: Color(0xFFE5B83A),
-      pathEdge: Color(0xFFC7952A),
-      foliageDark: Color(0xFF2F7A4A),
-      foliageLight: Color(0xFF5BAF6A),
-      stone: Color(0xFFF7E3A8),
+      skyTop: Color(0xFF9FD3F0),
+      skyBottom: Color(0xFFFCE7C4),
+      haze: Color(0xFFFBE6C8),
+      ground: Color(0xFF9CCB8E),
+      groundFar: Color(0xFFB8DBA8),
+      pathA: Color(0xFFF2DDB4),
+      pathB: Color(0xFFE9CFA0),
+      pathEdge: Color(0xFFD9AE58),
+      foliageDark: Color(0xFF3F8A6A),
+      foliageLight: Color(0xFF8FCFA0),
+      stone: Color(0xFFF2DDB4),
       stoneDark: Color(0xFFD9AE58),
     ),
   ),
@@ -322,6 +333,8 @@ enum Realm {
   bool get hasRiver => waterFrom != null;
 
   bool get hasCrevasse => hasRiver && gapStyle == GapStyle.crevasse;
+
+  bool get hasMoat => hasRiver && gapStyle == GapStyle.moat;
 
   /// Metres at which open water starts (infinity on dry land).
   double get waterStart => waterFrom == null ? double.infinity : (waterFrom! * targetMetres).roundToDouble();

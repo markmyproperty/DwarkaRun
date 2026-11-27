@@ -86,7 +86,21 @@ enum ObstacleKind {
   oxCart(Clearance.lane, height: 1.6, depth: 2.0, sprite: 'vijayanagar/props/wooden_cart', spriteWidth: 2.6),
   bazaarPot(Clearance.jump, height: 0.9, depth: 0.9, sprite: 'vijayanagar/props/bazaar_pot', spriteWidth: 1.3),
   graniteRubble(Clearance.jump, height: 0.7, depth: 1.2, sprite: 'props/stone_debris', spriteWidth: 2.0),
-  mandapaBeam(Clearance.slide, height: 1.1, depth: 0.5, sprite: 'vijayanagar/props/stone_column');
+  mandapaBeam(Clearance.slide, height: 1.1, depth: 0.5, sprite: 'vijayanagar/props/stone_column'),
+
+  // Lanka Run: a golden palace-fortress. No sacred figures anywhere.
+  goldenBlock(Clearance.jump, height: 0.6, depth: 1.0, sprite: 'lanka/props/golden_block', spriteWidth: 2.2),
+  gardenPot(Clearance.jump, height: 0.9, depth: 0.9, sprite: 'lanka/props/garden_pot', spriteWidth: 1.4),
+  flamingArrows(Clearance.slide, height: 1.1, depth: 0.5, sprite: 'lanka/props/flaming_arrows'),
+  bladeTrap(Clearance.lane, height: 2.0, depth: 1.2, sprite: 'lanka/props/rotating_blades', spriteWidth: 2.3),
+  turretPillar(
+    Clearance.lane,
+    height: 2.8,
+    depth: 1.0,
+    sprite: 'lanka/props/collapsing_palace_pillar',
+    spriteWidth: 1.6,
+  ),
+  closingGate(Clearance.lane, height: 2.6, depth: 0.8, sprite: 'lanka/props/closing_golden_gate', spriteWidth: 2.5);
 
   const ObstacleKind(
     this.clearance, {

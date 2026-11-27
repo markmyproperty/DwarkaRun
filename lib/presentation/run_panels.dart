@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../game/dwarka_run_game.dart';
+import '../game/realm.dart';
 import '../game/run_simulation.dart';
 import '../l10n/gen/app_localizations.dart';
 import 'dr_theme.dart';
@@ -162,7 +163,7 @@ class GameOverPanel extends StatelessWidget {
     required this.onRetry,
     required this.onBack,
     this.splash = false,
-    this.crevasse = false,
+    this.gapStyle = GapStyle.river,
   });
 
   final int score;
@@ -172,8 +173,8 @@ class GameOverPanel extends StatelessWidget {
   /// The run ended in the river.
   final bool splash;
 
-  /// The fall was into an ice crevasse, not a river.
-  final bool crevasse;
+  /// What the hero fell into, when [splash] is set.
+  final GapStyle gapStyle;
   final VoidCallback onRetry;
   final VoidCallback onBack;
 
@@ -186,7 +187,15 @@ class GameOverPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Title(splash ? (crevasse ? l.gameOverCrevasse : l.gameOverSplash) : l.gameOverTitle),
+          _Title(
+            splash
+                ? switch (gapStyle) {
+                    GapStyle.river => l.gameOverSplash,
+                    GapStyle.crevasse => l.gameOverCrevasse,
+                    GapStyle.moat => l.gameOverMoat,
+                  }
+                : l.gameOverTitle,
+          ),
           if (newBest) ...[
             const SizedBox(height: 8),
             Text(

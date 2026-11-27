@@ -127,9 +127,17 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
       case RunEvent.lotus:
         _showToast(l.lotusGot);
       case RunEvent.riverStart:
-        _showToast(widget.realm.hasCrevasse ? l.crevasseStart : l.riverStart);
+        _showToast(switch (widget.realm.gapStyle) {
+          GapStyle.river => l.riverStart,
+          GapStyle.crevasse => l.crevasseStart,
+          GapStyle.moat => l.moatStart,
+        });
       case RunEvent.bridgeStart:
-        _showToast(widget.realm.hasCrevasse ? l.ropeBridgeStart : l.bridgeStart);
+        _showToast(switch (widget.realm.gapStyle) {
+          GapStyle.river => l.bridgeStart,
+          GapStyle.crevasse => l.ropeBridgeStart,
+          GapStyle.moat => l.fortressBridgeStart,
+        });
       case RunEvent.crash:
         HapticFeedback.heavyImpact();
       default:
@@ -300,7 +308,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
                   coins: _game.sim.coins,
                   newBest: _newBest,
                   splash: _game.sim.fellInWater,
-                  crevasse: widget.realm.hasCrevasse,
+                  gapStyle: widget.realm.gapStyle,
                   onRetry: _restart,
                   onBack: _back,
                 ),
