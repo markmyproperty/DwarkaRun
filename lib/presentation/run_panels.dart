@@ -16,7 +16,7 @@ class _PanelFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-    color: const Color(0x992B1A4A),
+    color: const Color(0x991E3A5F),
     child: SafeArea(
       child: Center(
         child: SingleChildScrollView(

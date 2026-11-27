@@ -3,18 +3,20 @@ import 'package:material_ui/material_ui.dart';
 import '../game/realm.dart';
 import '../l10n/gen/app_localizations.dart';
 
-/// Dwarka Run's own look: deep indigo, saffron, peacock teal and warm cream.
+/// The menus' Ukiyo-e woodblock look: washi paper, Prussian-blue ink,
+/// vermilion seals, ochre and sumi-black outlines. The stages keep their own
+/// art; only the hub, panels and buttons wear this style.
 class DrColors {
-  static const indigo = Color(0xFF2B1A4A);
-  static const indigoSoft = Color(0xFF4A3478);
-  static const saffron = Color(0xFFF29E38);
-  static const teal = Color(0xFF1F8A8A);
-  static const gold = Color(0xFFF5C542);
-  static const cream = Color(0xFFFFF4E0);
-  static const sand = Color(0xFFF6E7CC);
-  static const ink = Color(0xFF2A1E3A);
-  static const inkMuted = Color(0xFF6E6380);
-  static const done = Color(0xFF2E8B57);
+  static const indigo = Color(0xFF1E3A5F); // Prussian blue (bero-ai)
+  static const indigoSoft = Color(0xFF2F5680);
+  static const saffron = Color(0xFFC8402F); // vermilion
+  static const teal = Color(0xFF3F7F78);
+  static const gold = Color(0xFFD9A441); // ochre
+  static const cream = Color(0xFFF7EEDC); // washi paper
+  static const sand = Color(0xFFEDE0C4);
+  static const ink = Color(0xFF1C1A17); // sumi
+  static const inkMuted = Color(0xFF5E5547);
+  static const done = Color(0xFF4F7A4A);
 }
 
 ThemeData buildDrTheme() {
@@ -28,16 +30,78 @@ ThemeData buildDrTheme() {
     colorScheme: scheme,
     scaffoldBackgroundColor: DrColors.sand,
     useMaterial3: true,
-    textTheme: Typography.blackMountainView.apply(bodyColor: DrColors.ink, displayColor: DrColors.ink),
+    fontFamily: 'serif',
+    textTheme: Typography.blackMountainView.apply(
+      bodyColor: DrColors.ink,
+      displayColor: DrColors.ink,
+      fontFamily: 'serif',
+    ),
   );
 }
 
-/// Shared card decoration.
+/// Shared card: a paper panel with a sumi outline and a flat, offset
+/// "print" shadow instead of a soft blur.
 BoxDecoration drCard({Color color = DrColors.cream}) => BoxDecoration(
   color: color,
-  borderRadius: BorderRadius.circular(20),
-  boxShadow: const [BoxShadow(color: Color(0x222B1A4A), blurRadius: 16, offset: Offset(0, 6))],
+  borderRadius: BorderRadius.circular(8),
+  border: Border.all(color: DrColors.ink, width: 1.6),
+  boxShadow: const [BoxShadow(color: Color(0x401E3A5F), offset: Offset(4, 4))],
 );
+
+/// Washi paper with a vermilion sun and bands of seigaiha waves, behind the
+/// hub. Drawn in code, so there is nothing to load.
+class WoodblockBackground extends StatelessWidget {
+  const WoodblockBackground({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => CustomPaint(painter: _WoodblockPainter(), child: child);
+}
+
+class _WoodblockPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()..isAntiAlias = true;
+    canvas.drawRect(Offset.zero & size, p..color = DrColors.sand);
+    // Faint paper fibres.
+    p
+      ..color = const Color(0x14806A40)
+      ..strokeWidth = 1;
+    for (var i = 0; i < 90; i++) {
+      final y = (i * 97.0) % size.height;
+      final x = (i * 211.0) % size.width;
+      canvas.drawLine(Offset(x, y), Offset(x + 18 + (i % 5) * 6, y + (i % 3) - 1), p);
+    }
+    // The rising sun.
+    final sun = Offset(size.width * 0.86, 120);
+    canvas.drawCircle(sun, 74, p..color = const Color(0x22C8402F));
+    canvas.drawCircle(sun, 52, p..color = const Color(0x55C8402F));
+    // Seigaiha waves along the bottom.
+    const r = 26.0;
+    final stroke = Paint()
+      ..isAntiAlias = true
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6;
+    final fill = Paint()..isAntiAlias = true;
+    var row = 0;
+    for (var y = size.height - 40; y < size.height + r; y += r * 0.55, row++) {
+      final shift = row.isOdd ? r : 0.0;
+      for (var x = -r + shift; x < size.width + r; x += r * 2) {
+        final c = Offset(x, y);
+        fill.color = row.isEven ? const Color(0xFF2F5680) : const Color(0xFF1E3A5F);
+        canvas.drawCircle(c, r, fill);
+        stroke.color = const Color(0xCCF7EEDC);
+        for (final k in const [0.78, 0.56, 0.34]) {
+          canvas.drawCircle(c, r * k, stroke);
+        }
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
 
 /// Whether the player asked for less motion (system setting).
 bool reduceMotionOf(BuildContext context) => MediaQuery.maybeDisableAnimationsOf(context) ?? false;
@@ -96,8 +160,8 @@ class DrButton extends StatelessWidget {
             foregroundColor: fg,
             minimumSize: const Size(120, 56),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(28),
-              side: primary ? BorderSide.none : const BorderSide(color: DrColors.indigo, width: 2),
+              borderRadius: BorderRadius.circular(10),
+              side: const BorderSide(color: DrColors.ink, width: 2),
             ),
             textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
           ),

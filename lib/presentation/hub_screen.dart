@@ -58,57 +58,60 @@ class _HubScreenState extends State<HubScreen> {
     final shown = next ?? playRealm;
 
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 640),
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-              children: [
-                _Header(
-                  muted: progress.muted,
-                  onToggleSound: () {
-                    final muted = !progress.muted;
-                    progress.setMuted(muted);
-                    scope.audio.muted = muted;
-                  },
-                ),
-                const SizedBox(height: 14),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _StatCard(
-                        key: const Key('hub.wallet'),
-                        label: l.walletLabel,
-                        value: l.mudraCount(progress.wallet),
-                        icon: const CoinIcon(size: 24),
+      backgroundColor: DrColors.sand,
+      body: WoodblockBackground(
+        child: SafeArea(
+          bottom: false,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 640),
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+                children: [
+                  _Header(
+                    muted: progress.muted,
+                    onToggleSound: () {
+                      final muted = !progress.muted;
+                      progress.setMuted(muted);
+                      scope.audio.muted = muted;
+                    },
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _StatCard(
+                          key: const Key('hub.wallet'),
+                          label: l.walletLabel,
+                          value: l.mudraCount(progress.wallet),
+                          icon: const CoinIcon(size: 24),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _StatCard(
-                        key: const Key('hub.best'),
-                        label: l.bestLabel,
-                        value: l.metresValue(progress.bestMetres),
-                        icon: const Icon(Icons.emoji_events_rounded, color: DrColors.saffron),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _StatCard(
+                          key: const Key('hub.best'),
+                          label: l.bestLabel,
+                          value: l.metresValue(progress.bestMetres),
+                          icon: const Icon(Icons.emoji_events_rounded, color: DrColors.saffron),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                _NextStopCard(
-                  realm: shown,
-                  playRealm: playRealm,
-                  playLabel: playLabel,
-                  comingSoon: next != null && !next.playable,
-                  onPlay: () => _play(playRealm),
-                ),
-                const SizedBox(height: 14),
-                _RouteCard(done: progress.realmsDone),
-                const SizedBox(height: 14),
-                const _HowToCard(),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  _NextStopCard(
+                    realm: shown,
+                    playRealm: playRealm,
+                    playLabel: playLabel,
+                    comingSoon: next != null && !next.playable,
+                    onPlay: () => _play(playRealm),
+                  ),
+                  const SizedBox(height: 14),
+                  _RouteCard(done: progress.realmsDone),
+                  const SizedBox(height: 14),
+                  const _HowToCard(),
+                ],
+              ),
             ),
           ),
         ),
