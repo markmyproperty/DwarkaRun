@@ -1,10 +1,10 @@
-# Dwarka Run
+# Odyssey of the Ages
 
-An original, 3D-feel endless runner built with Flutter and Flame. A young traveller sets out on a quest through ten legendary worlds inspired by ancient India, other ancient civilisations and fantasy.
+An original, 3D-feel endless runner built with Flutter and Flame (formerly "Dwarka Run"). A crowned hero runs through legendary worlds inspired by ancient India, other ancient civilisations and fantasy. The game comes in seasons; Season 1 is **Jambudvīpa**.
 
 It runs on Android, iOS and the web from one codebase, with no backend. Progress is saved on the device.
 
-## The ten stages
+## Season 1: Jambudvīpa, ten stages
 
 The order is final (see the master brief):
 
@@ -97,6 +97,6 @@ lib/
 
 ## Respect for the source material
 
-Dwarka Run draws on broad themes of ancient India. Deities never appear as obstacles or enemies, and are never hit or mocked. They may only appear as benevolent background presences, such as a wayside shrine. The hero is an original young traveller. No religious symbol is placed on anything that gets hit, smashed or stepped on.
+Dwarka Run draws on broad themes of ancient India. Deities never appear as obstacles or enemies, and are never hit or mocked. They may only appear as benevolent background presences, such as a wayside shrine. The hero is an original crowned king (confirmed as not a deity), with the code-drawn young traveller as a stand-in while his frames load. No religious symbol is placed on anything that gets hit, smashed or stepped on.
 
 All art, characters and names are original. See [CREDITS.md](CREDITS.md).

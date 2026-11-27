@@ -1,11 +1,11 @@
 {
-    "name": "Dwarka Run",
-    "short_name": "Dwarka Run",
+    "name": "Odyssey of the Ages",
+    "short_name": "Odyssey",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#2B1A4A",
     "theme_color": "#2B1A4A",
-    "description": "An original endless runner on a yatra through ancient Indian realms.",
+    "description": "An original endless runner through legendary worlds.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

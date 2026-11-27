@@ -1,5 +1,5 @@
 name: dwarka_run
-description: "Dwarka Run - an original 3D-feel endless runner on a yatra through ancient Indian realms."
+description: "Odyssey of the Ages - an original 3D-feel endless runner through legendary worlds."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -69,6 +69,7 @@ flutter:
     - assets/images/river/
     - assets/audio/
     - assets/images/hero/
+    - assets/images/brand/
     - assets/images/pharaoh/backgrounds/
     - assets/images/pharaoh/buildings/
     - assets/images/pharaoh/env/

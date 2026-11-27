@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "Dwarka Run",
+  "appTitle": "Odyssey of the Ages",
   "hubTagline": "A quest through ten legendary worlds",
   "hubNextStop": "NEXT STOP",
   "hubStartYatra": "Start the adventure",
@@ -184,5 +184,9 @@
   "gameOverCrevasse": "Whoosh! Down the crevasse",
   "moatStart": "The palace moat! Hop across the golden platforms",
   "fortressBridgeStart": "The fortress bridge! Race to the citadel",
-  "gameOverMoat": "Splash! Into the palace moat"
+  "gameOverMoat": "Splash! Into the palace moat",
+  "seasonLabel": "Season {number}",
+  "seasonJambudvipa": "Jambudvīpa",
+  "seasonJambudvipaBlurb": "Ten legendary worlds, from Ayodhya to the sunken city of Dwarka",
+  "@seasonLabel": {"placeholders": {"number": {"type": "int"}}}
 }

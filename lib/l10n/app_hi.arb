@@ -1,6 +1,6 @@
 {
   "@@locale": "hi",
-  "appTitle": "द्वारका रन",
+  "appTitle": "युगों की यात्रा",
   "hubTagline": "दस महान लोकों की खोज-यात्रा",
   "hubNextStop": "अगला पड़ाव",
   "hubStartYatra": "साहसिक यात्रा शुरू करें",
@@ -80,5 +80,8 @@
   "gameOverCrevasse": "अरे! दरार में फिसल गए",
   "moatStart": "महल की खाई! सुनहरे चबूतरों पर कूदते चलो",
   "fortressBridgeStart": "क़िले का पुल! गढ़ तक दौड़ो",
-  "gameOverMoat": "छपाक! महल की खाई में गिर गए"
+  "gameOverMoat": "छपाक! महल की खाई में गिर गए",
+  "seasonLabel": "सीज़न {number}",
+  "seasonJambudvipa": "जम्बूद्वीप",
+  "seasonJambudvipaBlurb": "अयोध्या से डूबी द्वारका तक, दस महान लोक"
 }

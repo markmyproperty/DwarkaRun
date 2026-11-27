@@ -9,7 +9,8 @@ void main() {
     await tester.pumpWidget(s.app());
     await tester.pump();
 
-    expect(find.text('Dwarka Run'), findsOneWidget);
+    expect(find.text('Odyssey of the Ages'), findsOneWidget);
+    expect(find.byKey(const Key('hub.logo')), findsOneWidget);
     expect(find.byKey(const Key('hub.nextStop')), findsOneWidget);
     expect(find.text('Ayodhya Run'), findsWidgets);
     expect(find.text('Start the adventure'), findsOneWidget);
@@ -27,6 +28,7 @@ void main() {
       'sunken',
       'finale',
     ]) {
+      await tester.scrollUntilVisible(find.byKey(Key('play.route.$id.todo')), 120);
       expect(find.byKey(Key('play.route.$id.todo')), findsOneWidget, reason: id);
     }
     await tester.scrollUntilVisible(find.byKey(const Key('play.howto')), 200);
@@ -89,7 +91,7 @@ void main() {
     final s = await TestServices.create();
     await tester.pumpWidget(s.app(locale: const Locale('hi')));
     await tester.pump();
-    expect(find.text('द्वारका रन'), findsOneWidget);
+    expect(find.text('युगों की यात्रा'), findsOneWidget);
     expect(find.text('साहसिक यात्रा शुरू करें'), findsOneWidget);
   });
 

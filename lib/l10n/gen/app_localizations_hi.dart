@@ -10,7 +10,7 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get appTitle => 'द्वारका रन';
+  String get appTitle => 'युगों की यात्रा';
 
   @override
   String get hubTagline => 'दस महान लोकों की खोज-यात्रा';
@@ -92,19 +92,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get howToSlide => 'फिसलने के लिए नीचे स्वाइप करें';
 
   @override
-  String get howToKeys =>
-      'कीबोर्ड पर: तीर कुंजियाँ या WASD, और बूस्ट के लिए स्पेस';
+  String get howToKeys => 'कीबोर्ड पर: तीर कुंजियाँ या WASD, और बूस्ट के लिए स्पेस';
 
   @override
-  String get howToBoost =>
-      'गरुड़ पंख इकट्ठा करें, फिर सब कुछ पार उड़ने के लिए उसे टैप करें';
+  String get howToBoost => 'गरुड़ पंख इकट्ठा करें, फिर सब कुछ पार उड़ने के लिए उसे टैप करें';
 
   @override
   String get howToLotus => 'कमल ताबीज़ पास की मुद्राएँ आपकी ओर खींचता है';
 
   @override
-  String get howToMonkey =>
-      'शरारती बंदर कुछ मुद्राएँ छीन लेते हैं। उनके ऊपर से कूदें!';
+  String get howToMonkey => 'शरारती बंदर कुछ मुद्राएँ छीन लेते हैं। उनके ऊपर से कूदें!';
 
   @override
   String get soundOn => 'आवाज़ चालू';
@@ -155,12 +152,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get realmHimalayanBlurb => 'बर्फ़ीले दर्रे, रस्सी के पुल और मठ';
 
   @override
-  String get realmVijayanagarBlurb =>
-      'पत्थर के रथ, बाज़ार और शिलाओं वाली पहाड़ियाँ';
+  String get realmVijayanagarBlurb => 'पत्थर के रथ, बाज़ार और शिलाओं वाली पहाड़ियाँ';
 
   @override
-  String get realmDragonValleyBlurb =>
-      'ज्वालामुखी, लावा गुफाएँ और ड्रैगन के किले';
+  String get realmDragonValleyBlurb => 'ज्वालामुखी, लावा गुफाएँ और ड्रैगन के किले';
 
   @override
   String get realmLankaBlurb => 'महलों और बागों वाला एक स्वर्णिम द्वीप राज्य';
@@ -228,8 +223,7 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get realmCompleteBody =>
-      'आप लोक के दूसरे छोर तक पहुँच गए। आपकी मुद्राएँ बटुए में सुरक्षित हैं।';
+  String get realmCompleteBody => 'आप लोक के दूसरे छोर तक पहुँच गए। आपकी मुद्राएँ बटुए में सुरक्षित हैं।';
 
   @override
   String get continueLabel => 'आगे बढ़ें';
@@ -260,8 +254,7 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get riverStart =>
-      'खुला पानी! नावों और तख्तों के बीच की दूरी कूदकर पार करें';
+  String get riverStart => 'खुला पानी! नावों और तख्तों के बीच की दूरी कूदकर पार करें';
 
   @override
   String get bridgeStart => 'धारा तेज़ हो रही है! पुल पर दौड़ लगाएँ';
@@ -286,4 +279,15 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get gameOverMoat => 'छपाक! महल की खाई में गिर गए';
+
+  @override
+  String seasonLabel(int number) {
+    return 'सीज़न $number';
+  }
+
+  @override
+  String get seasonJambudvipa => 'जम्बूद्वीप';
+
+  @override
+  String get seasonJambudvipaBlurb => 'अयोध्या से डूबी द्वारका तक, दस महान लोक';
 }

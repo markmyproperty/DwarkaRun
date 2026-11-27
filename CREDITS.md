@@ -1,6 +1,6 @@
 # Credits
 
-Every asset in Dwarka Run is either original or properly licensed. This file lists them all.
+Every asset in Odyssey of the Ages (formerly Dwarka Run) is either original or properly licensed. This file lists them all.
 
 ## Art pack: "Dwarka Run: India / Ancient Dwarka"
 
@@ -37,6 +37,10 @@ Supplied by the project owner, same style and terms. The pack's notes say it is 
 - Obstacles: golden block, garden pot, flaming arrows between golden columns (slide), the fortress blade trap, a collapsing turret pillar and the closing palace gate.
 - Backdrop only: golden palace, tower, citadel, pavilion, terrace, courtyard, palace stairs, water palace and fortress bridge, island houses, palms and gardens. Braziers are palace lights on the kerb.
 - Kept for later: the palace sentinel guardian, the sun-jewel relic and the treasure chest.
+
+## Logo
+
+`assets/images/brand/logo.webp`, the Android, iOS and web app icons: the "Odyssey of the Ages" logo, supplied by the project owner. Resized only (corners rounded for Android and the web).
 
 ## Hero run cycle
 

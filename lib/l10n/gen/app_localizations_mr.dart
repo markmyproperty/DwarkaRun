@@ -10,7 +10,7 @@ class AppLocalizationsMr extends AppLocalizations {
   AppLocalizationsMr([String locale = 'mr']) : super(locale);
 
   @override
-  String get appTitle => 'Dwarka Run';
+  String get appTitle => 'Odyssey of the Ages';
 
   @override
   String get hubTagline => 'A quest through ten legendary worlds';
@@ -92,19 +92,16 @@ class AppLocalizationsMr extends AppLocalizations {
   String get howToSlide => 'Swipe down to slide';
 
   @override
-  String get howToKeys =>
-      'On a keyboard: arrow keys or WASD, and space for a boost';
+  String get howToKeys => 'On a keyboard: arrow keys or WASD, and space for a boost';
 
   @override
-  String get howToBoost =>
-      'Collect a Garuda feather, then tap it to fly over everything';
+  String get howToBoost => 'Collect a Garuda feather, then tap it to fly over everything';
 
   @override
   String get howToLotus => 'A Lotus charm pulls nearby mudra towards you';
 
   @override
-  String get howToMonkey =>
-      'Cheeky monkeys snatch a few mudra. Jump over them!';
+  String get howToMonkey => 'Cheeky monkeys snatch a few mudra. Jump over them!';
 
   @override
   String get soundOn => 'Sound on';
@@ -143,8 +140,7 @@ class AppLocalizationsMr extends AppLocalizations {
   String get realmFinalLegend => 'Dwarka Run: The Final Legend';
 
   @override
-  String get realmAyodhyaBlurb =>
-      'Temples, royal courtyards and market streets';
+  String get realmAyodhyaBlurb => 'Temples, royal courtyards and market streets';
 
   @override
   String get realmGangaBlurb => 'Riverside ghats, boats and floating platforms';
@@ -153,20 +149,16 @@ class AppLocalizationsMr extends AppLocalizations {
   String get realmPharaohBlurb => 'Pyramids, dunes and hidden tombs';
 
   @override
-  String get realmHimalayanBlurb =>
-      'Snowy passes, rope bridges and monasteries';
+  String get realmHimalayanBlurb => 'Snowy passes, rope bridges and monasteries';
 
   @override
-  String get realmVijayanagarBlurb =>
-      'Stone chariots, bazaars and boulder hills';
+  String get realmVijayanagarBlurb => 'Stone chariots, bazaars and boulder hills';
 
   @override
-  String get realmDragonValleyBlurb =>
-      'Volcanoes, lava caves and dragon fortresses';
+  String get realmDragonValleyBlurb => 'Volcanoes, lava caves and dragon fortresses';
 
   @override
-  String get realmLankaBlurb =>
-      'A golden island kingdom of palaces and gardens';
+  String get realmLankaBlurb => 'A golden island kingdom of palaces and gardens';
 
   @override
   String get realmIndusBlurb => 'Brick cities, granaries and water channels';
@@ -175,8 +167,7 @@ class AppLocalizationsMr extends AppLocalizations {
   String get realmSunkenDwarkaBlurb => 'Ocean temples and submerged palaces';
 
   @override
-  String get realmFinalLegendBlurb =>
-      'The golden city and the final relic chamber';
+  String get realmFinalLegendBlurb => 'The golden city and the final relic chamber';
 
   @override
   String hudCoins(int count) {
@@ -232,8 +223,7 @@ class AppLocalizationsMr extends AppLocalizations {
   }
 
   @override
-  String get realmCompleteBody =>
-      'You reached the far side of the realm. Your mudra are safe in your wallet.';
+  String get realmCompleteBody => 'You reached the far side of the realm. Your mudra are safe in your wallet.';
 
   @override
   String get continueLabel => 'Continue';
@@ -273,12 +263,10 @@ class AppLocalizationsMr extends AppLocalizations {
   String get gameOverSplash => 'Splash! Into the river';
 
   @override
-  String get crevasseStart =>
-      'Ice crevasses! Keep to the ice and jump the gaps';
+  String get crevasseStart => 'Ice crevasses! Keep to the ice and jump the gaps';
 
   @override
-  String get ropeBridgeStart =>
-      'The rope bridge! Run across before the wind rises';
+  String get ropeBridgeStart => 'The rope bridge! Run across before the wind rises';
 
   @override
   String get gameOverCrevasse => 'Whoosh! Down the crevasse';
@@ -291,4 +279,15 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get gameOverMoat => 'Splash! Into the palace moat';
+
+  @override
+  String seasonLabel(int number) {
+    return 'Season $number';
+  }
+
+  @override
+  String get seasonJambudvipa => 'Jambudvīpa';
+
+  @override
+  String get seasonJambudvipaBlurb => 'Ten legendary worlds, from Ayodhya to the sunken city of Dwarka';
 }

@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../app_scope.dart';
 import '../game/art_library.dart';
 import '../game/realm.dart';
+import '../game/season.dart';
 import '../l10n/gen/app_localizations.dart';
 import 'dr_theme.dart';
 import 'pickup_icons.dart';
@@ -127,6 +128,16 @@ class _Header extends StatelessWidget {
     final l = AppLocalizations.of(context);
     return Row(
       children: [
+        ExcludeSemantics(
+          child: Image.asset(
+            'assets/images/brand/logo.webp',
+            key: const Key('hub.logo'),
+            width: 64,
+            height: 64,
+            errorBuilder: (_, _, _) => const SizedBox(width: 64, height: 64),
+          ),
+        ),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +147,7 @@ class _Header extends StatelessWidget {
                 child: Text(
                   l.appTitle,
                   style: const TextStyle(
-                    fontSize: 32,
+                    fontSize: 26,
                     fontWeight: FontWeight.w900,
                     color: DrColors.indigo,
                     letterSpacing: 0.5,
@@ -330,13 +341,26 @@ class _RouteCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            '${l.seasonLabel(Season.jambudvipa.number)} · ${l.seasonJambudvipa}',
+            key: const Key('hub.season'),
+            style: const TextStyle(
+              color: DrColors.saffron,
+              fontWeight: FontWeight.w800,
+              fontSize: 13,
+              letterSpacing: 0.8,
+            ),
+          ),
+          const SizedBox(height: 2),
           Semantics(
             header: true,
             child: Text(l.routeTitle, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
           ),
+          const SizedBox(height: 2),
+          Text(l.seasonJambudvipaBlurb, style: const TextStyle(color: DrColors.inkMuted, fontSize: 13)),
           const SizedBox(height: 10),
-          for (final (i, realm) in Realm.values.indexed)
-            _RouteStop(realm: realm, done: done.contains(realm.id), last: i == Realm.values.length - 1),
+          for (final (i, realm) in Season.jambudvipa.realms.indexed)
+            _RouteStop(realm: realm, done: done.contains(realm.id), last: i == Season.jambudvipa.realms.length - 1),
         ],
       ),
     );
