@@ -1,22 +1,38 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../game/realm.dart';
 import '../dr_theme.dart';
 
 /// The hero's rendered run cycle as a widget, for menus and the story intro.
 class HeroRunner extends StatefulWidget {
-  const HeroRunner({super.key, this.height = 260, this.fps = 14, this.shadow = true});
+  const HeroRunner({
+    super.key,
+    this.height = 260,
+    this.fps = 14,
+    this.shadow = true,
+    this.outfit = Realm.ayodhya,
+    this.front = false,
+  });
 
   final double height;
   final double fps;
   final bool shadow;
 
-  static List<String> get frames => [
-    for (var i = 1; i <= 16; i++) 'assets/images/hero/run_${i.toString().padLeft(2, '0')}.webp',
+  /// Which stage's outfit he wears.
+  final Realm outfit;
+
+  /// Running toward the camera rather than away from it.
+  final bool front;
+
+  static List<String> framesOf(Realm outfit, {bool front = false}) => [
+    for (var i = 1; i <= 16; i++)
+      'assets/images/hero/${outfit.id}/${front ? 'front' : 'run'}_${i.toString().padLeft(2, '0')}.webp',
   ];
 
   /// Loads every frame so the cycle never flickers on its first pass.
-  static Future<void> precache(BuildContext context) =>
-      Future.wait([for (final f in frames) precacheImage(AssetImage(f), context)]).catchError((_) => <void>[]);
+  static Future<void> precache(BuildContext context, {Realm outfit = Realm.ayodhya, bool front = false}) =>
+      Future.wait([for (final f in framesOf(outfit, front: front)) precacheImage(AssetImage(f), context)])
+          .catchError((_) => <void>[]);
 
   @override
   State<HeroRunner> createState() => _HeroRunnerState();
@@ -28,12 +44,20 @@ class _HeroRunnerState extends State<HeroRunner> with SingleTickerProviderStateM
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    HeroRunner.precache(context);
+    HeroRunner.precache(context, outfit: widget.outfit, front: widget.front);
     _c.duration = Duration(milliseconds: (16 / widget.fps * 1000).round());
     if (reduceMotionOf(context)) {
       _c.stop();
     } else if (!_c.isAnimating) {
       _c.repeat();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant HeroRunner oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.outfit != widget.outfit || oldWidget.front != widget.front) {
+      HeroRunner.precache(context, outfit: widget.outfit, front: widget.front);
     }
   }
 
@@ -46,7 +70,8 @@ class _HeroRunnerState extends State<HeroRunner> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     final h = widget.height;
-    final w = h * 144 / 416;
+    final w = h * 144 / 418;
+    final frames = HeroRunner.framesOf(widget.outfit, front: widget.front);
     return ExcludeSemantics(
       child: SizedBox(
         width: w * 1.6,
@@ -73,7 +98,7 @@ class _HeroRunnerState extends State<HeroRunner> with SingleTickerProviderStateM
                 Positioned(
                   bottom: h * 0.025,
                   child: Image.asset(
-                    HeroRunner.frames[frame],
+                    frames[frame],
                     height: h,
                     width: w,
                     fit: BoxFit.contain,

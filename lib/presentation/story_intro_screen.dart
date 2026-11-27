@@ -93,7 +93,7 @@ class _StoryIntroScreenState extends State<StoryIntroScreen> {
     for (final s in _shots) {
       precacheImage(AssetImage(s.art), context).catchError((_) {});
     }
-    HeroRunner.precache(context);
+    HeroRunner.precache(context, front: true);
   }
 
   void _schedule() {
@@ -191,7 +191,7 @@ class _StoryIntroScreenState extends State<StoryIntroScreen> {
                   duration: const Duration(milliseconds: 1200),
                   curve: Curves.easeOutCubic,
                   builder: (context, v, child) => FractionalTranslation(translation: Offset(v * 2.5, 0), child: child),
-                  child: const HeroRunner(height: 230),
+                  child: const HeroRunner(height: 230, front: true),
                 ),
               ),
             ],

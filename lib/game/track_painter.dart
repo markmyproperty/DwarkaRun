@@ -123,8 +123,6 @@ class TrackPainter {
           _paintPickup(canvas, cam, sim.pools.pickups[idx], sim.time);
         case _kScenery:
           switch (realm) {
-            case Realm.ayodhya:
-              _paintCityScenery(canvas, cam, idx);
             case Realm.ganga:
               _paintRiverScenery(canvas, cam, idx, sim);
             default:
@@ -143,13 +141,9 @@ class TrackPainter {
 
   // ── backdrop ──
   void _paintSky(Canvas canvas, TrackCamera cam) {
-    if (realm == Realm.ayodhya &&
-        _paintBandSky(canvas, cam, 'backgrounds/sky_india', 'backgrounds/temple_hills', 'backgrounds/skyline_dwarka')) {
-      return;
-    }
-    if (realm == Realm.ganga && _paintRiverSky(canvas, cam)) return;
     final st = stage;
     if (st != null && _paintBandSky(canvas, cam, st.sky, st.farBand, st.nearBand)) return;
+    if (realm == Realm.ganga && _paintRiverSky(canvas, cam)) return;
     canvas.drawRect(Rect.fromLTWH(0, 0, _w, cam.horizon + 1), _sky);
     _fill.color = const Color(0xFFFFF3D0);
     canvas.drawCircle(Offset(_w * 0.78, cam.horizon * 0.42), _h * 0.045, _fill);
@@ -470,14 +464,6 @@ class TrackPainter {
     return true;
   }
 
-  static const _riverTemples = [
-    'monuments/sacred_shrine',
-    'monuments/temple_tower',
-    'monuments/dwarka_temple',
-    'monuments/golden_palace',
-  ];
-  static const _riverTempleWidth = [7.0, 7.0, 11.0, 20.0];
-
   void _paintRiverScenery(Canvas canvas, TrackCamera cam, int i, RunSimulation sim) {
     final z = i * sceneryEvery;
     final s = cam.scaleAt(z);
@@ -489,20 +475,32 @@ class TrackPainter {
       if (!water && side > 0) {
         // The ghats: stone steps down to the water, houses and, set back,
         // riverside temples and palaces as a backdrop.
-        if ((i + 3) % 9 == 0) {
-          final m = (i ~/ 9) % _riverTemples.length;
-          _sprite(
-            canvas,
-            _riverTemples[m],
-            cam.sx(pathHalfWidth + 11 + _riverTempleWidth[m] / 2, z),
-            cam.sy(0, z),
-            _riverTempleWidth[m] * s,
-          );
-        } else if (h < 0.55) {
-          final b = (_hash(i, 5) * _buildings.length).floor() % _buildings.length;
-          _sprite(canvas, _buildings[b], cam.sx(pathHalfWidth + 6.5, z), cam.sy(0, z), 7.0 * s, pad: 0.04);
+        final st = stage!;
+        if ((i + 3) % 5 == 0) {
+          // A ghat landmark right on the bank, close enough to admire.
+          final m = st.monuments[(i ~/ 5) % st.monuments.length];
+          final w = math.min(m.width, 18.0);
+          _sprite(canvas, m.name, cam.sx(pathHalfWidth + 2.2 + w / 2, z), cam.sy(0, z), w * s);
+        } else {
+          // Back row of tall houses, then the front row on the steps.
+          if (_hash(i, 21) < 0.75) {
+            final b = st.buildings[(_hash(i, 23) * st.buildings.length).floor() % st.buildings.length];
+            final bz = z + 3.5;
+            final bw = _houseWidth(b, st.buildingWidth);
+            _sprite(canvas, b, cam.sx(pathHalfWidth + 9 + bw / 2, bz), cam.sy(0, bz), bw * cam.scaleAt(bz), pad: 0.04);
+          }
+          if (h < 0.8) {
+            final b = st.buildings[(_hash(i, 5) * st.buildings.length).floor() % st.buildings.length];
+            final bw = _houseWidth(b, st.buildingWidth);
+            _sprite(canvas, b, cam.sx(pathHalfWidth + 4.2 + bw / 2, z), cam.sy(0, z), bw * s, pad: 0.04);
+          }
+          _sprite(canvas, 'river/coastal_steps', cam.sx(pathHalfWidth + 2.6, z), cam.sy(0, z), 4.6 * s);
         }
-        _sprite(canvas, 'river/coastal_steps', cam.sx(pathHalfWidth + 2.6, z), cam.sy(0, z), 4.6 * s);
+        if (_hash(i, 25) < 0.7 && st.kerb.isNotEmpty) {
+          final p = st.kerb[(_hash(i, 27) * st.kerb.length).floor() % st.kerb.length];
+          final kz = z + 3;
+          _sprite(canvas, p.name, cam.sx(pathHalfWidth + 0.8, kz), cam.sy(0, kz), p.width * cam.scaleAt(kz));
+        }
         continue;
       }
       // Out on the water.
@@ -513,9 +511,14 @@ class TrackPainter {
         }
       } else if (h < 0.18) {
         _sprite(canvas, 'river/boat_side', cam.sx(side * (7 + _hash(i, 9) * 8), z), cam.sy(0, z), 6.5 * s, pad: 0.2);
-      } else if (h < 0.34) {
+      } else if (h < 0.5 && stage!.gapWild.isNotEmpty) {
+        // Rowing boats, barges, lotus pads and reeds on the water.
+        final gw = stage!.gapWild;
+        final p = gw[(_hash(i, side + 31) * gw.length).floor() % gw.length];
+        _sprite(canvas, p.name, cam.sx(side * (5.2 + p.width / 2 + _hash(i, 33) * 6), z), cam.sy(0, z), p.width * s);
+      } else if (h < 0.6) {
         _sprite(canvas, 'river/water_rock', cam.sx(side * (5.5 + _hash(i, 11) * 6), z), cam.sy(0, z), 2.2 * s);
-      } else if (h < 0.44) {
+      } else if (h < 0.68) {
         _sprite(canvas, 'river/sea_pillar', cam.sx(side * 5.2, z), cam.sy(0, z), 1.2 * s);
       }
       // Floating diyas drifting by: a gentle, respectful touch on the water.
@@ -725,11 +728,13 @@ class TrackPainter {
     _fill.color = const Color(0x33000000);
     canvas.drawOval(Rect.fromCenter(center: Offset(cx, gy), width: halfW * 2.1, height: 0.35 * s), _fill);
 
-    final sprite = o.kind.sprite;
+    final own = stage?.obstacleArt[o.kind];
+    final sprite = own?.name ?? o.kind.sprite;
+    final spriteWidth = own?.width ?? o.kind.spriteWidth;
     if (sprite != null && o.kind.clearance != Clearance.slide) {
       if (o.kind.speed > 0 && !reduceMotion && art[sprite] != null) {
         // Rolling boulders rock from side to side as they come.
-        final w = o.kind.spriteWidth * s;
+        final w = spriteWidth * s;
         canvas.save();
         canvas.translate(cx, gy - w * 0.45);
         canvas.rotate(math.sin(o.z * 1.6) * 0.12);
@@ -738,7 +743,7 @@ class TrackPainter {
         canvas.restore();
         return;
       }
-      if (_sprite(canvas, sprite, cx, gy, o.kind.spriteWidth * s)) return;
+      if (_sprite(canvas, sprite, cx, gy, spriteWidth * s)) return;
     }
 
     switch (o.kind) {
@@ -1172,14 +1177,6 @@ class TrackPainter {
 
   // ── Ayodhya Run (art pack) ──
   static const double gateStartZ = 18;
-  static const _buildings = [
-    'buildings/ancient_b01',
-    'buildings/ancient_b02',
-    'buildings/ancient_b03',
-    'buildings/ancient_b04',
-    'buildings/ancient_b05',
-    'buildings/ancient_b06',
-  ];
 
   /// A sky image with two horizon bands (far hills, near skyline).
   bool _paintBandSky(Canvas canvas, TrackCamera cam, String skyName, String far, String near) {
@@ -1211,49 +1208,6 @@ class TrackPainter {
     while (x < _w) {
       canvas.drawImageRect(img, src, Rect.fromLTWH(x, bottom - height, width, height), _image);
       x += width;
-    }
-  }
-
-  static const _cityMonuments = [
-    Piece('monuments/royal_fort', 24),
-    Piece('monuments/dwarka_temple', 13),
-    Piece('monuments/golden_palace', 20),
-    Piece('monuments/ancient_stepwell', 12),
-    Piece('monuments/temple_tower', 9),
-    Piece('monuments/royal_treasure_temple', 14),
-    Piece('monuments/stone_monument', 5),
-  ];
-  static const _cityWild = [
-    Piece('props/stone_arch', 4.5),
-    Piece('props/broken_pillar', 1.4),
-    Piece('monuments/lost_temple_ruins', 10),
-  ];
-  static const _cityKerb = [
-    Piece('props/ancient_torch', 0.9),
-    Piece('props/marigold_pot', 1.3),
-    Piece('props/golden_vase', 0.8),
-    Piece('props/stone_pillar', 0.7),
-    Piece('props/ancient_pot', 0.9),
-    Piece('props/wooden_crate', 1.1),
-  ];
-
-  void _paintCityScenery(Canvas canvas, TrackCamera cam, int i) {
-    final z = i * sceneryEvery;
-    if (cam.scaleAt(z) <= 0) return;
-    for (final side in const [-1, 1]) {
-      _dressStreet(
-        canvas,
-        cam,
-        i,
-        z,
-        side,
-        buildings: _buildings,
-        bw: 7.2,
-        houseChance: 0.9,
-        monuments: _cityMonuments,
-        wild: _cityWild,
-        kerb: _cityKerb,
-      );
     }
   }
 
@@ -1305,12 +1259,13 @@ class TrackPainter {
     if (!plaza && !afterPlaza && detail && _hash(i, side + 17) < 0.7) {
       final b = buildings[(_hash(i, side + 19) * buildings.length).floor() % buildings.length];
       final bz = z + 3.5;
+      final w = _houseWidth(b, bw) * 1.05;
       _sprite(
         canvas,
         b,
-        cam.sx(side * (pathHalfWidth + 1.6 + bw * 1.5), bz),
+        cam.sx(side * (pathHalfWidth + 2.6 + bw + w / 2), bz),
         cam.sy(0, bz),
-        bw * 1.05 * cam.scaleAt(bz),
+        w * cam.scaleAt(bz),
         pad: 0.04,
       );
     }
@@ -1323,8 +1278,9 @@ class TrackPainter {
       final h = _hash(i, side + 3);
       if (h < houseChance) {
         final b = buildings[(_hash(i, side + 5) * buildings.length).floor() % buildings.length];
-        final bx = side * (pathHalfWidth + 1.0 + bw / 2);
-        if (!_sprite(canvas, b, cam.sx(bx, z), cam.sy(0, z), bw * cam.scaleAt(z), pad: 0.04)) {
+        final w = _houseWidth(b, bw);
+        final bx = side * (pathHalfWidth + 1.0 + w / 2);
+        if (!_sprite(canvas, b, cam.sx(bx, z), cam.sy(0, z), w * cam.scaleAt(z), pad: 0.04)) {
           _ruin(canvas, cam, bx, z, h);
         }
       }
@@ -1340,6 +1296,14 @@ class TrackPainter {
         }
       }
     }
+  }
+
+  /// A house's width from its picture's shape, so tall narrow towers stay
+  /// slim and long low villas spread out, all at about the same height.
+  double _houseWidth(String name, double bw) {
+    final src = art.src(name);
+    if (src == null) return bw;
+    return bw * (src.width / src.height).clamp(0.3, 1.35);
   }
 
   /// The city gateway the path runs through, wide enough to clear all lanes.
@@ -1587,24 +1551,7 @@ class TrackPainter {
     canvas.drawCircle(Offset(cx, headY - 0.2 * s), 0.08 * s, _fill);
   }
 
-  static const _heroFrames = [
-    'hero/run_01',
-    'hero/run_02',
-    'hero/run_03',
-    'hero/run_04',
-    'hero/run_05',
-    'hero/run_06',
-    'hero/run_07',
-    'hero/run_08',
-    'hero/run_09',
-    'hero/run_10',
-    'hero/run_11',
-    'hero/run_12',
-    'hero/run_13',
-    'hero/run_14',
-    'hero/run_15',
-    'hero/run_16',
-  ];
+  late final List<String> _heroFrames = ArtLibrary.heroFrames(realm);
 
   /// The rendered 16-frame run cycle, when its frames are loaded. In the
   /// air the hero holds a flight frame; sliding is the run pose crouched low.

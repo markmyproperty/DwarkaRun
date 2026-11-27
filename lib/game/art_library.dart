@@ -54,7 +54,11 @@ class ArtLibrary {
     'river/sea_pillar',
     'river/water_splash',
     'river/coastal_lamp',
-    for (var i = 1; i <= 16; i++) 'hero/run_${i.toString().padLeft(2, '0')}',
+  ];
+
+  /// The hero's 16-frame run cycle in [realm]'s outfit, seen from behind.
+  static List<String> heroFrames(Realm realm) => [
+    for (var i = 1; i <= 16; i++) 'hero/${realm.id}/run_${i.toString().padLeft(2, '0')}',
   ];
 
   final Map<String, ui.Image> _images = {};
@@ -66,7 +70,9 @@ class ArtLibrary {
   bool get loaded => names.every(_images.containsKey);
 
   /// Whether every image of [realm]'s art pack is ready.
-  bool stageLoaded(Realm realm) => StageArt.of(realm)?.names(realm).every(_images.containsKey) ?? loaded;
+  bool stageLoaded(Realm realm) =>
+      (StageArt.of(realm)?.names(realm).every(_images.containsKey) ?? loaded) &&
+      heroFrames(realm).every(_images.containsKey);
 
   ui.Image? operator [](String name) => _images[name];
 
@@ -86,24 +92,31 @@ class ArtLibrary {
     if (_loading == null) return Future.value(); // Art is off (tests).
     _bundle ??= bundle;
     final stage = StageArt.of(realm);
-    if (stage == null) return load();
-    final want = stage.names(realm);
+    final want = {...heroFrames(realm), ...?stage?.names(realm)};
     for (final name in _images.keys.toList()) {
       if (_isStageImage(name) && !want.contains(name)) {
         _images.remove(name)?.dispose();
         _src.remove(name);
       }
     }
-    return _loadAll(want);
+    return (stage == null ? load() : Future<void>.value()).then((_) => _loadAll(want));
   }
 
   static bool _isStageImage(String name) => name.split('/').length > 2;
 
+  /// Loads [list] in order, a few images at a time.
   Future<void> _loadAll(Iterable<String> list) async {
-    for (final name in list) {
-      if (_images.containsKey(name)) continue;
-      await (_pending[name] ??= _loadOne(name));
+    final todo = list.where((n) => !_images.containsKey(n)).toList();
+    var next = 0;
+    Future<void> worker() async {
+      while (next < todo.length) {
+        final name = todo[next++];
+        if (_images.containsKey(name)) continue;
+        await (_pending[name] ??= _loadOne(name));
+      }
     }
+
+    await Future.wait([for (var i = 0; i < 4; i++) worker()]);
   }
 
   Future<void> _loadOne(String name) async {

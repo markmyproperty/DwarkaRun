@@ -10,6 +10,8 @@ import '../l10n/gen/app_localizations.dart';
 import 'dr_theme.dart';
 import 'pickup_icons.dart';
 import 'story_intro_screen.dart';
+import 'realm_postcard.dart';
+import '../game/realm.dart';
 import 'ui/game_ui.dart';
 import 'ui/hero_runner.dart';
 
@@ -177,6 +179,17 @@ class _DailySheet extends StatelessWidget {
   }
 }
 
+/// The treasure each day of the week pays out, from the worlds' art packs.
+const _dayArt = [
+  'ayodhya/rewards/coin_stack',
+  'ganga/rewards/brass_coin_pot',
+  'himalayan/rewards/turquoise_mountain_jewel',
+  'himalayan/rewards/copper_coin_box',
+  'vijayanagar/rewards/temple_gold_coin_pot',
+  'vijayanagar/rewards/carnelian_temple_jewel',
+  'ayodhya/rewards/royal_gold_chest',
+];
+
 class _DayTile extends StatelessWidget {
   const _DayTile({required this.day, required this.reward, required this.claimed, required this.current});
 
@@ -214,12 +227,17 @@ class _DayTile extends StatelessWidget {
             children: [
               StrokeText(l.dayN(day + 1), size: 15, maxLines: 1, strokeWidth: 3),
               const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (reward.coins > 0) const CoinIcon(size: 30),
-                  if (reward.gems > 0) const GemIcon(size: 28),
-                ],
+              Image.asset(
+                'assets/images/${_dayArt[day % _dayArt.length]}.webp',
+                height: big ? 50 : 42,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (reward.coins > 0) const CoinIcon(size: 30),
+                    if (reward.gems > 0) const GemIcon(size: 28),
+                  ],
+                ),
               ),
               const Spacer(),
               StrokeText(
@@ -555,12 +573,23 @@ class _UpgradeRow extends StatelessWidget {
 
 Future<void> showHeroSheet(BuildContext context) => showGameSheet<void>(context, builder: (_) => const _HeroSheet());
 
-class _HeroSheet extends StatelessWidget {
+class _HeroSheet extends StatefulWidget {
   const _HeroSheet();
+
+  @override
+  State<_HeroSheet> createState() => _HeroSheetState();
+}
+
+/// The king's wardrobe: one royal outfit per world. The selected world's
+/// outfit runs toward you in the preview; reaching a world unlocks its look.
+class _HeroSheetState extends State<_HeroSheet> {
+  Realm? _shown;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final progress = AppScope.of(context).progress;
+    final shown = _shown ?? progress.selectedRealm;
     return GameSheet(
       title: l.heroTitle,
       tone: GameTone.blue,
@@ -569,59 +598,106 @@ class _HeroSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: 250,
+            height: 230,
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              gradient: const RadialGradient(colors: [Color(0xFF7FDBFF), Color(0xFF1E5FBF), Color(0xFF14306E)]),
-              border: Border.all(color: Colors.white, width: 3),
+              border: Border.all(color: GameColors.gold, width: 3),
             ),
-            child: const Center(child: HeroRunner(height: 210, fps: 12)),
-          ),
-          const SizedBox(height: 10),
-          StrokeText(l.heroKing, size: 26),
-          Text(
-            l.heroKingBlurb,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: GameColors.textDim, fontSize: 15, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(color: GameColors.green, borderRadius: BorderRadius.circular(14)),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+            child: Stack(
+              fit: StackFit.expand,
               children: [
-                const Icon(Icons.check_rounded, color: Colors.white, size: 18),
-                const SizedBox(width: 4),
-                Text(
-                  l.heroSelected,
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                RealmPostcard(realm: shown, alignmentY: 0.2),
+                const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(radius: 0.8, colors: [Color(0x55FFF0B0), Color(0xAA120A2E)]),
+                  ),
+                ),
+                Align(
+                  alignment: const Alignment(0, 0.9),
+                  child: HeroRunner(key: const Key('hero.preview'), height: 196, fps: 12, outfit: shown, front: true),
+                ),
+                Positioned(
+                  left: 10,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(color: const Color(0xCC120A2E), borderRadius: BorderRadius.circular(12)),
+                    child: Text(
+                      shown.name(l),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              for (var i = 0; i < 3; i++)
-                Expanded(
-                  child: Container(
-                    height: 74,
-                    margin: EdgeInsets.only(right: i < 2 ? 8 : 0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: const Color(0x33000000),
-                      border: Border.all(color: const Color(0x33FFFFFF), width: 1.5),
-                    ),
-                    child: const Icon(Icons.lock_rounded, color: Color(0x88FFFFFF), size: 30),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
+          StrokeText(l.heroKing, size: 24),
           Text(
-            l.heroComingSoon,
-            style: const TextStyle(color: GameColors.textDim, fontWeight: FontWeight.w700),
+            l.heroOutfitsHint,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: GameColors.textDim, fontSize: 14, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 104,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: Realm.values.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, i) {
+                final r = Realm.values[i];
+                final open = progress.isUnlocked(r);
+                final selected = r == shown;
+                return Semantics(
+                  button: true,
+                  selected: selected,
+                  label: open ? r.name(l) : '${r.name(l)}: ${l.routeTodo}',
+                  excludeSemantics: true,
+                  child: GestureDetector(
+                    key: Key('hero.outfit.${r.id}'),
+                    onTap: () {
+                      tapFeedback(context);
+                      setState(() => _shown = r);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 66,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: selected ? GameTone.gold.face : const [Color(0xFF4B3C9E), Color(0xFF2B1E70)],
+                        ),
+                        border: Border.all(color: selected ? Colors.white : const Color(0x44FFFFFF), width: 2),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(4, 4, 4, 16),
+                            child: ColorFiltered(
+                              colorFilter: open
+                                  ? const ColorFilter.mode(Color(0x00000000), BlendMode.dst)
+                                  : const ColorFilter.mode(Color(0xDD1A1240), BlendMode.srcATop),
+                              child: Image.asset(
+                                'assets/images/hero/${r.id}/front_01.webp',
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, _, _) => const SizedBox(),
+                              ),
+                            ),
+                          ),
+                          if (!open) const Icon(Icons.lock_rounded, color: Color(0xCCFFFFFF), size: 22),
+                          Positioned(bottom: 3, child: StrokeText('${i + 1}', size: 13, strokeWidth: 2.5)),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

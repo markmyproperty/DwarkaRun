@@ -14,6 +14,7 @@ import 'realm_postcard.dart';
 import 'run_screen.dart';
 import 'ui/game_title.dart';
 import 'ui/game_ui.dart';
+import 'ui/world_ambience.dart';
 import 'ui/hero_runner.dart';
 import 'unlock_overlay.dart';
 import 'worlds_screen.dart';
@@ -125,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
         fit: StackFit.expand,
         children: [
           _WorldBackdrop(realm: realm, reduce: reduce),
+          FallingAmbience(key: ValueKey('ambience.${realm.id}'), realm: realm, reduce: reduce),
           const DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -172,15 +174,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: compact ? 2 : 8),
-                      _FloatingLogo(width: compact ? 230 : 290, reduce: reduce),
+                      Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          WorldGarland(key: ValueKey('garland.${realm.id}'), realm: realm, height: compact ? 30 : 40),
+                          Padding(
+                            padding: EdgeInsets.only(top: compact ? 6 : 14),
+                            child: _FloatingLogo(width: compact ? 230 : 290, reduce: reduce),
+                          ),
+                        ],
+                      ),
                       // ── hero and side buttons ──
                       Expanded(
                         child: Stack(
                           children: [
                             Align(
                               alignment: const Alignment(0, 0.95),
-                              child: _HeroStage(height: compact ? 180 : 240, reduce: reduce),
+                              child: _HeroStage(height: compact ? 180 : 240, reduce: reduce, outfit: realm),
                             ),
                             Align(
                               alignment: Alignment.centerLeft,
@@ -353,10 +363,11 @@ class _FloatingLogoState extends State<_FloatingLogo> with SingleTickerProviderS
 /// The hero on a carved stone dais, with slowly turning rays of sunlight
 /// behind him and drifting golden motes.
 class _HeroStage extends StatefulWidget {
-  const _HeroStage({required this.height, required this.reduce});
+  const _HeroStage({required this.height, required this.reduce, required this.outfit});
 
   final double height;
   final bool reduce;
+  final Realm outfit;
 
   @override
   State<_HeroStage> createState() => _HeroStageState();
@@ -404,7 +415,7 @@ class _HeroStageState extends State<_HeroStage> with SingleTickerProviderStateMi
           ),
           Positioned(
             bottom: height * 0.1,
-            child: HeroRunner(height: height, fps: 12),
+            child: HeroRunner(height: height, fps: 12, outfit: widget.outfit, front: true),
           ),
         ],
       ),

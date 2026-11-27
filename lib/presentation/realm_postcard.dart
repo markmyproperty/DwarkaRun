@@ -23,7 +23,7 @@ class RealmPostcard extends StatelessWidget {
   Widget build(BuildContext context) {
     final painted = CustomPaint(painter: _PostcardPainter(realm.palette), size: Size.infinite);
     final stage = StageArt.of(realm);
-    final asset = _art[realm] ?? (stage == null ? null : 'assets/images/${stage.postcard}.webp');
+    final asset = stage == null ? _art[realm] : 'assets/images/${stage.postcard}.webp';
     return ExcludeSemantics(
       child: asset == null
           ? painted

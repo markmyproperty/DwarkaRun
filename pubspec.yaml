@@ -70,7 +70,6 @@ flutter:
     - assets/images/river/
     - assets/audio/
     - assets/audio/sfx/
-    - assets/images/hero/
     - assets/images/brand/
     - assets/images/pharaoh/backgrounds/
     - assets/images/pharaoh/buildings/
@@ -102,6 +101,41 @@ flutter:
     - assets/images/finale/env/
     - assets/images/finale/monuments/
     - assets/images/finale/props/
+    - assets/images/hero/ayodhya/
+    - assets/images/hero/ganga/
+    - assets/images/hero/pharaoh/
+    - assets/images/hero/himalayan/
+    - assets/images/hero/vijayanagar/
+    - assets/images/hero/dragon/
+    - assets/images/hero/lanka/
+    - assets/images/hero/indus/
+    - assets/images/hero/sunken/
+    - assets/images/hero/finale/
+    - assets/images/ayodhya/backgrounds/
+    - assets/images/ayodhya/buildings/
+    - assets/images/ayodhya/decorations/
+    - assets/images/ayodhya/monuments/
+    - assets/images/ayodhya/obstacles/
+    - assets/images/ayodhya/props/
+    - assets/images/ayodhya/rewards/
+    - assets/images/ayodhya/vfx/
+    - assets/images/ganga/backgrounds/
+    - assets/images/ganga/buildings/
+    - assets/images/ganga/decorations/
+    - assets/images/ganga/monuments/
+    - assets/images/ganga/obstacles/
+    - assets/images/ganga/props/
+    - assets/images/ganga/rewards/
+    - assets/images/ganga/vfx/
+    - assets/images/pharaoh/vfx/
+    - assets/images/himalayan/decorations/
+    - assets/images/himalayan/obstacles/
+    - assets/images/himalayan/rewards/
+    - assets/images/himalayan/vfx/
+    - assets/images/vijayanagar/decorations/
+    - assets/images/vijayanagar/obstacles/
+    - assets/images/vijayanagar/rewards/
+    - assets/images/vijayanagar/vfx/
     - assets/lottie/
   fonts:
     - family: Lilita
