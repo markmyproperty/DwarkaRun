@@ -32,7 +32,6 @@ class SeededRandom {
     final aLo = a & 0xFFFF;
     final bHi = (b >> 16) & 0xFFFF;
     final bLo = b & 0xFFFF;
-    return ((aLo * bLo) + ((((aHi * bLo) + (aLo * bHi)) << 16) & 0xFFFFFFFF)) &
-        0xFFFFFFFF;
+    return ((aLo * bLo) + ((((aHi * bLo) + (aLo * bHi)) << 16) & 0xFFFFFFFF)) & 0xFFFFFFFF;
   }
 }

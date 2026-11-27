@@ -22,10 +22,23 @@ enum ObstacleKind {
   ropeBarrier(Clearance.jump, height: 0.9, depth: 0.4),
   firePit(Clearance.jump, height: 0.5, depth: 1.4),
   marketCart(Clearance.lane, height: 2.1, depth: 2.2),
-  monkey(Clearance.steal, height: 0.9, depth: 0.6);
+  monkey(Clearance.steal, height: 0.9, depth: 0.6),
 
-  const ObstacleKind(this.clearance,
-      {required this.height, required this.depth, this.speed = 0});
+  // Ancient Dwarka street obstacles, drawn from the art pack.
+  clayPot(Clearance.jump, height: 0.9, depth: 0.9, sprite: 'props/ancient_pot', spriteWidth: 1.4),
+  stoneDebris(Clearance.jump, height: 0.7, depth: 1.2, sprite: 'props/stone_debris', spriteWidth: 2.0),
+  woodenCrate(Clearance.lane, height: 1.6, depth: 1.4, sprite: 'props/wooden_crate', spriteWidth: 2.0),
+  brokenPillar(Clearance.lane, height: 2.6, depth: 1.0, sprite: 'props/broken_pillar', spriteWidth: 1.9),
+  garlandBeam(Clearance.slide, height: 1.1, depth: 0.5);
+
+  const ObstacleKind(
+    this.clearance, {
+    required this.height,
+    required this.depth,
+    this.speed = 0,
+    this.sprite,
+    this.spriteWidth = 2.0,
+  });
 
   final Clearance clearance;
 
@@ -38,6 +51,13 @@ enum ObstacleKind {
 
   /// Extra speed towards the hero (metres per second), for rolling things.
   final double speed;
+
+  /// Art-pack image (path under assets/images, without extension). Drawn in
+  /// code when null or not loaded yet.
+  final String? sprite;
+
+  /// Width of the sprite on the path (metres).
+  final double spriteWidth;
 }
 
 /// A pooled obstacle. Instances are reused; [active] says if it is in play.

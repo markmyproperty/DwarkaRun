@@ -1,6 +1,6 @@
 # Dwarka Run
 
-An original, 3D-feel endless runner built with Flutter and Flame. A young traveller sets out on a yatra through ancient Indian realms: banyan forests, river ghats, desert forts, Himalayan passes and a golden celestial city.
+An original, 3D-feel endless runner built with Flutter and Flame. A young traveller sets out on a yatra through ancient Indian realms: the streets of ancient Dwarka, banyan forests, river ghats, desert forts and a golden celestial city.
 
 It runs on Android, iOS and the web from one codebase, with no backend. Progress is saved on the device.
 
@@ -10,8 +10,8 @@ The game is being built in three stages, each as its own pull request.
 
 | Stage | What it adds | State |
 | --- | --- | --- |
-| 1 | Core run, the Forest Kingdom, the hub, saving, English and Hindi | This version |
-| 2 | River of Ghats (boat and log stage), Desert Fort, Himalayan Pass, Celestial City, and flights between realms | Next |
+| 1 | Core run, Ancient Dwarka (art pack) and the Forest Kingdom, the hub, saving, English and Hindi | This version |
+| 2 | River of Ghats (boat and log stage), Desert Fort, Celestial City, and flights between realms | Next |
 | 3 | Sites to own, daily blessing, outfits, trip summary and sharing, sound and music, monsoon rain, release builds | After that |
 
 ## How to play
@@ -51,12 +51,14 @@ flutter build web --release --no-web-resources-cdn
 ## How the code is laid out
 
 ```
+assets/images/   art pack, resized WebP (see CREDITS.md)
 lib/
   game/          Flame game, rules, seeded level generator, collisions, painting
   data/          progress repository (shared_preferences)
   presentation/  hub, run screen, HUD, pause, game over, realm complete
   audio/         sound interface with mute (sound files arrive in stage 3)
   analytics/     analytics interface with no-op and recording versions
+  game/art_library.dart  loads the art pack in the background; code-drawn stand-ins until it is ready
   l10n/          ARB strings: English and Hindi, with Tamil, Bengali and Marathi files ready
 ```
 

@@ -11,10 +11,26 @@ class RealmPostcard extends StatelessWidget {
 
   final Realm realm;
 
+  /// Art-pack backdrops, where a realm has one.
+  static const _art = {Realm.dwarka: 'assets/images/backgrounds/ancient_city_background.webp'};
+
   @override
-  Widget build(BuildContext context) => ExcludeSemantics(
-        child: CustomPaint(painter: _PostcardPainter(realm.palette), size: Size.infinite),
-      );
+  Widget build(BuildContext context) {
+    final painted = CustomPaint(painter: _PostcardPainter(realm.palette), size: Size.infinite);
+    final asset = _art[realm];
+    return ExcludeSemantics(
+      child: asset == null
+          ? painted
+          : Image.asset(
+              asset,
+              fit: BoxFit.cover,
+              alignment: const Alignment(0, 0.2),
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (_, _, _) => painted,
+            ),
+    );
+  }
 }
 
 class _PostcardPainter extends CustomPainter {

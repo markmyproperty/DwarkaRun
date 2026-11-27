@@ -22,23 +22,23 @@ class TestServices {
   }
 
   Widget app({bool reduceMotion = false, Locale? locale}) => MediaQuery(
-        data: MediaQueryData(size: const Size(400, 800), disableAnimations: reduceMotion),
-        child: DwarkaRunApp(progress: progress, analytics: analytics, audio: audio, locale: locale),
-      );
+    data: MediaQueryData(size: const Size(400, 800), disableAnimations: reduceMotion),
+    child: DwarkaRunApp(progress: progress, analytics: analytics, audio: audio, locale: locale),
+  );
 
   /// Wraps [child] in everything a screen needs, without the hub.
   Widget wrap(Widget child, {bool reduceMotion = false}) => MediaQuery(
-        data: MediaQueryData(size: const Size(400, 800), disableAnimations: reduceMotion),
-        child: AppScope(
-          progress: progress,
-          analytics: analytics,
-          audio: audio,
-          child: MaterialApp(
-            theme: buildDrTheme(),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: child,
-          ),
-        ),
-      );
+    data: MediaQueryData(size: const Size(400, 800), disableAnimations: reduceMotion),
+    child: AppScope(
+      progress: progress,
+      analytics: analytics,
+      audio: audio,
+      child: MaterialApp(
+        theme: buildDrTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: child,
+      ),
+    ),
+  );
 }

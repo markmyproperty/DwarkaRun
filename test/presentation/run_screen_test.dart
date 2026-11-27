@@ -7,13 +7,14 @@ import 'package:material_ui/material_ui.dart';
 import 'test_app.dart';
 
 int hudCoins(WidgetTester tester) {
-  final text = tester.widget<Text>(find.descendant(of: find.byKey(const Key('hud.coins')), matching: find.byType(Text)));
+  final text = tester.widget<Text>(
+    find.descendant(of: find.byKey(const Key('hud.coins')), matching: find.byType(Text)),
+  );
   return int.parse(text.data!);
 }
 
-String hudDistance(WidgetTester tester) => tester
-    .widget<Text>(find.descendant(of: find.byKey(const Key('hud.distance')), matching: find.byType(Text)))
-    .data!;
+String hudDistance(WidgetTester tester) =>
+    tester.widget<Text>(find.descendant(of: find.byKey(const Key('hud.distance')), matching: find.byType(Text))).data!;
 
 /// Pumps frames until [finder] shows, or fails after [seconds].
 Future<void> pumpUntil(WidgetTester tester, Finder finder, {double seconds = 90}) async {

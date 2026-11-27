@@ -12,13 +12,7 @@ import 'track_painter.dart';
 
 /// What the Flutter HUD shows. A record, so the notifier only fires when a
 /// value actually changes.
-typedef RunHud = ({
-  int coins,
-  int metres,
-  double progress,
-  int boostCharges,
-  bool boosting,
-});
+typedef RunHud = ({int coins, int metres, double progress, int boostCharges, bool boosting});
 
 /// The Flame game for one run of one realm.
 ///
@@ -35,13 +29,8 @@ class DwarkaRunGame extends FlameGame {
     this.onCrashed,
     this.onFinished,
     bool autopilot = false,
-  }) : sim = RunSimulation(
-          realm: realm,
-          seed: seed,
-          gentleStart: gentleStart,
-          targetMetres: targetMetres,
-        ),
-        painter = TrackPainter(realm) {
+  }) : sim = RunSimulation(realm: realm, seed: seed, gentleStart: gentleStart, targetMetres: targetMetres),
+       painter = TrackPainter(realm) {
     sim.onEvent = _handleEvent;
     if (autopilot) _autopilot = RunAutopilot(sim);
     painter.reduceMotion = reduceMotion;
@@ -59,13 +48,7 @@ class DwarkaRunGame extends FlameGame {
   final VoidCallback? onCrashed;
   final VoidCallback? onFinished;
 
-  final ValueNotifier<RunHud> hud = ValueNotifier((
-    coins: 0,
-    metres: 0,
-    progress: 0,
-    boostCharges: 0,
-    boosting: false,
-  ));
+  final ValueNotifier<RunHud> hud = ValueNotifier((coins: 0, metres: 0, progress: 0, boostCharges: 0, boosting: false));
 
   /// Seconds left of the crash wobble before game over is reported.
   RunAutopilot? _autopilot;

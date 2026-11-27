@@ -5,19 +5,7 @@ import 'level_generator.dart';
 import 'realm.dart';
 
 /// Things that happen in a run, for sound, haptics and analytics.
-enum RunEvent {
-  coin,
-  gem,
-  feather,
-  lotus,
-  jump,
-  slide,
-  laneChange,
-  boostStart,
-  monkeySteal,
-  crash,
-  finish,
-}
+enum RunEvent { coin, gem, feather, lotus, jump, slide, laneChange, boostStart, monkeySteal, crash, finish }
 
 enum RunState { running, crashed, finished }
 
@@ -25,20 +13,10 @@ enum RunState { running, crashed, finished }
 /// directly. It advances in fixed steps, so the same seed and inputs always
 /// play out the same way whatever the frame rate.
 class RunSimulation {
-  RunSimulation({
-    required this.realm,
-    required int seed,
-    this.gentleStart = false,
-    int? targetMetres,
-    this.onEvent,
-  })  : targetMetres = targetMetres ?? realm.targetMetres,
-        speed = gentleStart ? gentleSpeed : startSpeed {
-    generator = LevelGenerator(
-      realm: realm,
-      seed: seed,
-      gentleStart: gentleStart,
-      laneWidth: laneWidth,
-    );
+  RunSimulation({required this.realm, required int seed, this.gentleStart = false, int? targetMetres, this.onEvent})
+    : targetMetres = targetMetres ?? realm.targetMetres,
+      speed = gentleStart ? gentleSpeed : startSpeed {
+    generator = LevelGenerator(realm: realm, seed: seed, gentleStart: gentleStart, laneWidth: laneWidth);
     generator.fill(pools, viewAhead, 0);
   }
 

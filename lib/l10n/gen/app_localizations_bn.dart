@@ -113,6 +113,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get soundOff => 'Sound off';
 
   @override
+  String get realmDwarka => 'Ancient Dwarka';
+
+  @override
   String get realmForest => 'Forest Kingdom';
 
   @override
@@ -122,10 +125,11 @@ class AppLocalizationsBn extends AppLocalizations {
   String get realmDesert => 'Desert Fort';
 
   @override
-  String get realmHimalaya => 'Himalayan Pass';
+  String get realmCelestial => 'Celestial City';
 
   @override
-  String get realmCelestial => 'Celestial City';
+  String get realmDwarkaBlurb =>
+      'Sandstone streets, shop-houses and grand monuments';
 
   @override
   String get realmForestBlurb => 'Banyan forests and old stone ruins';
@@ -135,9 +139,6 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get realmDesertBlurb => 'Sandstone ramparts under a wide sky';
-
-  @override
-  String get realmHimalayaBlurb => 'Snowy passes and fluttering flags';
 
   @override
   String get realmCelestialBlurb => 'A floating city of gold';

@@ -27,10 +27,12 @@ class _HubScreenState extends State<HubScreen> {
   }
 
   void _play(Realm realm) {
-    Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (_) => RunScreen(realm: realm),
-      settings: const RouteSettings(name: '/run'),
-    ));
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => RunScreen(realm: realm),
+        settings: const RouteSettings(name: '/run'),
+      ),
+    );
   }
 
   @override
@@ -169,30 +171,32 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        label: '$label: $value',
-        excludeSemantics: true,
-        child: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: drCard(),
-          child: Row(
-            children: [
-              icon,
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(label, style: const TextStyle(color: DrColors.inkMuted, fontSize: 13)),
-                    Text(value,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
-                  ],
+    label: '$label: $value',
+    excludeSemantics: true,
+    child: Container(
+      padding: const EdgeInsets.all(14),
+      decoration: drCard(),
+      child: Row(
+        children: [
+          icon,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: const TextStyle(color: DrColors.inkMuted, fontSize: 13)),
+                Text(
+                  value,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
 
 class _NextStopCard extends StatelessWidget {
@@ -229,7 +233,11 @@ class _NextStopCard extends StatelessWidget {
                 Text(
                   l.hubNextStop,
                   style: const TextStyle(
-                      color: DrColors.saffron, fontWeight: FontWeight.w800, letterSpacing: 1.6, fontSize: 13),
+                    color: DrColors.saffron,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.6,
+                    fontSize: 13,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(realm.name(l), style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
@@ -240,7 +248,9 @@ class _NextStopCard extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 16),
-                Center(child: PulsingPlayButton(label: playLabel, onPressed: onPlay)),
+                Center(
+                  child: PulsingPlayButton(label: playLabel, onPressed: onPlay),
+                ),
               ],
             ),
           ),
@@ -323,11 +333,7 @@ class _RouteCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           for (final (i, realm) in Realm.values.indexed)
-            _RouteStop(
-              realm: realm,
-              done: done.contains(realm.id),
-              last: i == Realm.values.length - 1,
-            ),
+            _RouteStop(realm: realm, done: done.contains(realm.id), last: i == Realm.values.length - 1),
         ],
       ),
     );
@@ -368,13 +374,14 @@ class _RouteStop extends StatelessWidget {
                     child: done
                         ? const Icon(Icons.check_rounded, color: Colors.white, size: 18)
                         : Center(
-                            child: Text('${realm.index + 1}',
-                                style: TextStyle(fontWeight: FontWeight.w800, color: realm.palette.pathEdge))),
+                            child: Text(
+                              '${realm.index + 1}',
+                              style: TextStyle(fontWeight: FontWeight.w800, color: realm.palette.pathEdge),
+                            ),
+                          ),
                   ),
                   if (!last)
-                    Expanded(
-                      child: Container(width: 3, color: done ? DrColors.done : const Color(0x332B1A4A)),
-                    ),
+                    Expanded(child: Container(width: 3, color: done ? DrColors.done : const Color(0x332B1A4A))),
                 ],
               ),
             ),
@@ -393,11 +400,14 @@ class _RouteStop extends StatelessWidget {
                         color: done ? const Color(0x222E8B57) : const Color(0x142B1A4A),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(state,
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: done ? DrColors.done : DrColors.inkMuted)),
+                      child: Text(
+                        state,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: done ? DrColors.done : DrColors.inkMuted,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -417,15 +427,15 @@ class _HowToCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     Widget row(IconData icon, String text) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: Row(
-            children: [
-              Icon(icon, color: DrColors.teal, size: 24),
-              const SizedBox(width: 12),
-              Expanded(child: Text(text, style: const TextStyle(fontSize: 15))),
-            ],
-          ),
-        );
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          Icon(icon, color: DrColors.teal, size: 24),
+          const SizedBox(width: 12),
+          Expanded(child: Text(text, style: const TextStyle(fontSize: 15))),
+        ],
+      ),
+    );
     return Container(
       key: const Key('play.howto'),
       padding: const EdgeInsets.all(18),

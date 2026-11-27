@@ -11,11 +11,11 @@ void main() {
 
     expect(find.text('Dwarka Run'), findsOneWidget);
     expect(find.byKey(const Key('hub.nextStop')), findsOneWidget);
-    expect(find.text('Forest Kingdom'), findsWidgets);
+    expect(find.text('Ancient Dwarka'), findsWidgets);
     expect(find.text('Start yatra'), findsOneWidget);
     expect(find.text('120 mudra'), findsOneWidget);
     expect(find.text('640 m'), findsOneWidget);
-    for (final id in ['forest', 'river', 'desert', 'himalaya', 'celestial']) {
+    for (final id in ['dwarka', 'forest', 'river', 'desert', 'celestial']) {
       expect(find.byKey(Key('play.route.$id.todo')), findsOneWidget, reason: id);
     }
     await tester.scrollUntilVisible(find.byKey(const Key('play.howto')), 200);
@@ -24,7 +24,20 @@ void main() {
   });
 
   testWidgets('a finished realm shows as done on the route', (tester) async {
-    final s = await TestServices.create({'dr.realmsDone': ['forest']});
+    final s = await TestServices.create({
+      'dr.realmsDone': ['dwarka'],
+    });
+    await tester.pumpWidget(s.app());
+    await tester.pump();
+    expect(find.byKey(const Key('play.route.dwarka.done')), findsOneWidget);
+    expect(find.byKey(const Key('play.route.forest.todo')), findsOneWidget);
+    expect(find.text('Continue to Forest Kingdom'), findsOneWidget);
+  });
+
+  testWidgets('past the playable realms, Play runs the last one again', (tester) async {
+    final s = await TestServices.create({
+      'dr.realmsDone': ['dwarka', 'forest'],
+    });
     await tester.pumpWidget(s.app());
     await tester.pump();
     expect(find.byKey(const Key('play.route.forest.done')), findsOneWidget);

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'art_library.dart';
 import 'camera.dart';
 import 'entities.dart';
 import 'realm.dart';
@@ -13,7 +14,14 @@ import 'run_simulation.dart';
 /// Paints, paths and the draw-order buffers are created once and reused, so
 /// painting a frame allocates nothing.
 class TrackPainter {
-  TrackPainter(this.realm) : pal = realm.palette;
+  TrackPainter(this.realm, {ArtLibrary? art}) : pal = realm.palette, art = art ?? ArtLibrary.instance;
+
+  /// Art-pack images. Anything not loaded yet is drawn in code instead.
+  final ArtLibrary art;
+  final Paint _image = Paint()
+    ..filterQuality = FilterQuality.medium
+    ..isAntiAlias = true;
+  Rect? _skySrc;
 
   final Realm realm;
   final RealmPalette pal;
@@ -41,6 +49,7 @@ class TrackPainter {
   static const _kObstacle = 1;
   static const _kPickup = 2;
   static const _kScenery = 3;
+  static const _kGate = 4;
 
   static const double sceneryEvery = 7.0;
   static const double hazeFrom = 70;
@@ -51,16 +60,11 @@ class TrackPainter {
   void resize(TrackCamera cam) {
     _w = cam.width;
     _h = cam.height;
-    _sky.shader = Gradient.linear(
-      Offset(0, 0),
-      Offset(0, cam.horizon),
-      [pal.skyTop, pal.skyBottom],
-    );
-    _haze.shader = Gradient.linear(
-      Offset(0, cam.horizon),
-      Offset(0, cam.horizon + _h * 0.16),
-      [pal.haze.withValues(alpha: 0.85), pal.haze.withValues(alpha: 0)],
-    );
+    _sky.shader = Gradient.linear(Offset(0, 0), Offset(0, cam.horizon), [pal.skyTop, pal.skyBottom]);
+    _haze.shader = Gradient.linear(Offset(0, cam.horizon), Offset(0, cam.horizon + _h * 0.16), [
+      pal.haze.withValues(alpha: 0.85),
+      pal.haze.withValues(alpha: 0),
+    ]);
     // Distant hills, fixed to the horizon.
     _hills.reset();
     _hillsNear.reset();
@@ -107,7 +111,9 @@ class TrackPainter {
         case _kPickup:
           _paintPickup(canvas, cam, sim.pools.pickups[idx], sim.time);
         case _kScenery:
-          _paintScenery(canvas, cam, idx);
+          realm == Realm.dwarka ? _paintCityScenery(canvas, cam, idx) : _paintScenery(canvas, cam, idx);
+        case _kGate:
+          _paintGate(canvas, cam, z);
       }
     }
     if (!hazeDrawn) {
@@ -118,6 +124,7 @@ class TrackPainter {
 
   // ── backdrop ──
   void _paintSky(Canvas canvas, TrackCamera cam) {
+    if (realm == Realm.dwarka && _paintCitySky(canvas, cam)) return;
     canvas.drawRect(Rect.fromLTWH(0, 0, _w, cam.horizon + 1), _sky);
     _fill.color = const Color(0xFFFFF3D0);
     canvas.drawCircle(Offset(_w * 0.78, cam.horizon * 0.42), _h * 0.045, _fill);
@@ -154,11 +161,7 @@ class TrackPainter {
           ..color = pal.pathEdge.withValues(alpha: 0.35)
           ..strokeWidth = math.max(1, 0.05 * cam.scaleAt(z0));
         for (final lx in const [-RunSimulation.laneWidth / 2, RunSimulation.laneWidth / 2]) {
-          canvas.drawLine(
-            Offset(cam.sx(lx, z0), cam.sy(0, z0)),
-            Offset(cam.sx(lx, z1), cam.sy(0, z1)),
-            _stroke,
-          );
+          canvas.drawLine(Offset(cam.sx(lx, z0), cam.sy(0, z0)), Offset(cam.sx(lx, z1), cam.sy(0, z1)), _stroke);
         }
       }
       z -= tile;
@@ -195,6 +198,12 @@ class TrackPainter {
     final last = (far / sceneryEvery).floor();
     for (var i = first; i <= last; i++) {
       _push(i * sceneryEvery, (_kScenery << 16) | (i & 0xFFFF));
+    }
+    // City gateways at the start and at the far edge of Ancient Dwarka.
+    if (realm == Realm.dwarka) {
+      for (final gz in [gateStartZ, sim.targetMetres.toDouble()]) {
+        if (cam.visible(gz) && gz < far) _push(gz, (_kGate << 16));
+      }
     }
     // Insertion sort, far first. The order barely changes between frames.
     for (var i = 1; i < _drawCount; i++) {
@@ -255,7 +264,9 @@ class TrackPainter {
     _fill.color = const Color(0xFF6B4A2E);
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-          Rect.fromLTWH(bx - trunkW / 2, by - trunkH, trunkW, trunkH), Radius.circular(trunkW * 0.3)),
+        Rect.fromLTWH(bx - trunkW / 2, by - trunkH, trunkW, trunkH),
+        Radius.circular(trunkW * 0.3),
+      ),
       _fill,
     );
     _stroke
@@ -349,12 +360,17 @@ class TrackPainter {
     _fill.color = const Color(0x33000000);
     canvas.drawOval(Rect.fromCenter(center: Offset(cx, gy), width: halfW * 2.1, height: 0.35 * s), _fill);
 
+    final sprite = o.kind.sprite;
+    if (sprite != null && _sprite(canvas, sprite, cx, gy, o.kind.spriteWidth * s)) return;
+
     switch (o.kind) {
       case ObstacleKind.fallenPillar:
         final h = o.kind.height * s;
         _fill.color = pal.stone;
         canvas.drawRRect(
-            RRect.fromRectAndRadius(Rect.fromLTRB(cx - halfW, gy - h, cx + halfW, gy), Radius.circular(h * 0.45)), _fill);
+          RRect.fromRectAndRadius(Rect.fromLTRB(cx - halfW, gy - h, cx + halfW, gy), Radius.circular(h * 0.45)),
+          _fill,
+        );
         _fill.color = pal.stoneDark;
         canvas.drawRect(Rect.fromLTRB(cx - halfW * 0.55, gy - h, cx - halfW * 0.45, gy), _fill);
         canvas.drawRect(Rect.fromLTRB(cx + halfW * 0.45, gy - h, cx + halfW * 0.55, gy), _fill);
@@ -369,9 +385,12 @@ class TrackPainter {
         _fill.color = const Color(0xFF5E4027);
         canvas.drawRect(Rect.fromLTWH(cx + side * halfW - 0.2 * s, gy - under - thick, 0.4 * s, under + thick), _fill);
         canvas.drawRRect(
-            RRect.fromRectAndRadius(
-                Rect.fromLTRB(cx - halfW * 1.1, gy - under - thick, cx + halfW * 1.1, gy - under), Radius.circular(thick / 2)),
-            _fill);
+          RRect.fromRectAndRadius(
+            Rect.fromLTRB(cx - halfW * 1.1, gy - under - thick, cx + halfW * 1.1, gy - under),
+            Radius.circular(thick / 2),
+          ),
+          _fill,
+        );
         _fill.color = pal.foliageLight;
         for (var k = -2; k <= 2; k++) {
           canvas.drawCircle(Offset(cx + k * halfW * 0.45, gy - under - thick * 1.2), 0.32 * s, _fill);
@@ -445,6 +464,23 @@ class TrackPainter {
         canvas.drawCircle(Offset(cx + halfW * 0.7, gy - 0.35 * s), 0.35 * s, _fill);
       case ObstacleKind.monkey:
         _paintMonkey(canvas, cx, gy, s, t, o.variant);
+      case ObstacleKind.garlandBeam:
+        _paintGarlandBeam(canvas, cx, gy, s, halfW, t);
+      // Code-drawn stand-ins while the art pack is still loading.
+      case ObstacleKind.clayPot:
+        _fill.color = const Color(0xFFD56B4F);
+        canvas.drawOval(Rect.fromLTRB(cx - halfW * 0.7, gy - 0.95 * s, cx + halfW * 0.7, gy), _fill);
+      case ObstacleKind.stoneDebris:
+        _fill.color = pal.stoneDark;
+        canvas.drawRect(Rect.fromLTRB(cx - halfW, gy - 0.5 * s, cx + halfW * 0.2, gy), _fill);
+        _fill.color = pal.stone;
+        canvas.drawRect(Rect.fromLTRB(cx - halfW * 0.1, gy - 0.75 * s, cx + halfW, gy), _fill);
+      case ObstacleKind.woodenCrate:
+        _fill.color = const Color(0xFFA87951);
+        canvas.drawRect(Rect.fromLTRB(cx - halfW, gy - 1.6 * s, cx + halfW, gy), _fill);
+      case ObstacleKind.brokenPillar:
+        _fill.color = pal.stone;
+        canvas.drawRect(Rect.fromLTRB(cx - halfW * 0.6, gy - 2.6 * s, cx + halfW * 0.6, gy), _fill);
     }
   }
 
@@ -470,6 +506,136 @@ class TrackPainter {
     _fill.color = const Color(0xFF2A1A10);
     canvas.drawCircle(Offset(cx - 0.07 * s, by - 0.88 * s), 0.03 * s, _fill);
     canvas.drawCircle(Offset(cx + 0.07 * s, by - 0.88 * s), 0.03 * s, _fill);
+  }
+
+  /// Draws an art-pack image standing on the ground at ([cx], [gy]), [width]
+  /// pixels wide. Pack images have about 5% transparent padding, which the
+  /// base offset absorbs. Returns false if the image is not loaded yet.
+  bool _sprite(Canvas canvas, String name, double cx, double gy, double width, {double pad = 0.05}) {
+    final img = art[name];
+    if (img == null) return false;
+    final src = art.src(name)!;
+    final height = width * src.height / src.width;
+    canvas.drawImageRect(img, src, Rect.fromLTWH(cx - width / 2, gy - height * (1 - pad), width, height), _image);
+    return true;
+  }
+
+  /// A wooden beam across the lane with marigold garlands: slide under it.
+  void _paintGarlandBeam(Canvas canvas, double cx, double gy, double s, double halfW, double t) {
+    final under = ObstacleKind.garlandBeam.height * s;
+    _fill.color = const Color(0xFF8A5A33);
+    canvas.drawRect(Rect.fromLTWH(cx - halfW * 1.1, gy - under - 1.3 * s, 0.22 * s, under + 1.3 * s), _fill);
+    canvas.drawRect(Rect.fromLTWH(cx + halfW * 1.1 - 0.22 * s, gy - under - 1.3 * s, 0.22 * s, under + 1.3 * s), _fill);
+    _fill.color = const Color(0xFFA87951);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTRB(cx - halfW * 1.2, gy - under - 0.5 * s, cx + halfW * 1.2, gy - under - 0.2 * s),
+        Radius.circular(0.06 * s),
+      ),
+      _fill,
+    );
+    // Swags of marigolds hanging from the beam.
+    final sway = reduceMotion ? 0.0 : math.sin(t * 3) * 0.03 * s;
+    for (var k = 0; k < 9; k++) {
+      final u = k / 8.0;
+      final px = cx - halfW * 1.1 + u * halfW * 2.2 + sway;
+      final py = gy - under - 0.2 * s + math.sin(u * math.pi * 2).abs() * 0.18 * s;
+      _fill.color = k.isEven ? const Color(0xFFF29E38) : const Color(0xFFFCC23A);
+      canvas.drawCircle(Offset(px, py), 0.1 * s, _fill);
+    }
+  }
+
+  // ── Ancient Dwarka (art pack) ──
+  static const double gateStartZ = 18;
+  static const _buildings = [
+    'buildings/ancient_b01',
+    'buildings/ancient_b02',
+    'buildings/ancient_b03',
+    'buildings/ancient_b04',
+    'buildings/ancient_b05',
+    'buildings/ancient_b06',
+  ];
+  static const _streetProps = ['props/ancient_torch', 'props/marigold_pot', 'props/golden_vase', 'props/stone_pillar'];
+  static const _streetPropWidth = [0.9, 1.3, 0.8, 0.7];
+
+  /// Monuments set well back from the street, as a backdrop. Temples and
+  /// shrines only ever appear here, never on the path.
+  static const _monuments = [
+    'monuments/dwarka_temple',
+    'monuments/royal_fort',
+    'monuments/golden_palace',
+    'monuments/temple_tower',
+    'monuments/stone_monument',
+  ];
+  static const _monumentWidth = [13.0, 26.0, 22.0, 9.0, 4.5];
+
+  bool _paintCitySky(Canvas canvas, TrackCamera cam) {
+    final sky = art['backgrounds/sky_india'];
+    if (sky == null) return false;
+    final hz = cam.horizon + 1;
+    if (_skySrc == null) {
+      // Cover-fit the sky image to the sky area (made once, then reused).
+      final src = art.src('backgrounds/sky_india')!;
+      final want = _w / hz;
+      final have = src.width / src.height;
+      _skySrc = want > have
+          ? Rect.fromLTWH(0, 0, src.width, src.width / want)
+          : Rect.fromLTWH((src.width - src.height * want) / 2, 0, src.height * want, src.height);
+    }
+    canvas.drawImageRect(sky, _skySrc!, Rect.fromLTWH(0, 0, _w, hz), _image);
+    _band(canvas, 'backgrounds/temple_hills', cam.horizon + 2, _h * 0.13, -cam.camX * 2);
+    _band(canvas, 'backgrounds/skyline_dwarka', cam.horizon + 2, _h * 0.085, -cam.camX * 5);
+    return true;
+  }
+
+  /// A horizon strip, bottom-aligned at [bottom], tiled across the screen.
+  void _band(Canvas canvas, String name, double bottom, double height, double shift) {
+    final img = art[name];
+    if (img == null) return;
+    final src = art.src(name)!;
+    final width = src.width * height / src.height;
+    var x = (shift % width) - width;
+    while (x < _w) {
+      canvas.drawImageRect(img, src, Rect.fromLTWH(x, bottom - height, width, height), _image);
+      x += width;
+    }
+  }
+
+  void _paintCityScenery(Canvas canvas, TrackCamera cam, int i) {
+    final z = i * sceneryEvery;
+    final s = cam.scaleAt(z);
+    if (s <= 0) return;
+    for (final side in const [-1, 1]) {
+      // A monument now and then, far back from the street.
+      if ((i + (side > 0 ? 0 : 6)) % 12 == 0) {
+        final m = (i ~/ 12 + (side > 0 ? 1 : 0)) % _monuments.length;
+        final mx = side * (pathHalfWidth + 9 + _monumentWidth[m] / 2);
+        _sprite(canvas, _monuments[m], cam.sx(mx, z), cam.sy(0, z), _monumentWidth[m] * s);
+      }
+      // Shop-houses line the street.
+      final h = _hash(i, side + 3);
+      if (h < 0.8) {
+        final b = (_hash(i, side + 5) * _buildings.length).floor() % _buildings.length;
+        final bx = side * (pathHalfWidth + 3.6);
+        if (!_sprite(canvas, _buildings[b], cam.sx(bx, z), cam.sy(0, z), 7.2 * s, pad: 0.04)) {
+          _ruin(canvas, cam, bx, z, h);
+        }
+      }
+      // Lamps, pots and pillars along the kerb: decoration only.
+      final hp = _hash(i, side + 9);
+      if (hp < 0.55) {
+        final p = (hp * 7).floor() % _streetProps.length;
+        final px = side * (pathHalfWidth + 0.9);
+        _sprite(canvas, _streetProps[p], cam.sx(px, z + 3), cam.sy(0, z + 3), _streetPropWidth[p] * cam.scaleAt(z + 3));
+      }
+    }
+  }
+
+  /// The city gateway the path runs through, wide enough to clear all lanes.
+  void _paintGate(Canvas canvas, TrackCamera cam, double z) {
+    final s = cam.scaleAt(z);
+    if (s <= 0) return;
+    _sprite(canvas, 'monuments/ancient_gateway', cam.sx(0, z), cam.sy(0, z), 19 * s);
   }
 
   // ── pickups ──
@@ -554,7 +720,9 @@ class TrackPainter {
     final shadow = 1 / (1 + y * 0.6);
     _fill.color = const Color(0x40000000);
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(cx, groundY), width: 0.9 * s * shadow, height: 0.25 * s * shadow), _fill);
+      Rect.fromCenter(center: Offset(cx, groundY), width: 0.9 * s * shadow, height: 0.25 * s * shadow),
+      _fill,
+    );
 
     if (sim.boosting) _paintWings(canvas, cx, footY - 1.2 * s, s, sim.time);
 
@@ -577,8 +745,14 @@ class TrackPainter {
     canvas.drawLine(Offset(cx - 0.12 * s, hipY), Offset(cx - 0.14 * s, footY - legA * s), _stroke);
     canvas.drawLine(Offset(cx + 0.12 * s, hipY), Offset(cx + 0.14 * s, footY - legB * s), _stroke);
     _fill.color = const Color(0xFF5A3A22);
-    canvas.drawOval(Rect.fromCenter(center: Offset(cx - 0.14 * s, footY - legA * s), width: 0.2 * s, height: 0.1 * s), _fill);
-    canvas.drawOval(Rect.fromCenter(center: Offset(cx + 0.14 * s, footY - legB * s), width: 0.2 * s, height: 0.1 * s), _fill);
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(cx - 0.14 * s, footY - legA * s), width: 0.2 * s, height: 0.1 * s),
+      _fill,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(cx + 0.14 * s, footY - legB * s), width: 0.2 * s, height: 0.1 * s),
+      _fill,
+    );
 
     // Arms swing opposite to the legs.
     final armSwing = airborne ? -0.3 : math.sin(run) * 0.18;
@@ -592,8 +766,10 @@ class TrackPainter {
     // Tunic.
     _fill.color = const Color(0xFFF29E38);
     canvas.drawRRect(
-      RRect.fromRectAndRadius(Rect.fromLTRB(cx - 0.28 * s, shoulderY - 0.05 * s, cx + 0.28 * s, hipY + 0.12 * s),
-          Radius.circular(0.12 * s)),
+      RRect.fromRectAndRadius(
+        Rect.fromLTRB(cx - 0.28 * s, shoulderY - 0.05 * s, cx + 0.28 * s, hipY + 0.12 * s),
+        Radius.circular(0.12 * s),
+      ),
       _fill,
     );
     // Sash.
@@ -606,7 +782,10 @@ class TrackPainter {
     canvas.drawLine(Offset(cx - 0.22 * s, shoulderY), Offset(cx + 0.22 * s, hipY - 0.1 * s), _stroke);
     _fill.color = const Color(0xFF8A6238);
     canvas.drawRRect(
-      RRect.fromRectAndRadius(Rect.fromLTWH(cx + 0.12 * s, hipY - 0.2 * s, 0.26 * s, 0.24 * s), Radius.circular(0.05 * s)),
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(cx + 0.12 * s, hipY - 0.2 * s, 0.26 * s, 0.24 * s),
+        Radius.circular(0.05 * s),
+      ),
       _fill,
     );
 

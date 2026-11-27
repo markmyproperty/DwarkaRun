@@ -28,53 +28,41 @@ ThemeData buildDrTheme() {
     colorScheme: scheme,
     scaffoldBackgroundColor: DrColors.sand,
     useMaterial3: true,
-    textTheme: Typography.blackMountainView.apply(
-      bodyColor: DrColors.ink,
-      displayColor: DrColors.ink,
-    ),
+    textTheme: Typography.blackMountainView.apply(bodyColor: DrColors.ink, displayColor: DrColors.ink),
   );
 }
 
 /// Shared card decoration.
 BoxDecoration drCard({Color color = DrColors.cream}) => BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(20),
-      boxShadow: const [
-        BoxShadow(color: Color(0x222B1A4A), blurRadius: 16, offset: Offset(0, 6)),
-      ],
-    );
+  color: color,
+  borderRadius: BorderRadius.circular(20),
+  boxShadow: const [BoxShadow(color: Color(0x222B1A4A), blurRadius: 16, offset: Offset(0, 6))],
+);
 
 /// Whether the player asked for less motion (system setting).
-bool reduceMotionOf(BuildContext context) =>
-    MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+bool reduceMotionOf(BuildContext context) => MediaQuery.maybeDisableAnimationsOf(context) ?? false;
 
 extension RealmText on Realm {
   String name(AppLocalizations l) => switch (this) {
-        Realm.forest => l.realmForest,
-        Realm.river => l.realmRiver,
-        Realm.desert => l.realmDesert,
-        Realm.himalaya => l.realmHimalaya,
-        Realm.celestial => l.realmCelestial,
-      };
+    Realm.dwarka => l.realmDwarka,
+    Realm.forest => l.realmForest,
+    Realm.river => l.realmRiver,
+    Realm.desert => l.realmDesert,
+    Realm.celestial => l.realmCelestial,
+  };
 
   String blurb(AppLocalizations l) => switch (this) {
-        Realm.forest => l.realmForestBlurb,
-        Realm.river => l.realmRiverBlurb,
-        Realm.desert => l.realmDesertBlurb,
-        Realm.himalaya => l.realmHimalayaBlurb,
-        Realm.celestial => l.realmCelestialBlurb,
-      };
+    Realm.dwarka => l.realmDwarkaBlurb,
+    Realm.forest => l.realmForestBlurb,
+    Realm.river => l.realmRiverBlurb,
+    Realm.desert => l.realmDesertBlurb,
+    Realm.celestial => l.realmCelestialBlurb,
+  };
 }
 
 /// A big, rounded primary button with a semantic label and a 56 px target.
 class DrButton extends StatelessWidget {
-  const DrButton({
-    super.key,
-    required this.label,
-    required this.onPressed,
-    this.icon,
-    this.primary = true,
-  });
+  const DrButton({super.key, required this.label, required this.onPressed, this.icon, this.primary = true});
 
   final String label;
   final VoidCallback? onPressed;

@@ -36,6 +36,34 @@ class RealmPalette {
 
 /// One stage of the yatra. The order of the values is the order of the trip.
 enum Realm {
+  dwarka(
+    id: 'dwarka',
+    targetMetres: 1500,
+    playable: true,
+    obstacles: [
+      ObstacleKind.clayPot,
+      ObstacleKind.garlandBeam,
+      ObstacleKind.woodenCrate,
+      ObstacleKind.stoneDebris,
+      ObstacleKind.brokenPillar,
+      ObstacleKind.marketCart,
+      ObstacleKind.monkey,
+    ],
+    palette: RealmPalette(
+      skyTop: Color(0xFF9FD3F2),
+      skyBottom: Color(0xFFFCE7C8),
+      haze: Color(0xFFFFEBD2),
+      ground: Color(0xFFE6C79E),
+      groundFar: Color(0xFFF1DDBE),
+      pathA: Color(0xFFE9CFA6),
+      pathB: Color(0xFFE0C194),
+      pathEdge: Color(0xFFB9A78E),
+      foliageDark: Color(0xFF5C9F99),
+      foliageLight: Color(0xFFBDE8D9),
+      stone: Color(0xFFE9CFA6),
+      stoneDark: Color(0xFFB9A78E),
+    ),
+  ),
   forest(
     id: 'forest',
     targetMetres: 1500,
@@ -101,26 +129,6 @@ enum Realm {
       foliageLight: Color(0xFF9AA552),
       stone: Color(0xFFD9935A),
       stoneDark: Color(0xFFA9683A),
-    ),
-  ),
-  himalaya(
-    id: 'himalaya',
-    targetMetres: 1700,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar],
-    palette: RealmPalette(
-      skyTop: Color(0xFF5B8FC7),
-      skyBottom: Color(0xFFDDEBF5),
-      haze: Color(0xFFE8F0F6),
-      ground: Color(0xFFF2F5F8),
-      groundFar: Color(0xFFDDE6EE),
-      pathA: Color(0xFFBFD3E3),
-      pathB: Color(0xFFAFC6D9),
-      pathEdge: Color(0xFF8AA4BB),
-      foliageDark: Color(0xFF2F5249),
-      foliageLight: Color(0xFF4F7A6C),
-      stone: Color(0xFF9AA3AD),
-      stoneDark: Color(0xFF6E7781),
     ),
   ),
   celestial(

@@ -60,3 +60,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/images/backgrounds/
+    - assets/images/buildings/
+    - assets/images/monuments/
+    - assets/images/props/
+    - assets/images/river/

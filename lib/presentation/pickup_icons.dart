@@ -9,8 +9,7 @@ class CoinIcon extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(BuildContext context) =>
-      CustomPaint(size: Size.square(size), painter: _CoinPainter());
+  Widget build(BuildContext context) => CustomPaint(size: Size.square(size), painter: _CoinPainter());
 }
 
 class _CoinPainter extends CustomPainter {
@@ -38,8 +37,7 @@ class FeatherIcon extends StatelessWidget {
   final bool dim;
 
   @override
-  Widget build(BuildContext context) =>
-      CustomPaint(size: Size.square(size), painter: _FeatherPainter(dim));
+  Widget build(BuildContext context) => CustomPaint(size: Size.square(size), painter: _FeatherPainter(dim));
 }
 
 class _FeatherPainter extends CustomPainter {

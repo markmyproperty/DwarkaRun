@@ -15,23 +15,23 @@ class _PanelFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-        color: const Color(0x992B1A4A),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 380),
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(22, 24, 22, 22),
-                  decoration: drCard(),
-                  child: Material(type: MaterialType.transparency, child: child),
-                ),
-              ),
+    color: const Color(0x992B1A4A),
+    child: SafeArea(
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 380),
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(22, 24, 22, 22),
+              decoration: drCard(),
+              child: Material(type: MaterialType.transparency, child: child),
             ),
           ),
         ),
-      );
+      ),
+    ),
+  );
 }
 
 class _Title extends StatelessWidget {
@@ -41,13 +41,13 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        header: true,
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: DrColors.indigo),
-        ),
-      );
+    header: true,
+    child: Text(
+      text,
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: DrColors.indigo),
+    ),
+  );
 }
 
 class PausePanel extends StatelessWidget {
@@ -77,17 +77,28 @@ class PausePanel extends StatelessWidget {
         children: [
           _Title(l.pauseTitle),
           const SizedBox(height: 20),
-          DrButton(key: const Key('pause.resume'), label: l.pauseResume, icon: Icons.play_arrow_rounded, onPressed: onResume),
+          DrButton(
+            key: const Key('pause.resume'),
+            label: l.pauseResume,
+            icon: Icons.play_arrow_rounded,
+            onPressed: onResume,
+          ),
           const SizedBox(height: 12),
           DrButton(
-              key: const Key('pause.restart'),
-              label: l.pauseRestart,
-              icon: Icons.replay_rounded,
-              primary: false,
-              onPressed: onRestart),
+            key: const Key('pause.restart'),
+            label: l.pauseRestart,
+            icon: Icons.replay_rounded,
+            primary: false,
+            onPressed: onRestart,
+          ),
           const SizedBox(height: 12),
           DrButton(
-              key: const Key('pause.quit'), label: l.pauseQuit, icon: Icons.home_rounded, primary: false, onPressed: onQuit),
+            key: const Key('pause.quit'),
+            label: l.pauseQuit,
+            icon: Icons.home_rounded,
+            primary: false,
+            onPressed: onQuit,
+          ),
           const SizedBox(height: 8),
           Semantics(
             toggled: !muted,
@@ -117,26 +128,29 @@ class _Stat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        label: '$label: $value',
-        excludeSemantics: true,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(color: DrColors.sand, borderRadius: BorderRadius.circular(14)),
-          child: Column(
+    label: '$label: $value',
+    excludeSemantics: true,
+    child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(color: DrColors.sand, borderRadius: BorderRadius.circular(14)),
+      child: Column(
+        children: [
+          Text(label, style: const TextStyle(color: DrColors.inkMuted, fontSize: 13)),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(label, style: const TextStyle(color: DrColors.inkMuted, fontSize: 13)),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (icon != null) ...[icon!, const SizedBox(width: 6)],
-                  Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: DrColors.ink)),
-                ],
+              if (icon != null) ...[icon!, const SizedBox(width: 6)],
+              Text(
+                value,
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: DrColors.ink),
               ),
             ],
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
 
 class GameOverPanel extends StatelessWidget {
@@ -167,22 +181,27 @@ class GameOverPanel extends StatelessWidget {
           _Title(l.gameOverTitle),
           if (newBest) ...[
             const SizedBox(height: 8),
-            Text(l.newBest,
-                key: const Key('gameover.best'),
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: DrColors.saffron, fontWeight: FontWeight.w800, fontSize: 16)),
+            Text(
+              l.newBest,
+              key: const Key('gameover.best'),
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: DrColors.saffron, fontWeight: FontWeight.w800, fontSize: 16),
+            ),
           ],
           const SizedBox(height: 18),
           Row(
             children: [
-              Expanded(child: _Stat(key: const Key('gameover.score'), label: l.scoreLabel, value: l.metresValue(score))),
+              Expanded(
+                child: _Stat(key: const Key('gameover.score'), label: l.scoreLabel, value: l.metresValue(score)),
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: _Stat(
-                    key: const Key('gameover.coins'),
-                    label: l.coinsCollected,
-                    value: '$coins',
-                    icon: const CoinIcon(size: 20)),
+                  key: const Key('gameover.coins'),
+                  label: l.coinsCollected,
+                  value: '$coins',
+                  icon: const CoinIcon(size: 20),
+                ),
               ),
             ],
           ),
@@ -190,7 +209,12 @@ class GameOverPanel extends StatelessWidget {
           DrButton(key: const Key('gameover.retry'), label: l.retry, icon: Icons.replay_rounded, onPressed: onRetry),
           const SizedBox(height: 12),
           DrButton(
-              key: const Key('gameover.back'), label: l.backToHub, icon: Icons.home_rounded, primary: false, onPressed: onBack),
+            key: const Key('gameover.back'),
+            label: l.backToHub,
+            icon: Icons.home_rounded,
+            primary: false,
+            onPressed: onBack,
+          ),
         ],
       ),
     );
@@ -224,21 +248,30 @@ class RealmCompletePanel extends StatelessWidget {
           const SizedBox(height: 8),
           _Title(title),
           const SizedBox(height: 8),
-          Text(l.realmCompleteBody, textAlign: TextAlign.center, style: const TextStyle(color: DrColors.inkMuted)),
+          Text(
+            l.realmCompleteBody,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: DrColors.inkMuted),
+          ),
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: _Stat(label: l.scoreLabel, value: l.metresValue(metres))),
+              Expanded(
+                child: _Stat(label: l.scoreLabel, value: l.metresValue(metres)),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: _Stat(label: l.coinsCollected, value: '$coins', icon: const CoinIcon(size: 20))),
+              Expanded(
+                child: _Stat(label: l.coinsCollected, value: '$coins', icon: const CoinIcon(size: 20)),
+              ),
             ],
           ),
           const SizedBox(height: 20),
           DrButton(
-              key: const Key('complete.continue'),
-              label: l.continueLabel,
-              icon: Icons.arrow_forward_rounded,
-              onPressed: onContinue),
+            key: const Key('complete.continue'),
+            label: l.continueLabel,
+            icon: Icons.arrow_forward_rounded,
+            onPressed: onContinue,
+          ),
         ],
       ),
     );
@@ -263,10 +296,10 @@ class TutorialHints extends StatelessWidget {
           final (String? text, IconData icon) = m < 50
               ? (l.hintLanes, Icons.swap_horiz_rounded)
               : m < 92
-                  ? (l.hintJump, Icons.keyboard_double_arrow_up_rounded)
-                  : m < 133
-                      ? (l.hintSlide, Icons.keyboard_double_arrow_down_rounded)
-                      : (null, Icons.circle);
+              ? (l.hintJump, Icons.keyboard_double_arrow_up_rounded)
+              : m < 133
+              ? (l.hintSlide, Icons.keyboard_double_arrow_down_rounded)
+              : (null, Icons.circle);
           if (text == null) return const SizedBox.shrink();
           return Align(
             alignment: const Alignment(0, 0.15),
@@ -279,7 +312,10 @@ class TutorialHints extends StatelessWidget {
                 children: [
                   Icon(icon, color: DrColors.indigo, size: 30),
                   const SizedBox(width: 10),
-                  Text(text, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: DrColors.indigo)),
+                  Text(
+                    text,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: DrColors.indigo),
+                  ),
                 ],
               ),
             ),

@@ -13,9 +13,9 @@ void run(RunSimulation sim, double seconds) {
 }
 
 List<String> layout(RunSimulation sim) => [
-      for (final o in sim.pools.obstacles)
-        if (o.active) '${o.kind.name}@${o.lane}:${o.z.toStringAsFixed(2)}',
-    ]..sort();
+  for (final o in sim.pools.obstacles)
+    if (o.active) '${o.kind.name}@${o.lane}:${o.z.toStringAsFixed(2)}',
+]..sort();
 
 void main() {
   test('the random generator is reproducible', () {
@@ -185,18 +185,43 @@ void main() {
     expect(sim.lane, 1);
   });
 
-  test('the autopilot can cross the Forest Kingdom on most seeds', () {
-    var finished = 0;
-    for (var seed = 0; seed < 10; seed++) {
-      final sim = RunSimulation(realm: Realm.forest, seed: seed);
-      final bot = RunAutopilot(sim);
-      for (var i = 0; i < 60 * 240 && sim.state == RunState.running; i++) {
-        bot.drive();
-        sim.update(1 / 60);
+  for (final realm in Realm.values.where((r) => r.playable)) {
+    test('every row in ${realm.name} leaves a passable lane', () {
+      for (var seed = 0; seed < 40; seed++) {
+        final sim = RunSimulation(realm: realm, seed: seed);
+        final rows = <double, List<Obstacle>>{};
+        for (final o in sim.pools.obstacles.where((o) => o.active)) {
+          rows.putIfAbsent(o.z, () => []).add(o);
+        }
+        for (final row in rows.values) {
+          expect(row.where((o) => o.kind.clearance == Clearance.lane).length, lessThan(2), reason: 'seed $seed');
+          expect(row.every((o) => realm.obstacles.contains(o.kind)), isTrue);
+        }
       }
-      if (sim.state == RunState.finished) finished++;
+    });
+  }
+
+  test('the autopilot can cross each playable realm on most seeds', () {
+    for (final realm in Realm.values.where((r) => r.playable)) {
+      var finished = 0;
+      for (var seed = 0; seed < 10; seed++) {
+        final sim = RunSimulation(realm: realm, seed: seed);
+        final bot = RunAutopilot(sim);
+        for (var i = 0; i < 60 * 240 && sim.state == RunState.running; i++) {
+          bot.drive();
+          sim.update(1 / 60);
+        }
+        if (sim.state == RunState.finished) finished++;
+      }
+      // The level must be beatable: a simple bot gets through most of the time.
+      expect(finished, greaterThanOrEqualTo(6), reason: realm.name);
     }
-    // The level must be beatable: a simple bot gets through most of the time.
-    expect(finished, greaterThanOrEqualTo(6));
+  });
+
+  test('a first run teaches with the realm\'s own obstacles', () {
+    final sim = RunSimulation(realm: Realm.dwarka, seed: 1, gentleStart: true);
+    final first = sim.pools.obstacles.where((o) => o.active).toList()..sort((a, b) => a.z.compareTo(b.z));
+    expect(first.take(3).map((o) => o.kind.clearance), [Clearance.lane, Clearance.jump, Clearance.slide]);
+    expect(first.take(3).every((o) => Realm.dwarka.obstacles.contains(o.kind)), isTrue);
   });
 }

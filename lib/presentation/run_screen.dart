@@ -23,13 +23,7 @@ enum _Phase { playing, paused, gameOver, complete }
 /// One run of a realm: the game, its HUD and the pause, game-over and
 /// realm-complete panels.
 class RunScreen extends StatefulWidget {
-  const RunScreen({
-    super.key,
-    required this.realm,
-    this.seed,
-    this.gentleStart,
-    this.targetMetres,
-  });
+  const RunScreen({super.key, required this.realm, this.seed, this.gentleStart, this.targetMetres});
 
   final Realm realm;
 
@@ -176,8 +170,8 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
 
   void _restart() {
     if (_phase == _Phase.paused) {
-      AppScope.read(context).analytics.runEnd(
-          realm: widget.realm.id, reason: 'restart', metres: _game.sim.metres, coins: _game.sim.coins);
+      AppScope.read(context).analytics
+          .runEnd(realm: widget.realm.id, reason: 'restart', metres: _game.sim.metres, coins: _game.sim.coins);
     }
     setState(() {
       _attempt++;
@@ -281,14 +275,8 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
                 onPanCancel: _onPanEnd,
                 child: GameWidget(key: ValueKey(_game), game: _game, autofocus: false),
               ),
-              RunHudOverlay(
-                hud: _game.hud,
-                targetMetres: target,
-                onPause: _pause,
-                onBoost: () => _game.sim.boost(),
-              ),
-              if (_game.gentleStart && _phase == _Phase.playing)
-                TutorialHints(hud: _game.hud, sim: _game.sim),
+              RunHudOverlay(hud: _game.hud, targetMetres: target, onPause: _pause, onBoost: () => _game.sim.boost()),
+              if (_game.gentleStart && _phase == _Phase.playing) TutorialHints(hud: _game.hud, sim: _game.sim),
               _Toast(toast: _toast),
               if (_phase == _Phase.paused)
                 PausePanel(
@@ -328,24 +316,23 @@ class _Toast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<String?>(
-        valueListenable: toast,
-        builder: (context, text, _) => text == null
-            ? const SizedBox.shrink()
-            : Align(
-                alignment: const Alignment(0, -0.55),
-                child: Semantics(
-                  liveRegion: true,
-                  child: Container(
-                    key: const Key('run.toast'),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xE62B1A4A),
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: Text(text,
-                        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
-                  ),
+    valueListenable: toast,
+    builder: (context, text, _) => text == null
+        ? const SizedBox.shrink()
+        : Align(
+            alignment: const Alignment(0, -0.55),
+            child: Semantics(
+              liveRegion: true,
+              child: Container(
+                key: const Key('run.toast'),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(color: const Color(0xE62B1A4A), borderRadius: BorderRadius.circular(18)),
+                child: Text(
+                  text,
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
                 ),
               ),
-      );
+            ),
+          ),
+  );
 }

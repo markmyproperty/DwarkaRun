@@ -6,12 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('starts empty, with the Forest Kingdom next', () async {
+  test('starts empty, with Ancient Dwarka next', () async {
     final repo = await ProgressRepository.load();
     expect(repo.wallet, 0);
     expect(repo.bestMetres, 0);
-    expect(repo.nextRealm, Realm.forest);
-    expect(repo.playRealm, Realm.forest);
+    expect(repo.nextRealm, Realm.dwarka);
+    expect(repo.playRealm, Realm.dwarka);
     expect(repo.tutorialDone, isFalse);
   });
 
@@ -38,13 +38,16 @@ void main() {
 
   test('completing a realm moves the route on and persists', () async {
     final repo = await ProgressRepository.load();
+    await repo.completeRealm(Realm.dwarka);
+    expect(repo.isDone(Realm.dwarka), isTrue);
+    expect(repo.nextRealm, Realm.forest);
+    expect(repo.playRealm, Realm.forest);
     await repo.completeRealm(Realm.forest);
-    expect(repo.isDone(Realm.forest), isTrue);
     expect(repo.nextRealm, Realm.river);
     // The river is not playable in this build, so Play runs the forest.
     expect(repo.playRealm, Realm.forest);
     final again = await ProgressRepository.load();
-    expect(again.realmsDone, {'forest'});
+    expect(again.realmsDone, {'dwarka', 'forest'});
   });
 
   test('mute and tutorial settings persist', () async {

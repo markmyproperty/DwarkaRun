@@ -7,8 +7,8 @@ import 'seeded_random.dart';
 /// Fixed-size pools so a run never allocates entities after it starts.
 class EntityPools {
   EntityPools({int obstacles = 48, int pickups = 192})
-      : obstacles = List.generate(obstacles, (_) => Obstacle(), growable: false),
-        pickups = List.generate(pickups, (_) => Pickup(), growable: false);
+    : obstacles = List.generate(obstacles, (_) => Obstacle(), growable: false),
+      pickups = List.generate(pickups, (_) => Pickup(), growable: false);
 
   final List<Obstacle> obstacles;
   final List<Pickup> pickups;
@@ -52,13 +52,9 @@ class EntityPools {
 /// The same seed and realm always give the same level. Every row leaves at
 /// least one lane the hero can get through without a power-up.
 class LevelGenerator {
-  LevelGenerator({
-    required this.realm,
-    required int seed,
-    required this.gentleStart,
-    required this.laneWidth,
-  })  : _rng = SeededRandom(seed),
-        _nextRowZ = gentleStart ? 55 : 40;
+  LevelGenerator({required this.realm, required int seed, required this.gentleStart, required this.laneWidth})
+    : _rng = SeededRandom(seed),
+      _nextRowZ = gentleStart ? 55 : 40;
 
   final Realm realm;
   final bool gentleStart;
@@ -72,12 +68,22 @@ class LevelGenerator {
   double get nextRowZ => _nextRowZ;
 
   /// The opening rows of a first run: one obstacle each, teaching lane,
-  /// jump and slide in that order.
-  static const _tutorialRows = [
-    (ObstacleKind.stoneWheel, 0),
-    (ObstacleKind.fallenPillar, 0),
-    (ObstacleKind.lowBranch, 0),
+  /// jump and slide in that order, using this realm's own obstacles.
+  late final List<ObstacleKind> _tutorialRows = [
+    _firstOf(Clearance.lane, ObstacleKind.stoneWheel),
+    _firstOf(Clearance.jump, ObstacleKind.fallenPillar),
+    _firstOf(Clearance.slide, ObstacleKind.lowBranch),
   ];
+
+  /// What a second lane-blocker in a row turns into: a jump obstacle.
+  late final ObstacleKind _fallbackJump = _firstOf(Clearance.jump, ObstacleKind.fallenPillar);
+
+  ObstacleKind _firstOf(Clearance c, ObstacleKind orElse) {
+    for (final k in realm.obstacles) {
+      if (k.clearance == c && k.speed == 0) return k;
+    }
+    return orElse;
+  }
 
   /// Spawns rows until the track is laid out to [aheadZ]. [difficulty] runs
   /// from 0 (start) to 1 (top speed) and tightens the spacing.
@@ -93,9 +99,8 @@ class LevelGenerator {
 
   void _spawnRow(EntityPools pools, double z, double difficulty) {
     if (gentleStart && _row < _tutorialRows.length) {
-      final (kind, lane) = _tutorialRows[_row];
-      _obstacle(pools, kind, lane, z);
-      _coinLine(pools, lane == 0 ? 1 : 0, z, 6);
+      _obstacle(pools, _tutorialRows[_row], 0, z);
+      _coinLine(pools, 1, z, 6);
       return;
     }
 
@@ -114,7 +119,7 @@ class LevelGenerator {
       // Never block two lanes outright: the second becomes a jump or slide.
       if (kind.clearance == Clearance.lane) {
         blockingCount++;
-        if (blockingCount > 1) kind = ObstacleKind.fallenPillar;
+        if (blockingCount > 1) kind = _fallbackJump;
       }
       _obstacle(pools, kind, lane, z);
     }

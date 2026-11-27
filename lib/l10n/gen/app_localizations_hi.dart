@@ -113,6 +113,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get soundOff => 'आवाज़ बंद';
 
   @override
+  String get realmDwarka => 'प्राचीन द्वारका';
+
+  @override
   String get realmForest => 'वन राज्य';
 
   @override
@@ -122,10 +125,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get realmDesert => 'मरु दुर्ग';
 
   @override
-  String get realmHimalaya => 'हिमालय दर्रा';
+  String get realmCelestial => 'स्वर्ण नगरी';
 
   @override
-  String get realmCelestial => 'स्वर्ण नगरी';
+  String get realmDwarkaBlurb =>
+      'बलुआ पत्थर की गलियाँ, दुकान-घर और भव्य स्मारक';
 
   @override
   String get realmForestBlurb => 'बरगद के जंगल और पुराने पत्थर के खंडहर';
@@ -135,9 +139,6 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get realmDesertBlurb => 'खुले आसमान के नीचे बलुआ पत्थर की प्राचीरें';
-
-  @override
-  String get realmHimalayaBlurb => 'बर्फ़ीले दर्रे और लहराती झंडियाँ';
 
   @override
   String get realmCelestialBlurb => 'सोने की एक तैरती नगरी';

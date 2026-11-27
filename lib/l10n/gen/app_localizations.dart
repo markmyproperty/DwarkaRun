@@ -272,6 +272,12 @@ abstract class AppLocalizations {
   /// **'Sound off'**
   String get soundOff;
 
+  /// No description provided for @realmDwarka.
+  ///
+  /// In en, this message translates to:
+  /// **'Ancient Dwarka'**
+  String get realmDwarka;
+
   /// No description provided for @realmForest.
   ///
   /// In en, this message translates to:
@@ -290,17 +296,17 @@ abstract class AppLocalizations {
   /// **'Desert Fort'**
   String get realmDesert;
 
-  /// No description provided for @realmHimalaya.
-  ///
-  /// In en, this message translates to:
-  /// **'Himalayan Pass'**
-  String get realmHimalaya;
-
   /// No description provided for @realmCelestial.
   ///
   /// In en, this message translates to:
   /// **'Celestial City'**
   String get realmCelestial;
+
+  /// No description provided for @realmDwarkaBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Sandstone streets, shop-houses and grand monuments'**
+  String get realmDwarkaBlurb;
 
   /// No description provided for @realmForestBlurb.
   ///
@@ -319,12 +325,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sandstone ramparts under a wide sky'**
   String get realmDesertBlurb;
-
-  /// No description provided for @realmHimalayaBlurb.
-  ///
-  /// In en, this message translates to:
-  /// **'Snowy passes and fluttering flags'**
-  String get realmHimalayaBlurb;
 
   /// No description provided for @realmCelestialBlurb.
   ///

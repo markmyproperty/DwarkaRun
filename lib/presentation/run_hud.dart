@@ -55,7 +55,10 @@ class RunHudOverlay extends StatelessWidget {
                           text: l.metresValue(h.metres),
                         ),
                         const SizedBox(height: 6),
-                        _Progress(value: h.progress, label: l.distanceToGo((targetMetres - h.metres).clamp(0, targetMetres))),
+                        _Progress(
+                          value: h.progress,
+                          label: l.distanceToGo((targetMetres - h.metres).clamp(0, targetMetres)),
+                        ),
                       ],
                     ),
                   ),
@@ -103,27 +106,24 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        label: semantics,
-        excludeSemantics: true,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: const Color(0xCC2B1A4A),
-            borderRadius: BorderRadius.circular(22),
+    label: semantics,
+    excludeSemantics: true,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(color: const Color(0xCC2B1A4A), borderRadius: BorderRadius.circular(22)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          icon,
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              icon,
-              const SizedBox(width: 6),
-              Text(
-                text,
-                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
-              ),
-            ],
-          ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
 
 class _Progress extends StatelessWidget {
@@ -134,21 +134,21 @@ class _Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        label: label,
-        excludeSemantics: true,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: SizedBox(
-            height: 8,
-            width: 160,
-            child: LinearProgressIndicator(
-              value: value,
-              backgroundColor: const Color(0x662B1A4A),
-              valueColor: const AlwaysStoppedAnimation(DrColors.gold),
-            ),
-          ),
+    label: label,
+    excludeSemantics: true,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(6),
+      child: SizedBox(
+        height: 8,
+        width: 160,
+        child: LinearProgressIndicator(
+          value: value,
+          backgroundColor: const Color(0x662B1A4A),
+          valueColor: const AlwaysStoppedAnimation(DrColors.gold),
         ),
-      );
+      ),
+    ),
+  );
 }
 
 class _BoostButton extends StatelessWidget {
