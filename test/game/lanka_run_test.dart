@@ -11,22 +11,19 @@ void main() {
     expect(Realm.lanka.bridgeStart, greaterThan(Realm.lanka.waterStart));
   });
 
-  test('a stage waiting for its art is stepped over: after Vijayanagar the route goes on to Lanka', () async {
+  test('every stage is built, so after Vijayanagar the route goes on to Dragon Valley and on to the end', () async {
     SharedPreferences.setMockInitialValues({
       'dr.realmsDone': ['ayodhya', 'ganga', 'pharaoh', 'himalayan', 'vijayanagar'],
     });
     final repo = await ProgressRepository.load();
-    expect(Realm.dragonValley.playable, isFalse);
-    expect(repo.nextRealm, Realm.lanka);
-    expect(repo.playRealm, Realm.lanka);
-    expect(repo.isUnlocked(Realm.lanka), isTrue);
-    expect(repo.isUnlocked(Realm.dragonValley), isFalse);
-    await repo.completeRealm(Realm.lanka);
-    expect(repo.playRealm, Realm.indus);
-    await repo.completeRealm(Realm.indus);
-    await repo.completeRealm(Realm.sunkenDwarka);
+    expect(Realm.values.every((r) => r.playable), isTrue);
+    for (final r in [Realm.dragonValley, Realm.lanka, Realm.indus, Realm.sunkenDwarka]) {
+      expect(repo.playRealm, r);
+      expect(repo.isUnlocked(r), isTrue);
+      await repo.completeRealm(r);
+    }
+    expect(repo.playRealm, Realm.finalLegend);
     await repo.completeRealm(Realm.finalLegend);
     expect(repo.yatraComplete, isTrue);
-    expect(repo.playRealm, Realm.finalLegend);
   });
 }

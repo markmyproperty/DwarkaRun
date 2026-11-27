@@ -30,6 +30,11 @@ class WorldAmbience {
       falling: 'vijayanagar/vfx/falling_plumeria_petals',
       garland: 'vijayanagar/decorations/jasmine_garland_swag',
     ),
+    Realm.dragonValley => const WorldAmbience(falling: 'dragon/vfx/falling_cinder_flakes'),
+    Realm.lanka => const WorldAmbience(
+      falling: 'lanka/vfx/falling_frangipani_petals',
+      garland: 'lanka/decorations/floral_swag_garland',
+    ),
     _ => const WorldAmbience(falling: 'ayodhya/vfx/gold_sparkle'),
   };
 }

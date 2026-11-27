@@ -188,8 +188,15 @@ enum Realm {
   dragonValley(
     id: 'dragon',
     targetMetres: 1700,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    playable: true,
+    obstacles: [
+      ObstacleKind.stoneDebris,
+      ObstacleKind.lowBranch,
+      ObstacleKind.fallenPillar,
+      ObstacleKind.brokenPillar,
+      ObstacleKind.woodenCrate,
+      ObstacleKind.graniteBoulder,
+    ],
     palette: RealmPalette(
       skyTop: Color(0xFF3A1F3D),
       skyBottom: Color(0xFFE8865A),

@@ -48,9 +48,8 @@ void main() {
     for (final r in [Realm.pharaoh, Realm.himalayan, Realm.vijayanagar]) {
       await repo.completeRealm(r);
     }
-    // Dragon Valley is not built yet, so the route steps over it to Lanka.
-    expect(repo.nextRealm, Realm.lanka);
-    expect(repo.playRealm, Realm.lanka);
+    expect(repo.nextRealm, Realm.dragonValley);
+    expect(repo.playRealm, Realm.dragonValley);
     final again = await ProgressRepository.load();
     expect(again.realmsDone, {'ayodhya', 'ganga', 'pharaoh', 'himalayan', 'vijayanagar'});
   });

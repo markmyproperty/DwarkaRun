@@ -10,13 +10,14 @@ void main() {
     Realm.pharaoh,
     Realm.himalayan,
     Realm.vijayanagar,
+    Realm.dragonValley,
     Realm.lanka,
     Realm.indus,
     Realm.sunkenDwarka,
     Realm.finalLegend,
   ];
 
-  test('stages 3 to 5 and 7 to 10 are playable and dressed from their own art packs', () {
+  test('stages 3 to 10 are playable and dressed from their own art packs', () {
     for (final realm in packStages) {
       expect(realm.playable, isTrue, reason: realm.id);
       final art = StageArt.of(realm);

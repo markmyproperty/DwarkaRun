@@ -141,6 +141,18 @@ flutter:
     - assets/images/indus/buildings/
     - assets/images/indus/env/
     - assets/images/indus/monuments/
+    - assets/images/dragon/backgrounds/
+    - assets/images/dragon/buildings/
+    - assets/images/dragon/decorations/
+    - assets/images/dragon/monuments/
+    - assets/images/dragon/obstacles/
+    - assets/images/dragon/props/
+    - assets/images/dragon/rewards/
+    - assets/images/dragon/vfx/
+    - assets/images/lanka/decorations/
+    - assets/images/lanka/obstacles/
+    - assets/images/lanka/rewards/
+    - assets/images/lanka/vfx/
     - assets/lottie/
   fonts:
     - family: Lilita
