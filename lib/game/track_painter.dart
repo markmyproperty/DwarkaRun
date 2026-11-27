@@ -87,7 +87,8 @@ class TrackPainter {
   void paint(Canvas canvas, TrackCamera cam, RunSimulation sim) {
     _paintSky(canvas, cam);
     _paintGround(canvas, cam);
-    _paintPath(canvas, cam);
+    _paintPath(canvas, cam, sim);
+    if (realm.hasRiver) _paintPlatforms(canvas, cam, sim);
     _collect(cam, sim);
 
     var hazeDrawn = false;
@@ -111,7 +112,14 @@ class TrackPainter {
         case _kPickup:
           _paintPickup(canvas, cam, sim.pools.pickups[idx], sim.time);
         case _kScenery:
-          realm == Realm.ayodhya ? _paintCityScenery(canvas, cam, idx) : _paintScenery(canvas, cam, idx);
+          switch (realm) {
+            case Realm.ayodhya:
+              _paintCityScenery(canvas, cam, idx);
+            case Realm.ganga:
+              _paintRiverScenery(canvas, cam, idx, sim);
+            default:
+              _paintScenery(canvas, cam, idx);
+          }
         case _kGate:
           _paintGate(canvas, cam, z);
       }
@@ -125,6 +133,7 @@ class TrackPainter {
   // ── backdrop ──
   void _paintSky(Canvas canvas, TrackCamera cam) {
     if (realm == Realm.ayodhya && _paintCitySky(canvas, cam)) return;
+    if (realm == Realm.ganga && _paintRiverSky(canvas, cam)) return;
     canvas.drawRect(Rect.fromLTWH(0, 0, _w, cam.horizon + 1), _sky);
     _fill.color = const Color(0xFFFFF3D0);
     canvas.drawCircle(Offset(_w * 0.78, cam.horizon * 0.42), _h * 0.045, _fill);
@@ -143,7 +152,7 @@ class TrackPainter {
 
   /// The path as 3-metre tiles, far to near. The tile colour comes from the
   /// tile's world position, so the path appears to scroll.
-  void _paintPath(Canvas canvas, TrackCamera cam) {
+  void _paintPath(Canvas canvas, TrackCamera cam, RunSimulation sim) {
     const tile = 3.0;
     final near = cam.camZ + 0.8;
     final far = cam.camZ + 170;
@@ -152,6 +161,16 @@ class TrackPainter {
       final z0 = math.max(z, near);
       final z1 = z + tile;
       final even = ((z / tile).floor() & 1) == 0;
+      if (realm.hasRiver) {
+        // Gentle bands on the water, scrolling with the run.
+        if (even) _quad(canvas, cam, -60, 60, z0, z1, _waterBand);
+        if (z >= sim.waterStart) {
+          z -= tile;
+          continue;
+        }
+        // Along the ghats: stone bank on the right, river on the left.
+        _quad(canvas, cam, pathHalfWidth, 60, z0, z1, even ? pal.stone : pal.stoneDark);
+      }
       // Edge strip, then the stone path.
       _quad(canvas, cam, -pathHalfWidth - 0.35, pathHalfWidth + 0.35, z0, z1, pal.pathEdge);
       _quad(canvas, cam, -pathHalfWidth, pathHalfWidth, z0, z1, even ? pal.pathA : pal.pathB);
@@ -178,6 +197,187 @@ class TrackPainter {
       ..close();
     _fill.color = c;
     canvas.drawPath(_path, _fill);
+  }
+
+  static const Color _waterBand = Color(0x1AFFFFFF);
+
+  /// Floating planks, boats and the bridge deck, drawn flat on the water.
+  void _paintPlatforms(Canvas canvas, TrackCamera cam, RunSimulation sim) {
+    final far = cam.camZ + 168;
+    for (final p in sim.pools.platforms) {
+      if (!p.active || p.z1 < cam.camZ + 0.8 || p.z0 > far) continue;
+      final z0 = math.max(p.z0, cam.camZ + 0.8);
+      final z1 = math.min(p.z1, far);
+      final x = p.lane * RunSimulation.laneWidth;
+      switch (p.kind) {
+        case PlatformKind.plank:
+          _quad(canvas, cam, x - 1.0, x + 1.0, z0, z1, const Color(0xFF8A6238));
+          _quad(
+            canvas,
+            cam,
+            x - 0.92,
+            x + 0.92,
+            z0,
+            z1,
+            p.variant < 0.5 ? const Color(0xFFA87951) : const Color(0xFFB48660),
+          );
+          _seams(canvas, cam, x, 0.92, z0, z1, 1.2, const Color(0x55603F22));
+        case PlatformKind.boat:
+          _boat(canvas, cam, x, z0, z1, p);
+        case PlatformKind.bridge:
+          _quad(canvas, cam, x - 1.1, x + 1.1, z0, z1, const Color(0xFF9C7A52));
+          _quad(canvas, cam, x - 1.05, x + 1.05, z0, z1, const Color(0xFFC9A47A));
+          _seams(canvas, cam, x, 1.05, z0, z1, 0.9, const Color(0x66704C2C));
+      }
+      // The near edge shows its thickness.
+      if (p.z0 >= cam.camZ + 0.8 && p.kind != PlatformKind.boat) {
+        final s0 = cam.scaleAt(p.z0);
+        _fill.color = const Color(0xFF5C4027);
+        final hw = p.kind == PlatformKind.bridge ? 1.1 : 1.0;
+        canvas.drawRect(
+          Rect.fromLTRB(cam.sx(x - hw, p.z0), cam.sy(0, p.z0), cam.sx(x + hw, p.z0), cam.sy(0, p.z0) + 0.28 * s0),
+          _fill,
+        );
+      }
+    }
+  }
+
+  void _seams(Canvas canvas, TrackCamera cam, double x, double hw, double z0, double z1, double every, Color c) {
+    _stroke
+      ..color = c
+      ..strokeWidth = 1;
+    var z = (z0 / every).ceil() * every;
+    while (z < z1) {
+      if (cam.scaleAt(z) > 3) {
+        canvas.drawLine(Offset(cam.sx(x - hw, z), cam.sy(0, z)), Offset(cam.sx(x + hw, z), cam.sy(0, z)), _stroke);
+      }
+      z += every;
+    }
+  }
+
+  /// A long wooden river boat seen from above: teal hull, saffron rim and a
+  /// plank deck to run along.
+  void _boat(Canvas canvas, TrackCamera cam, double x, double z0, double z1, Platform p) {
+    final bow = math.min(1.6, (p.z1 - p.z0) / 3);
+    final a = math.max(z0, p.z0 + bow);
+    final b = math.min(z1, p.z1 - bow);
+    _path
+      ..reset()
+      ..moveTo(cam.sx(x - 0.35, z0), cam.sy(0, z0))
+      ..lineTo(cam.sx(x + 0.35, z0), cam.sy(0, z0))
+      ..lineTo(cam.sx(x + 1.05, a), cam.sy(0, a))
+      ..lineTo(cam.sx(x + 1.05, b), cam.sy(0, b))
+      ..lineTo(cam.sx(x + 0.35, z1), cam.sy(0, z1))
+      ..lineTo(cam.sx(x - 0.35, z1), cam.sy(0, z1))
+      ..lineTo(cam.sx(x - 1.05, b), cam.sy(0, b))
+      ..lineTo(cam.sx(x - 1.05, a), cam.sy(0, a))
+      ..close();
+    _fill.color = const Color(0xFF2E8C8C);
+    canvas.drawPath(_path, _fill);
+    _stroke
+      ..color = const Color(0xFFE8743B)
+      ..strokeWidth = math.max(1.5, 0.08 * cam.scaleAt(z0));
+    canvas.drawPath(_path, _stroke);
+    _quad(canvas, cam, x - 0.78, x + 0.78, a, b, const Color(0xFFB48660));
+    _seams(canvas, cam, x, 0.78, a, b, 2.0, const Color(0x88603F22));
+  }
+
+  // ── Ganga Run (art pack part 2) ──
+  Rect? _riverSkySrc;
+
+  bool _paintRiverSky(Canvas canvas, TrackCamera cam) {
+    final img = art['backgrounds/coastal_background'];
+    if (img == null) return false;
+    final hz = cam.horizon + 1;
+    if (_riverSkySrc == null) {
+      // Line the backdrop's own water line up with our horizon.
+      final src = art.src('backgrounds/coastal_background')!;
+      final waterLine = src.height * 0.64;
+      var w = src.width;
+      var h = w * hz / _w;
+      if (h > waterLine) {
+        h = waterLine;
+        w = h * _w / hz;
+      }
+      _riverSkySrc = Rect.fromLTWH((src.width - w) / 2, waterLine - h, w, h);
+    }
+    canvas.drawImageRect(img, _riverSkySrc!, Rect.fromLTWH(0, 0, _w, hz), _image);
+    return true;
+  }
+
+  static const _riverTemples = [
+    'monuments/sacred_shrine',
+    'monuments/temple_tower',
+    'monuments/dwarka_temple',
+    'monuments/golden_palace',
+  ];
+  static const _riverTempleWidth = [7.0, 7.0, 11.0, 20.0];
+
+  void _paintRiverScenery(Canvas canvas, TrackCamera cam, int i, RunSimulation sim) {
+    final z = i * sceneryEvery;
+    final s = cam.scaleAt(z);
+    if (s <= 0) return;
+    final water = z >= sim.waterStart;
+    final bridge = z >= sim.bridgeStart;
+    for (final side in const [-1, 1]) {
+      final h = _hash(i, side + 3);
+      if (!water && side > 0) {
+        // The ghats: stone steps down to the water, houses and, set back,
+        // riverside temples and palaces as a backdrop.
+        if ((i + 3) % 9 == 0) {
+          final m = (i ~/ 9) % _riverTemples.length;
+          _sprite(
+            canvas,
+            _riverTemples[m],
+            cam.sx(pathHalfWidth + 11 + _riverTempleWidth[m] / 2, z),
+            cam.sy(0, z),
+            _riverTempleWidth[m] * s,
+          );
+        } else if (h < 0.55) {
+          final b = (_hash(i, 5) * _buildings.length).floor() % _buildings.length;
+          _sprite(canvas, _buildings[b], cam.sx(pathHalfWidth + 6.5, z), cam.sy(0, z), 7.0 * s, pad: 0.04);
+        }
+        _sprite(canvas, 'river/coastal_steps', cam.sx(pathHalfWidth + 2.6, z), cam.sy(0, z), 4.6 * s);
+        continue;
+      }
+      // Out on the water.
+      if (bridge && i.isEven) {
+        _railPost(canvas, cam, side * (RunSimulation.laneWidth * 1.5 + 0.15), z);
+        if (h < 0.3) {
+          _sprite(canvas, 'river/water_splash', cam.sx(side * 4.8, z), cam.sy(0, z), 3.0 * s);
+        }
+      } else if (h < 0.18) {
+        _sprite(canvas, 'river/boat_side', cam.sx(side * (7 + _hash(i, 9) * 8), z), cam.sy(0, z), 6.5 * s, pad: 0.2);
+      } else if (h < 0.34) {
+        _sprite(canvas, 'river/water_rock', cam.sx(side * (5.5 + _hash(i, 11) * 6), z), cam.sy(0, z), 2.2 * s);
+      } else if (h < 0.44) {
+        _sprite(canvas, 'river/sea_pillar', cam.sx(side * 5.2, z), cam.sy(0, z), 1.2 * s);
+      }
+      // Floating diyas drifting by: a gentle, respectful touch on the water.
+      if (_hash(i, side + 13) < 0.3) {
+        _sprite(
+          canvas,
+          'river/coastal_lamp',
+          cam.sx(side * (4.6 + _hash(i, 15) * 3), z + 2),
+          cam.sy(0, z + 2),
+          0.6 * cam.scaleAt(z + 2),
+          pad: 0.1,
+        );
+      }
+    }
+  }
+
+  void _railPost(Canvas canvas, TrackCamera cam, double x, double z) {
+    final s = cam.scaleAt(z);
+    final bx = cam.sx(x, z);
+    final by = cam.sy(0, z);
+    _fill.color = const Color(0xFF7A5634);
+    canvas.drawRect(Rect.fromLTWH(bx - 0.09 * s, by - 1.1 * s, 0.18 * s, 1.1 * s), _fill);
+    final z2 = z + sceneryEvery * 2;
+    _stroke
+      ..color = const Color(0xFF8A6238)
+      ..strokeWidth = math.max(1, 0.08 * s);
+    canvas.drawLine(Offset(bx, by - 1.0 * s), Offset(cam.sx(x, z2), cam.sy(1.0, z2)), _stroke);
   }
 
   // ── draw order ──
@@ -466,6 +666,18 @@ class TrackPainter {
         _paintMonkey(canvas, cx, gy, s, t, o.variant);
       case ObstacleKind.garlandBeam:
         _paintGarlandBeam(canvas, cx, gy, s, halfW, t);
+      case ObstacleKind.hangingLanterns:
+        _paintLanterns(canvas, cx, gy, s, halfW, t);
+      case ObstacleKind.stoneSteps:
+        // A short flight of ghat steps across the lane: jump it.
+        for (var k = 0; k < 3; k++) {
+          final top = gy - (0.25 * (k + 1)) * s;
+          final inset = k * 0.12 * halfW;
+          _fill.color = k.isEven ? pal.stone : const Color(0xFFE6CBA0);
+          canvas.drawRect(Rect.fromLTRB(cx - halfW + inset, top, cx + halfW - inset, top + 0.25 * s), _fill);
+        }
+        _fill.color = pal.stoneDark;
+        canvas.drawRect(Rect.fromLTRB(cx - halfW, gy - 0.04 * s, cx + halfW, gy), _fill);
       // Code-drawn stand-ins while the art pack is still loading.
       case ObstacleKind.clayPot:
         _fill.color = const Color(0xFFD56B4F);
@@ -542,6 +754,28 @@ class TrackPainter {
       final py = gy - under - 0.2 * s + math.sin(u * math.pi * 2).abs() * 0.18 * s;
       _fill.color = k.isEven ? const Color(0xFFF29E38) : const Color(0xFFFCC23A);
       canvas.drawCircle(Offset(px, py), 0.1 * s, _fill);
+    }
+  }
+
+  /// Paper lanterns strung across the lane on a wooden frame: slide under.
+  void _paintLanterns(Canvas canvas, double cx, double gy, double s, double halfW, double t) {
+    final under = ObstacleKind.hangingLanterns.height * s;
+    _fill.color = const Color(0xFF7A5634);
+    canvas.drawRect(Rect.fromLTWH(cx - halfW * 1.1, gy - under - 1.2 * s, 0.2 * s, under + 1.2 * s), _fill);
+    canvas.drawRect(Rect.fromLTWH(cx + halfW * 1.1 - 0.2 * s, gy - under - 1.2 * s, 0.2 * s, under + 1.2 * s), _fill);
+    _stroke
+      ..color = const Color(0xFF5C4027)
+      ..strokeWidth = math.max(1.5, 0.06 * s);
+    final ropeY = gy - under - 0.75 * s;
+    canvas.drawLine(Offset(cx - halfW * 1.1, ropeY), Offset(cx + halfW * 1.1, ropeY), _stroke);
+    const colors = [Color(0xFFE85D4A), Color(0xFFF2B33D), Color(0xFFE86FA0), Color(0xFF3FA796)];
+    for (var k = 0; k < 4; k++) {
+      final sway = reduceMotion ? 0.0 : math.sin(t * 2.5 + k) * 0.04 * s;
+      final lx = cx - halfW * 0.75 + k * halfW * 0.5 + sway;
+      _fill.color = colors[k];
+      canvas.drawOval(Rect.fromLTRB(lx - 0.17 * s, ropeY + 0.05 * s, lx + 0.17 * s, gy - under), _fill);
+      _fill.color = const Color(0x66FFF3C4);
+      canvas.drawOval(Rect.fromLTRB(lx - 0.08 * s, ropeY + 0.15 * s, lx + 0.08 * s, gy - under - 0.1 * s), _fill);
     }
   }
 
@@ -711,6 +945,17 @@ class TrackPainter {
   void _paintHero(Canvas canvas, TrackCamera cam, RunSimulation sim) {
     final z = sim.distance;
     final s = cam.scaleAt(z);
+    if (sim.fellInWater) {
+      // Into the river: just the splash.
+      if (!_sprite(canvas, 'river/water_splash', cam.sx(sim.x, z), cam.sy(0, z), 2.6 * s)) {
+        _fill.color = const Color(0xCCFFFFFF);
+        canvas.drawOval(
+          Rect.fromCenter(center: Offset(cam.sx(sim.x, z), cam.sy(0, z)), width: 1.6 * s, height: 0.6 * s),
+          _fill,
+        );
+      }
+      return;
+    }
     final cx = cam.sx(sim.x, z);
     final groundY = cam.sy(0, z);
     final y = sim.y;

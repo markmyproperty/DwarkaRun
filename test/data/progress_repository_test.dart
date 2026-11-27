@@ -41,10 +41,13 @@ void main() {
     await repo.completeRealm(Realm.ayodhya);
     expect(repo.isDone(Realm.ayodhya), isTrue);
     expect(repo.nextRealm, Realm.ganga);
-    // Ganga Run is not playable in this build yet, so Play runs Ayodhya again.
-    expect(repo.playRealm, Realm.ayodhya);
+    expect(repo.playRealm, Realm.ganga);
+    await repo.completeRealm(Realm.ganga);
+    expect(repo.nextRealm, Realm.pharaoh);
+    // Pharaoh Run is not playable in this build yet, so Play runs Ganga again.
+    expect(repo.playRealm, Realm.ganga);
     final again = await ProgressRepository.load();
-    expect(again.realmsDone, {'ayodhya'});
+    expect(again.realmsDone, {'ayodhya', 'ganga'});
   });
 
   test('the stages follow the final order of the master brief', () {

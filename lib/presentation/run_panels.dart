@@ -161,11 +161,15 @@ class GameOverPanel extends StatelessWidget {
     required this.newBest,
     required this.onRetry,
     required this.onBack,
+    this.splash = false,
   });
 
   final int score;
   final int coins;
   final bool newBest;
+
+  /// The run ended in the river.
+  final bool splash;
   final VoidCallback onRetry;
   final VoidCallback onBack;
 
@@ -178,7 +182,7 @@ class GameOverPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Title(l.gameOverTitle),
+          _Title(splash ? l.gameOverSplash : l.gameOverTitle),
           if (newBest) ...[
             const SizedBox(height: 8),
             Text(

@@ -8,11 +8,11 @@ The images in `assets/images/` come from the project's own Dwarka Run art pack, 
 
 | Folder | Images | Used in this version |
 | --- | --- | --- |
-| `monuments/` | 10 | City gateway over the path; temples, fort and palace as a distant backdrop only |
+| `monuments/` | 10 | City gateway over the path; temples, shrines, fort and palace as a distant backdrop only |
 | `buildings/` | 6 | Shop-houses lining the Ayodhya Run street |
 | `props/` | 15 | Obstacles: clay pot, stone debris, wooden crate, broken pillar. Kerb decoration: torch, marigold pot, golden vase, stone pillar |
-| `backgrounds/` | 6 | Sky, temple hills and Dwarka skyline behind the city; hub postcard |
-| `river/` | 8 | Kept for Ganga Run (stage 2) |
+| `backgrounds/` | 6 | Ayodhya: sky, temple hills and skyline. Ganga: the sunrise river backdrop. Hub postcards |
+| `river/` | 8 | Ganga Run: ghat steps, boats on the water, rocks, pillars, floating diyas (decoration), the splash when you fall in |
 
 Licence: owned by the project (the owner supplied it for this game). If any part was made with a third-party tool or under another licence, record it here.
 
@@ -26,7 +26,8 @@ These parts are original and drawn in code by this project, with no image files:
 | --- | --- | --- |
 | Hero (the young traveller), wings of light | `lib/game/track_painter.dart` | Original, part of this project |
 | Fallback scenery for stages without art yet: banyan trees, bushes, stone ruins, wayside shrine | `lib/game/track_painter.dart` | Original, part of this project |
-| Obstacles: fallen pillar, low branch, rolling millstone, rope barrier, fire pit, market cart, garland beam, monkey | `lib/game/track_painter.dart` | Original, part of this project |
+| Obstacles: fallen pillar, low branch, rolling millstone, rope barrier, fire pit, market cart, garland beam, ghat steps, hanging lanterns, monkey |
+| River surfaces: floating planks, boats, bridge deck and railings | `lib/game/track_painter.dart` | Original, part of this project | `lib/game/track_painter.dart` | Original, part of this project |
 | Pickups: mudra coin, gem, Garuda feather, Lotus charm | `lib/game/track_painter.dart`, `lib/presentation/pickup_icons.dart` | Original, part of this project |
 | Hub postcard art for realms without a pack backdrop | `lib/presentation/realm_postcard.dart` | Original, part of this project |
 | Stand-ins drawn while the art pack loads | `lib/game/track_painter.dart` | Original, part of this project |

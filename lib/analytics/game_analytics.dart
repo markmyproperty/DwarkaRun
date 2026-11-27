@@ -5,22 +5,15 @@ abstract class GameAnalytics {
 
   void gameOpen() => log('game_open');
 
-  void runStart({required String realm, required int seed}) =>
-      log('run_start', {'realm': realm, 'seed': seed});
+  void runStart({required String realm, required int seed}) => log('run_start', {'realm': realm, 'seed': seed});
 
-  void runEnd({
-    required String realm,
-    required String reason,
-    required int metres,
-    required int coins,
-  }) =>
+  void runEnd({required String realm, required String reason, required int metres, required int coins}) =>
       log('run_end', {'realm': realm, 'reason': reason, 'metres': metres, 'coins': coins});
 
   void realmComplete({required String realm, required int coins}) =>
       log('realm_complete', {'realm': realm, 'coins': coins});
 
-  void siteBought({required String site, required int price}) =>
-      log('site_bought', {'site': site, 'price': price});
+  void siteBought({required String site, required int price}) => log('site_bought', {'site': site, 'price': price});
 
   void shareClicked() => log('share_clicked');
 }

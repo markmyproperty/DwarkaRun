@@ -28,7 +28,8 @@ abstract class GameAudio {
       RunEvent.boostStart => Sfx.boost,
       RunEvent.monkeySteal => Sfx.monkey,
       RunEvent.finish => Sfx.fanfare,
-      RunEvent.laneChange => null,
+      RunEvent.splash => Sfx.crash,
+      RunEvent.laneChange || RunEvent.riverStart || RunEvent.bridgeStart => null,
     };
     if (sfx != null) play(sfx);
   }

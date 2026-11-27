@@ -25,8 +25,8 @@ Each step lands as its own pull request.
 
 | Step | What it adds | State |
 | --- | --- | --- |
-| 1 | Core run, Ayodhya Run (art pack part 1), the hub with all ten stages on the route, saving, English and Hindi | This version |
-| 2 | Ganga Run (art pack part 2): boats, floating platforms and the bridge finale | Next |
+| 1 | Core run, Ayodhya Run (art pack part 1), the hub with all ten stages on the route, saving, English and Hindi | Done |
+| 2 | Ganga Run (art pack part 2): ghats, a river crossing on boats and floating planks, and the bridge finale | This version |
 | 3 | Relics, keys, missions, guardian chases and the shop | After that |
 | 4+ | One stage per pull request, each built when its art pack arrives | Later |
 
@@ -38,7 +38,8 @@ Each step lands as its own pull request.
 - A **Garuda feather** gives a boost charge: tap the feather button to fly over everything for a few seconds.
 - A **Lotus charm** pulls nearby mudra towards you.
 - Cheeky **monkeys** snatch a few mudra if you run into them. Jump over them.
-- Run the realm's distance to cross it. A crash ends the run.
+- Run the stage's distance to cross it. A crash ends the run.
+- In Ganga Run, the path gives way to open water: run along boats and floating planks, and jump the gaps or change lane. Falling in ends the run.
 
 The very first run opens gently: slower, with one obstacle at a time and swipe hints.
 

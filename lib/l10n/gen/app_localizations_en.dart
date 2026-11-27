@@ -262,4 +262,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String distanceToGo(int metres) {
     return '$metres m to go';
   }
+
+  @override
+  String get riverStart => 'Open water! Jump the gaps between boats and planks';
+
+  @override
+  String get bridgeStart => 'The current is rising! Race across the bridge';
+
+  @override
+  String get gameOverSplash => 'Splash! Into the river';
 }

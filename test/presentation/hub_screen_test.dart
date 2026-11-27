@@ -41,10 +41,20 @@ void main() {
     await tester.pumpWidget(s.app());
     await tester.pump();
     expect(find.text('Ganga Run'), findsWidgets);
-    expect(find.text('Play Ayodhya Run again'), findsOneWidget);
+    expect(find.text('Continue to Ganga Run'), findsOneWidget);
     await tester.scrollUntilVisible(find.byKey(const Key('play.route.ayodhya.done')), 200);
     expect(find.byKey(const Key('play.route.ayodhya.done')), findsOneWidget);
     expect(find.byKey(const Key('play.route.ganga.todo')), findsOneWidget);
+  });
+
+  testWidgets('past the playable stages, Play repeats the last one', (tester) async {
+    final s = await TestServices.create({
+      'dr.realmsDone': ['ayodhya', 'ganga'],
+    });
+    await tester.pumpWidget(s.app());
+    await tester.pump();
+    expect(find.text('Pharaoh Run'), findsWidgets);
+    expect(find.text('Play Ganga Run again'), findsOneWidget);
   });
 
   testWidgets('the Play button pulses', (tester) async {

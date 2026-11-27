@@ -12,13 +12,7 @@ import 'presentation/hub_screen.dart';
 
 /// The Dwarka Run app. Services are passed in so tests can use fakes.
 class DwarkaRunApp extends StatelessWidget {
-  const DwarkaRunApp({
-    super.key,
-    required this.progress,
-    required this.analytics,
-    required this.audio,
-    this.locale,
-  });
+  const DwarkaRunApp({super.key, required this.progress, required this.analytics, required this.audio, this.locale});
 
   final ProgressRepository progress;
   final GameAnalytics analytics;

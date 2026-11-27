@@ -9,8 +9,7 @@ import '../game/realm.dart';
 class ProgressRepository extends ChangeNotifier {
   ProgressRepository(this._prefs);
 
-  static Future<ProgressRepository> load() async =>
-      ProgressRepository(await SharedPreferences.getInstance());
+  static Future<ProgressRepository> load() async => ProgressRepository(await SharedPreferences.getInstance());
 
   final SharedPreferences _prefs;
 

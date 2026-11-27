@@ -5,7 +5,26 @@ import 'level_generator.dart';
 import 'realm.dart';
 
 /// Things that happen in a run, for sound, haptics and analytics.
-enum RunEvent { coin, gem, feather, lotus, jump, slide, laneChange, boostStart, monkeySteal, crash, finish }
+enum RunEvent {
+  coin,
+  gem,
+  feather,
+  lotus,
+  jump,
+  slide,
+  laneChange,
+  boostStart,
+  monkeySteal,
+  crash,
+  finish,
+
+  /// The hero stepped off a platform into the river (followed by [crash]).
+  splash,
+
+  /// The run has reached open water, and later the bridge finale.
+  riverStart,
+  bridgeStart,
+}
 
 enum RunState { running, crashed, finished }
 
@@ -16,9 +35,27 @@ class RunSimulation {
   RunSimulation({required this.realm, required int seed, this.gentleStart = false, int? targetMetres, this.onEvent})
     : targetMetres = targetMetres ?? realm.targetMetres,
       speed = gentleStart ? gentleSpeed : startSpeed {
-    generator = LevelGenerator(realm: realm, seed: seed, gentleStart: gentleStart, laneWidth: laneWidth);
+    final t = this.targetMetres;
+    waterStart = realm.waterFrom == null ? double.infinity : (realm.waterFrom! * t).roundToDouble();
+    bridgeStart = realm.bridgeFrom == null ? double.infinity : (realm.bridgeFrom! * t).roundToDouble();
+    generator = LevelGenerator(
+      realm: realm,
+      seed: seed,
+      gentleStart: gentleStart,
+      laneWidth: laneWidth,
+      waterStart: waterStart,
+      bridgeStart: bridgeStart,
+    );
     generator.fill(pools, viewAhead, 0);
   }
+
+  /// River stages: where open water and the bridge finale begin (metres).
+  /// Infinity on dry land.
+  late final double waterStart;
+  late final double bridgeStart;
+
+  bool get onRiver => distance >= waterStart;
+  bool get onBridge => distance >= bridgeStart;
 
   // ── tuning ──
   static const double laneWidth = 2.2;
@@ -69,6 +106,12 @@ class RunSimulation {
 
   /// Set when the last crash happened, for the crash wobble.
   ObstacleKind? crashedInto;
+
+  /// Set when the run ended in the river rather than against an obstacle.
+  bool fellInWater = false;
+
+  /// Forgiveness at platform edges (metres).
+  static const double edgeGrace = 0.35;
 
   double _accumulator = 0;
 
@@ -167,6 +210,8 @@ class RunSimulation {
     if (slideLeft > 0) slideLeft = math.max(0, slideLeft - dt);
     if (magnetLeft > 0) magnetLeft = math.max(0, magnetLeft - dt);
 
+    _checkRiver();
+    if (state != RunState.running) return;
     _moveObstacles(dt);
     _collectPickups();
     _checkObstacles();
@@ -183,6 +228,33 @@ class RunSimulation {
     generator.fill(pools, ahead, difficulty);
     pools.recycleBehind(distance - 8);
   }
+
+  bool _wasOnRiver = false;
+  bool _wasOnBridge = false;
+
+  void _checkRiver() {
+    if (!onRiver) return;
+    if (!_wasOnRiver) {
+      _wasOnRiver = true;
+      onEvent?.call(RunEvent.riverStart);
+    }
+    if (onBridge && !_wasOnBridge) {
+      _wasOnBridge = true;
+      onEvent?.call(RunEvent.bridgeStart);
+    }
+    if (y > 0 || boosting) return;
+    // Feet down: is there anything under them? Mid lane-change, the lane the
+    // hero is mostly over counts.
+    final under = (x / laneWidth).round().clamp(-1, 1);
+    if (pools.surfaceAt(under, distance, edgeGrace)) return;
+    fellInWater = true;
+    state = RunState.crashed;
+    onEvent?.call(RunEvent.splash);
+    onEvent?.call(RunEvent.crash);
+  }
+
+  /// Whether [lane] has a surface at [z] (always true on dry land).
+  bool surfaceAt(int lane, double z) => z < waterStart || pools.surfaceAt(lane, z, edgeGrace);
 
   void _moveObstacles(double dt) {
     for (final o in pools.obstacles) {

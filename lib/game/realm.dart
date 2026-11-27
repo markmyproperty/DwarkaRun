@@ -68,8 +68,17 @@ enum Realm {
   ganga(
     id: 'ganga',
     targetMetres: 1500,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    playable: true,
+    waterFrom: 0.38,
+    bridgeFrom: 0.8,
+    obstacles: [
+      ObstacleKind.stoneSteps,
+      ObstacleKind.hangingLanterns,
+      ObstacleKind.woodenCrate,
+      ObstacleKind.clayPot,
+      ObstacleKind.brokenPillar,
+      ObstacleKind.monkey,
+    ],
     palette: RealmPalette(
       skyTop: Color(0xFFF2A65A),
       skyBottom: Color(0xFFFCE3B0),
@@ -252,6 +261,8 @@ enum Realm {
     required this.playable,
     required this.obstacles,
     required this.palette,
+    this.waterFrom,
+    this.bridgeFrom,
   });
 
   /// Stable id, used in saved progress and widget keys.
@@ -267,6 +278,19 @@ enum Realm {
   final List<ObstacleKind> obstacles;
 
   final RealmPalette palette;
+
+  /// For river stages: where the open water starts and where the bridge
+  /// finale starts, as fractions of [targetMetres]. Null on dry land.
+  final double? waterFrom;
+  final double? bridgeFrom;
+
+  bool get hasRiver => waterFrom != null;
+
+  /// Metres at which open water starts (infinity on dry land).
+  double get waterStart => waterFrom == null ? double.infinity : (waterFrom! * targetMetres).roundToDouble();
+
+  /// Metres at which the bridge finale starts (infinity when there is none).
+  double get bridgeStart => bridgeFrom == null ? double.infinity : (bridgeFrom! * targetMetres).roundToDouble();
 
   /// The realm after this one, or null for the last.
   Realm? get next => index + 1 < Realm.values.length ? Realm.values[index + 1] : null;

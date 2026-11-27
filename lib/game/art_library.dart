@@ -39,6 +39,14 @@ class ArtLibrary {
     'props/marigold_pot',
     'props/golden_vase',
     'props/stone_pillar',
+    'backgrounds/coastal_background',
+    'monuments/sacred_shrine',
+    'river/coastal_steps',
+    'river/boat_side',
+    'river/water_rock',
+    'river/sea_pillar',
+    'river/water_splash',
+    'river/coastal_lamp',
   ];
 
   final Map<String, ui.Image> _images = {};

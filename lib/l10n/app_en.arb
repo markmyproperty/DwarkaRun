@@ -175,5 +175,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "riverStart": "Open water! Jump the gaps between boats and planks",
+  "bridgeStart": "The current is rising! Race across the bridge",
+  "gameOverSplash": "Splash! Into the river"
 }

@@ -258,4 +258,14 @@ class AppLocalizationsHi extends AppLocalizations {
   String distanceToGo(int metres) {
     return '$metres मी बाकी';
   }
+
+  @override
+  String get riverStart =>
+      'खुला पानी! नावों और तख्तों के बीच की दूरी कूदकर पार करें';
+
+  @override
+  String get bridgeStart => 'धारा तेज़ हो रही है! पुल पर दौड़ लगाएँ';
+
+  @override
+  String get gameOverSplash => 'छपाक! नदी में गिर गए';
 }

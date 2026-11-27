@@ -6,12 +6,45 @@ import 'seeded_random.dart';
 
 /// Fixed-size pools so a run never allocates entities after it starts.
 class EntityPools {
-  EntityPools({int obstacles = 48, int pickups = 192})
+  EntityPools({int obstacles = 48, int pickups = 192, int platforms = 128})
     : obstacles = List.generate(obstacles, (_) => Obstacle(), growable: false),
-      pickups = List.generate(pickups, (_) => Pickup(), growable: false);
+      pickups = List.generate(pickups, (_) => Pickup(), growable: false),
+      platforms = List.generate(platforms, (_) => Platform(), growable: false);
 
   final List<Obstacle> obstacles;
   final List<Pickup> pickups;
+  final List<Platform> platforms;
+
+  Platform? obtainPlatform() {
+    for (final p in platforms) {
+      if (!p.active) return p;
+    }
+    return null;
+  }
+
+  /// Whether [lane] has something to stand on at [z].
+  bool surfaceAt(int lane, double z, [double tolerance = 0]) {
+    for (final p in platforms) {
+      if (p.lane == lane && p.covers(z, tolerance)) return true;
+    }
+    return false;
+  }
+
+  /// Whether [lane] is solid all the way from [from] to [to].
+  bool solidBetween(int lane, double from, double to) {
+    var z = from;
+    // Walk forward through touching platforms.
+    for (var guard = 0; guard < 16; guard++) {
+      Platform? best;
+      for (final p in platforms) {
+        if (p.lane == lane && p.covers(z, 0.01) && (best == null || p.z1 > best.z1)) best = p;
+      }
+      if (best == null) return false;
+      if (best.z1 >= to) return true;
+      z = best.z1;
+    }
+    return false;
+  }
 
   Obstacle? obtainObstacle() {
     for (final o in obstacles) {
@@ -35,9 +68,15 @@ class EntityPools {
     for (final p in pickups) {
       if (p.active && p.z < z) p.active = false;
     }
+    for (final p in platforms) {
+      if (p.active && p.z1 < z) p.active = false;
+    }
   }
 
   void clear() {
+    for (final p in platforms) {
+      p.active = false;
+    }
     for (final o in obstacles) {
       o.active = false;
     }
@@ -52,11 +91,35 @@ class EntityPools {
 /// The same seed and realm always give the same level. Every row leaves at
 /// least one lane the hero can get through without a power-up.
 class LevelGenerator {
-  LevelGenerator({required this.realm, required int seed, required this.gentleStart, required this.laneWidth})
-    : _rng = SeededRandom(seed),
-      _nextRowZ = gentleStart ? 55 : 40;
+  LevelGenerator({
+    required this.realm,
+    required int seed,
+    required this.gentleStart,
+    required this.laneWidth,
+    this.waterStart = double.infinity,
+    this.bridgeStart = double.infinity,
+  }) : _rng = SeededRandom(seed),
+       _riverRng = SeededRandom(seed ^ 0x5EA5EA),
+       _nextRowZ = gentleStart ? 55 : 40,
+       _cellZ = waterStart;
 
   final Realm realm;
+
+  /// River stages: open water from here on, and the bridge finale from
+  /// [bridgeStart]. Infinity on dry land.
+  final double waterStart;
+  final double bridgeStart;
+
+  /// The river layout has its own random stream, so dry stages keep exactly
+  /// the levels they always had.
+  final SeededRandom _riverRng;
+  double _cellZ;
+  final List<Platform?> _open = [null, null, null];
+
+  /// River surfaces are laid out in cells this long. In each cell at most two
+  /// lanes have a gap, and every gap is short enough to jump.
+  static const double cell = 12;
+  static const double maxGap = 4.2;
   final bool gentleStart;
   final double laneWidth;
   final SeededRandom _rng;
@@ -88,6 +151,8 @@ class LevelGenerator {
   /// Spawns rows until the track is laid out to [aheadZ]. [difficulty] runs
   /// from 0 (start) to 1 (top speed) and tightens the spacing.
   void fill(EntityPools pools, double aheadZ, double difficulty) {
+    // Surfaces go down first, a little further ahead, so rows can check them.
+    _fillRiver(pools, aheadZ + 30, difficulty);
     while (_nextRowZ < aheadZ) {
       _spawnRow(pools, _nextRowZ, difficulty);
       final gentle = gentleStart && _row < 8;
@@ -114,6 +179,7 @@ class LevelGenerator {
     }
 
     var blockingCount = 0;
+    final onWater = z >= waterStart - 6;
     for (final lane in lanes) {
       var kind = kinds[_rng.nextInt(kinds.length)];
       // Never block two lanes outright: the second becomes a jump or slide.
@@ -121,6 +187,9 @@ class LevelGenerator {
         blockingCount++;
         if (blockingCount > 1) kind = _fallbackJump;
       }
+      // On the river, obstacles only stand on long, unbroken stretches, so a
+      // dodge never ends in the water.
+      if (onWater && !pools.solidBetween(lane, z - 7, z + 7)) continue;
       _obstacle(pools, kind, lane, z);
     }
 
@@ -166,7 +235,53 @@ class LevelGenerator {
   }
 
   void _pickup(EntityPools pools, PickupKind kind, int lane, double y, double z) {
+    // Over a gap in the river, lift it to jump height: a hint to jump.
+    if (z >= waterStart && !pools.surfaceAt(lane, z, 0.5)) y = math.max(y, 1.6);
     pools.obtainPickup()?.spawn(kind, lane * laneWidth, y, z);
+  }
+
+  // ── river ──
+  void _fillRiver(EntityPools pools, double aheadZ, double difficulty) {
+    while (_cellZ < aheadZ) {
+      final c = _cellZ;
+      final bridge = c >= bridgeStart;
+      // The first cell of the water and of the bridge stays whole.
+      final whole = c == waterStart || (bridge && c - cell < bridgeStart);
+      var gaps = whole ? 0 : (_riverRng.chance(0.85) ? 1 : 0);
+      if (!whole && _riverRng.chance(0.15 + 0.35 * difficulty + (bridge ? 0.2 : 0))) gaps = 2;
+      final a = _riverRng.nextInt(3) - 1;
+      final b = (a + 1 + _riverRng.nextInt(2)) % 3;
+      final second = b > 1 ? b - 3 : b;
+      for (var lane = -1; lane <= 1; lane++) {
+        final gapped = (gaps >= 1 && lane == a) || (gaps == 2 && lane == second);
+        if (!gapped) {
+          _extend(pools, lane, c, c + cell, bridge);
+          continue;
+        }
+        final g0 = c + 3 + _riverRng.nextDouble() * 4;
+        final len = 2.4 + _riverRng.nextDouble() * (maxGap - 2.4);
+        _extend(pools, lane, c, g0, bridge);
+        _open[lane + 1] = null;
+        _extend(pools, lane, g0 + len, c + cell, bridge);
+      }
+      _cellZ += cell;
+    }
+  }
+
+  void _extend(EntityPools pools, int lane, double from, double to, bool bridge) {
+    final open = _open[lane + 1];
+    if (open != null && open.active && (open.z1 - from).abs() < 0.01 && (open.kind == PlatformKind.bridge) == bridge) {
+      final maxLen = open.kind == PlatformKind.boat ? 13.0 : 36.0;
+      if (to - open.z0 <= maxLen) {
+        open.z1 = to;
+        return;
+      }
+    }
+    final p = pools.obtainPlatform();
+    if (p == null) return;
+    final kind = bridge ? PlatformKind.bridge : (_riverRng.chance(0.35) ? PlatformKind.boat : PlatformKind.plank);
+    p.spawn(kind, lane, from, to, _riverRng.nextDouble());
+    _open[lane + 1] = p;
   }
 
   /// A line of coins in [lane], centred on the row at [z]. Placed beside the

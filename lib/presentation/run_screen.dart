@@ -124,6 +124,10 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
         _showToast(l.featherGot);
       case RunEvent.lotus:
         _showToast(l.lotusGot);
+      case RunEvent.riverStart:
+        _showToast(l.riverStart);
+      case RunEvent.bridgeStart:
+        _showToast(l.bridgeStart);
       case RunEvent.crash:
         HapticFeedback.heavyImpact();
       default:
@@ -291,6 +295,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
                   score: _game.sim.metres,
                   coins: _game.sim.coins,
                   newBest: _newBest,
+                  splash: _game.sim.fellInWater,
                   onRetry: _restart,
                   onBack: _back,
                 ),

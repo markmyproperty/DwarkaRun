@@ -535,6 +535,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{metres} m to go'**
   String distanceToGo(int metres);
+
+  /// No description provided for @riverStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Open water! Jump the gaps between boats and planks'**
+  String get riverStart;
+
+  /// No description provided for @bridgeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'The current is rising! Race across the bridge'**
+  String get bridgeStart;
+
+  /// No description provided for @gameOverSplash.
+  ///
+  /// In en, this message translates to:
+  /// **'Splash! Into the river'**
+  String get gameOverSplash;
 }
 
 class _AppLocalizationsDelegate

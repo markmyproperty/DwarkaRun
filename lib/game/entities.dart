@@ -29,7 +29,11 @@ enum ObstacleKind {
   stoneDebris(Clearance.jump, height: 0.7, depth: 1.2, sprite: 'props/stone_debris', spriteWidth: 2.0),
   woodenCrate(Clearance.lane, height: 1.6, depth: 1.4, sprite: 'props/wooden_crate', spriteWidth: 2.0),
   brokenPillar(Clearance.lane, height: 2.6, depth: 1.0, sprite: 'props/broken_pillar', spriteWidth: 1.9),
-  garlandBeam(Clearance.slide, height: 1.1, depth: 0.5);
+  garlandBeam(Clearance.slide, height: 1.1, depth: 0.5),
+
+  // Ganga Run.
+  stoneSteps(Clearance.jump, height: 0.65, depth: 1.6),
+  hangingLanterns(Clearance.slide, height: 1.1, depth: 0.5);
 
   const ObstacleKind(
     this.clearance, {
@@ -118,4 +122,32 @@ class Pickup {
     y = atY;
     z = atZ;
   }
+}
+
+/// What a river surface is made of. They all carry the hero the same way.
+enum PlatformKind { plank, boat, bridge }
+
+/// A pooled stretch of walkable surface over water, in one lane.
+class Platform {
+  bool active = false;
+  PlatformKind kind = PlatformKind.plank;
+  int lane = 0;
+
+  /// Near and far ends along the track (metres).
+  double z0 = 0;
+  double z1 = 0;
+
+  /// Per-platform variety for the painter (0..1).
+  double variant = 0;
+
+  void spawn(PlatformKind k, int l, double from, double to, double v) {
+    active = true;
+    kind = k;
+    lane = l;
+    z0 = from;
+    z1 = to;
+    variant = v;
+  }
+
+  bool covers(double z, [double tolerance = 0]) => active && z >= z0 - tolerance && z <= z1 + tolerance;
 }
