@@ -116,7 +116,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get realmGanga => 'गंगा रन';
 
   @override
-  String get realmPharaoh => 'फ़राओ रन';
+  String get realmPharaoh => 'थार रेगिस्तान रन';
 
   @override
   String get realmHimalayan => 'हिमालयन रन';
@@ -146,7 +146,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get realmGangaBlurb => 'नदी किनारे घाट, नावें और तैरते मंच';
 
   @override
-  String get realmPharaohBlurb => 'पिरामिड, रेत के टीले और छिपे मकबरे';
+  String get realmPharaohBlurb => 'सुनहरे टीले, बलुआ पत्थर की गलियाँ और छिपा ख़ज़ाना';
 
   @override
   String get realmHimalayanBlurb => 'बर्फ़ीले दर्रे, रस्सी के पुल और मठ';

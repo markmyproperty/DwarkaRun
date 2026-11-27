@@ -76,7 +76,7 @@ class ArtLibrary {
     return _loading ??= _loadAll(names);
   }
 
-  /// Loads the art pack of a later stage (Pharaoh Run onwards) and lets go
+  /// Loads the art pack of a later stage (stage 3 onwards) and lets go
   /// of other stages' packs, so only one stage's images are held at a time.
   Future<void> loadStage(Realm realm, [AssetBundle? bundle]) {
     if (_loading == null) return Future.value(); // Art is off (tests).

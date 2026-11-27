@@ -284,7 +284,7 @@ abstract class AppLocalizations {
   /// No description provided for @realmPharaoh.
   ///
   /// In en, this message translates to:
-  /// **'Pharaoh Run'**
+  /// **'Thar Desert Run'**
   String get realmPharaoh;
 
   /// No description provided for @realmHimalayan.
@@ -344,7 +344,7 @@ abstract class AppLocalizations {
   /// No description provided for @realmPharaohBlurb.
   ///
   /// In en, this message translates to:
-  /// **'Pyramids, dunes and hidden tombs'**
+  /// **'Golden dunes, sandstone streets and hidden treasure'**
   String get realmPharaohBlurb;
 
   /// No description provided for @realmHimalayanBlurb.

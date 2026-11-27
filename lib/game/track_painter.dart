@@ -20,7 +20,7 @@ class TrackPainter {
       stage = StageArt.of(realm),
       art = art ?? ArtLibrary.instance;
 
-  /// Art-pack dressing for Pharaoh Run onwards; null for the first two
+  /// Art-pack dressing for stage 3 onwards; null for the first two
   /// stages, which have their own scenery painters.
   final StageArt? stage;
 
@@ -1141,7 +1141,7 @@ class TrackPainter {
     _sprite(canvas, 'monuments/ancient_gateway', cam.sx(0, z), cam.sy(0, z), 19 * s);
   }
 
-  // ── Pharaoh Run onwards (one art pack per stage) ──
+  // ── stage 3 onwards (one art pack per stage) ──
   /// Houses along the path, wild scenery behind them, monuments set well
   /// back and small props on the kerb. Beside a crevasse, only wild scenery.
   void _paintStageScenery(Canvas canvas, TrackCamera cam, int i, RunSimulation sim, StageArt st) {

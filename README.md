@@ -10,7 +10,7 @@ The order is final (see the master brief):
 
 1. Ayodhya Run
 2. Ganga Run
-3. Pharaoh Run
+3. Thar Desert Run (renamed from Pharaoh Run; internal id `pharaoh`)
 4. Himalayan Run
 5. Vijayanagar Run
 6. Dragon Valley
@@ -27,7 +27,7 @@ Each step lands as its own pull request.
 | --- | --- | --- |
 | 1 | Core run, Ayodhya Run (art pack part 1), the hub with all ten stages on the route, saving, English and Hindi | Done |
 | 2 | Ganga Run (art pack part 2): ghats, a river crossing on boats and floating planks, and the bridge finale | Done |
-| 3 | Pharaoh Run, Himalayan Run (ice crevasses and a rope bridge) and Vijayanagar Run, each from its own art pack | This version |
+| 3 | Thar Desert Run (desert pack), Himalayan Run (ice crevasses and a rope bridge) and Vijayanagar Run, each from its own art pack | This version |
 | 4 | Lanka Run: a golden palace street, the palace moat on golden platforms and the fortress bridge. The rendered king run cycle as the hero | This version |
 | 5 | Dragon Valley and Indus Run | When their art packs arrive |
 | 6 | Relics, keys, missions, guardian chases and the shop | Later |

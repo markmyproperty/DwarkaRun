@@ -35,7 +35,7 @@ enum ObstacleKind {
   stoneSteps(Clearance.jump, height: 0.65, depth: 1.6),
   hangingLanterns(Clearance.slide, height: 1.1, depth: 0.5),
 
-  // Pharaoh Run.
+  // Thar Desert Run (stage 3; internal id "pharaoh", art from the Egyptian desert pack for now).
   sandBoulder(
     Clearance.lane,
     height: 2.0,
