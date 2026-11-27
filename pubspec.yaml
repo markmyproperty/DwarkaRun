@@ -68,3 +68,18 @@ flutter:
     - assets/images/props/
     - assets/images/river/
     - assets/audio/
+    - assets/images/pharaoh/backgrounds/
+    - assets/images/pharaoh/buildings/
+    - assets/images/pharaoh/env/
+    - assets/images/pharaoh/monuments/
+    - assets/images/pharaoh/props/
+    - assets/images/himalayan/backgrounds/
+    - assets/images/himalayan/buildings/
+    - assets/images/himalayan/env/
+    - assets/images/himalayan/monuments/
+    - assets/images/himalayan/props/
+    - assets/images/vijayanagar/backgrounds/
+    - assets/images/vijayanagar/buildings/
+    - assets/images/vijayanagar/env/
+    - assets/images/vijayanagar/monuments/
+    - assets/images/vijayanagar/props/

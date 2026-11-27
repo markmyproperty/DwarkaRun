@@ -7,6 +7,7 @@ import 'camera.dart';
 import 'entities.dart';
 import 'realm.dart';
 import 'run_simulation.dart';
+import 'stage_art.dart';
 
 /// Paints a run: sky, path, scenery, obstacles, pickups and the hero.
 ///
@@ -14,7 +15,14 @@ import 'run_simulation.dart';
 /// Paints, paths and the draw-order buffers are created once and reused, so
 /// painting a frame allocates nothing.
 class TrackPainter {
-  TrackPainter(this.realm, {ArtLibrary? art}) : pal = realm.palette, art = art ?? ArtLibrary.instance;
+  TrackPainter(this.realm, {ArtLibrary? art})
+    : pal = realm.palette,
+      stage = StageArt.of(realm),
+      art = art ?? ArtLibrary.instance;
+
+  /// Art-pack dressing for Pharaoh Run onwards; null for the first two
+  /// stages, which have their own scenery painters.
+  final StageArt? stage;
 
   /// Art-pack images. Anything not loaded yet is drawn in code instead.
   final ArtLibrary art;
@@ -60,6 +68,8 @@ class TrackPainter {
   void resize(TrackCamera cam) {
     _w = cam.width;
     _h = cam.height;
+    _skySrc = null;
+    _riverSkySrc = null;
     _sky.shader = Gradient.linear(Offset(0, 0), Offset(0, cam.horizon), [pal.skyTop, pal.skyBottom]);
     _haze.shader = Gradient.linear(Offset(0, cam.horizon), Offset(0, cam.horizon + _h * 0.16), [
       pal.haze.withValues(alpha: 0.85),
@@ -118,7 +128,8 @@ class TrackPainter {
             case Realm.ganga:
               _paintRiverScenery(canvas, cam, idx, sim);
             default:
-              _paintScenery(canvas, cam, idx);
+              final st = stage;
+              st == null ? _paintScenery(canvas, cam, idx) : _paintStageScenery(canvas, cam, idx, sim, st);
           }
         case _kGate:
           _paintGate(canvas, cam, z);
@@ -132,8 +143,13 @@ class TrackPainter {
 
   // ── backdrop ──
   void _paintSky(Canvas canvas, TrackCamera cam) {
-    if (realm == Realm.ayodhya && _paintCitySky(canvas, cam)) return;
+    if (realm == Realm.ayodhya &&
+        _paintBandSky(canvas, cam, 'backgrounds/sky_india', 'backgrounds/temple_hills', 'backgrounds/skyline_dwarka')) {
+      return;
+    }
     if (realm == Realm.ganga && _paintRiverSky(canvas, cam)) return;
+    final st = stage;
+    if (st != null && _paintBandSky(canvas, cam, st.sky, st.farBand, st.nearBand)) return;
     canvas.drawRect(Rect.fromLTWH(0, 0, _w, cam.horizon + 1), _sky);
     _fill.color = const Color(0xFFFFF3D0);
     canvas.drawCircle(Offset(_w * 0.78, cam.horizon * 0.42), _h * 0.045, _fill);
@@ -161,7 +177,17 @@ class TrackPainter {
       final z0 = math.max(z, near);
       final z1 = z + tile;
       final even = ((z / tile).floor() & 1) == 0;
-      if (realm.hasRiver) {
+      if (realm.hasCrevasse) {
+        if (z + tile > sim.waterStart) {
+          // An ice crevasse under the path: snowy lips, blue ice walls and
+          // a deep, dark floor.
+          _quad(canvas, cam, -pathHalfWidth - 0.9, pathHalfWidth + 0.9, z0, z1, const Color(0xFFDCE8F3));
+          _quad(canvas, cam, -pathHalfWidth - 0.5, pathHalfWidth + 0.5, z0, z1, even ? _iceWall : _iceWallB);
+          _quad(canvas, cam, -pathHalfWidth + 0.4, pathHalfWidth - 0.4, z0, z1, even ? _iceDeep : _iceDeepB);
+          z -= tile;
+          continue;
+        }
+      } else if (realm.hasRiver) {
         // Gentle bands on the water, scrolling with the run.
         if (even) _quad(canvas, cam, -60, 60, z0, z1, _waterBand);
         if (z >= sim.waterStart) {
@@ -200,6 +226,10 @@ class TrackPainter {
   }
 
   static const Color _waterBand = Color(0x1AFFFFFF);
+  static const Color _iceWall = Color(0xFF7FA9CF);
+  static const Color _iceWallB = Color(0xFF7AA3C9);
+  static const Color _iceDeep = Color(0xFF34557A);
+  static const Color _iceDeepB = Color(0xFF3A5C82);
 
   /// Floating planks, boats and the bridge deck, drawn flat on the water.
   void _paintPlatforms(Canvas canvas, TrackCamera cam, RunSimulation sim) {
@@ -209,6 +239,10 @@ class TrackPainter {
       final z0 = math.max(p.z0, cam.camZ + 0.8);
       final z1 = math.min(p.z1, far);
       final x = p.lane * RunSimulation.laneWidth;
+      if (realm.hasCrevasse) {
+        _paintIcePlatform(canvas, cam, x, z0, z1, p);
+        continue;
+      }
       switch (p.kind) {
         case PlatformKind.plank:
           _quad(canvas, cam, x - 1.0, x + 1.0, z0, z1, const Color(0xFF8A6238));
@@ -239,6 +273,40 @@ class TrackPainter {
           _fill,
         );
       }
+    }
+  }
+
+  /// Over a crevasse: ice slabs, long snow ledges and the rope bridge.
+  void _paintIcePlatform(Canvas canvas, TrackCamera cam, double x, double z0, double z1, Platform p) {
+    switch (p.kind) {
+      case PlatformKind.plank:
+        _quad(canvas, cam, x - 1.0, x + 1.0, z0, z1, const Color(0xFF9CC3E0));
+        _quad(
+          canvas,
+          cam,
+          x - 0.9,
+          x + 0.9,
+          z0,
+          z1,
+          p.variant < 0.5 ? const Color(0xFFD6EAF7) : const Color(0xFFCBE3F4),
+        );
+        _seams(canvas, cam, x, 0.9, z0, z1, 2.4, const Color(0x55FFFFFF));
+      case PlatformKind.boat:
+        _quad(canvas, cam, x - 1.05, x + 1.05, z0, z1, const Color(0xFFB9D0E3));
+        _quad(canvas, cam, x - 0.95, x + 0.95, z0, z1, const Color(0xFFF4F8FC));
+      case PlatformKind.bridge:
+        // Rope bridge: two ropes and wooden slats.
+        _quad(canvas, cam, x - 1.05, x + 1.05, z0, z1, const Color(0xFF8A6238));
+        _quad(canvas, cam, x - 0.98, x + 0.98, z0, z1, const Color(0xFFB48660));
+        _seams(canvas, cam, x, 0.98, z0, z1, 0.6, const Color(0x99603F22));
+    }
+    if (p.z0 >= cam.camZ + 0.8) {
+      final s0 = cam.scaleAt(p.z0);
+      _fill.color = p.kind == PlatformKind.bridge ? const Color(0xFF5C4027) : const Color(0xFF6E98BD);
+      canvas.drawRect(
+        Rect.fromLTRB(cam.sx(x - 1.05, p.z0), cam.sy(0, p.z0), cam.sx(x + 1.05, p.z0), cam.sy(0, p.z0) + 0.3 * s0),
+        _fill,
+      );
     }
   }
 
@@ -561,7 +629,20 @@ class TrackPainter {
     canvas.drawOval(Rect.fromCenter(center: Offset(cx, gy), width: halfW * 2.1, height: 0.35 * s), _fill);
 
     final sprite = o.kind.sprite;
-    if (sprite != null && _sprite(canvas, sprite, cx, gy, o.kind.spriteWidth * s)) return;
+    if (sprite != null && o.kind.clearance != Clearance.slide) {
+      if (o.kind.speed > 0 && !reduceMotion && art[sprite] != null) {
+        // Rolling boulders rock from side to side as they come.
+        final w = o.kind.spriteWidth * s;
+        canvas.save();
+        canvas.translate(cx, gy - w * 0.45);
+        canvas.rotate(math.sin(o.z * 1.6) * 0.12);
+        canvas.translate(-cx, -(gy - w * 0.45));
+        _sprite(canvas, sprite, cx, gy, w);
+        canvas.restore();
+        return;
+      }
+      if (_sprite(canvas, sprite, cx, gy, o.kind.spriteWidth * s)) return;
+    }
 
     switch (o.kind) {
       case ObstacleKind.fallenPillar:
@@ -693,6 +774,122 @@ class TrackPainter {
       case ObstacleKind.brokenPillar:
         _fill.color = pal.stone;
         canvas.drawRect(Rect.fromLTRB(cx - halfW * 0.6, gy - 2.6 * s, cx + halfW * 0.6, gy), _fill);
+      // Slide obstacles from the later art packs: a frame over the lane.
+      case ObstacleKind.bladeGate:
+        // A sandstone doorway with blades swinging under the lintel.
+        if (!_sprite(canvas, o.kind.sprite!, cx, gy, 2.7 * s)) _paintStandInBeam(canvas, cx, gy, s, halfW);
+      case ObstacleKind.icicles:
+        _paintIcicles(canvas, cx, gy, s, halfW, t);
+      case ObstacleKind.mandapaBeam:
+        _paintMandapaBeam(canvas, cx, gy, s, halfW);
+      // Stand-ins for the later art packs while they load.
+      case ObstacleKind.sandBoulder:
+      case ObstacleKind.snowBoulder:
+      case ObstacleKind.graniteBoulder:
+        _fill.color = pal.stoneDark;
+        canvas.drawCircle(Offset(cx, gy - 1.0 * s), 1.0 * s, _fill);
+      case ObstacleKind.brokenColumn:
+      case ObstacleKind.leaningPillar:
+      case ObstacleKind.fallenLintel:
+      case ObstacleKind.fallenRocks:
+      case ObstacleKind.snowCrate:
+      case ObstacleKind.oxCart:
+        _fill.color = pal.stoneDark;
+        canvas.drawRect(Rect.fromLTRB(cx - halfW * 0.8, gy - o.kind.height * s, cx + halfW * 0.8, gy), _fill);
+      case ObstacleKind.stoneBlocks:
+      case ObstacleKind.spikeTrap:
+      case ObstacleKind.sandPit:
+      case ObstacleKind.collapsingTiles:
+      case ObstacleKind.snowMound:
+      case ObstacleKind.crackedIce:
+      case ObstacleKind.bazaarPot:
+      case ObstacleKind.graniteRubble:
+        _fill.color = pal.stoneDark;
+        canvas.drawRect(Rect.fromLTRB(cx - halfW, gy - o.kind.height * s, cx + halfW, gy), _fill);
+    }
+  }
+
+  /// A plain beam over the lane, used while art loads.
+  void _paintStandInBeam(Canvas canvas, double cx, double gy, double s, double halfW) {
+    final under = 1.1 * s;
+    _fill.color = pal.stoneDark;
+    canvas.drawRect(Rect.fromLTWH(cx - halfW * 1.1, gy - under - 1.2 * s, 0.22 * s, under + 1.2 * s), _fill);
+    canvas.drawRect(Rect.fromLTWH(cx + halfW * 1.1 - 0.22 * s, gy - under - 1.2 * s, 0.22 * s, under + 1.2 * s), _fill);
+    canvas.drawRect(Rect.fromLTRB(cx - halfW * 1.2, gy - under - 0.5 * s, cx + halfW * 1.2, gy - under), _fill);
+  }
+
+  /// A snowy ice ledge across the lane with icicles hanging from it: slide.
+  void _paintIcicles(Canvas canvas, double cx, double gy, double s, double halfW, double t) {
+    final under = ObstacleKind.icicles.height * s;
+    // Ice posts and the snowy ledge.
+    _fill.color = const Color(0xFFB9D6EA);
+    canvas.drawRect(Rect.fromLTWH(cx - halfW * 1.15, gy - under - 1.4 * s, 0.26 * s, under + 1.4 * s), _fill);
+    canvas.drawRect(
+      Rect.fromLTWH(cx + halfW * 1.15 - 0.26 * s, gy - under - 1.4 * s, 0.26 * s, under + 1.4 * s),
+      _fill,
+    );
+    final top = gy - under - 1.3 * s;
+    final sway = reduceMotion ? 0.0 : math.sin(t * 2) * 0.02 * s;
+    // Icicles hang from just under the ledge down to the slide height.
+    for (var k = -1; k <= 1; k++) {
+      final ix = cx + k * halfW * 0.62 + sway;
+      if (!_sprite(canvas, ObstacleKind.icicles.sprite!, ix, gy - under + 0.08 * s, 0.68 * s)) {
+        _fill.color = const Color(0xFFD8ECF8);
+        _path
+          ..reset()
+          ..moveTo(ix - 0.22 * s, top)
+          ..lineTo(ix + 0.22 * s, top)
+          ..lineTo(ix, gy - under)
+          ..close();
+        canvas.drawPath(_path, _fill);
+      }
+    }
+    _fill.color = const Color(0xFFF7FBFF);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTRB(cx - halfW * 1.3, top - 0.35 * s, cx + halfW * 1.3, top + 0.1 * s),
+        Radius.circular(0.2 * s),
+      ),
+      _fill,
+    );
+    _fill.color = const Color(0xFFC9DDF0);
+    canvas.drawRect(Rect.fromLTRB(cx - halfW * 1.25, top + 0.02 * s, cx + halfW * 1.25, top + 0.1 * s), _fill);
+  }
+
+  /// A granite lintel across the lane on two carved columns: slide under.
+  void _paintMandapaBeam(Canvas canvas, double cx, double gy, double s, double halfW) {
+    final under = ObstacleKind.mandapaBeam.height * s;
+    final colH = under + 0.9 * s;
+    final colW = colH * 0.25 / 0.95;
+    for (final side in const [-1, 1]) {
+      final px = cx + side * (halfW * 1.1);
+      if (!_sprite(canvas, ObstacleKind.mandapaBeam.sprite!, px, gy, colW)) {
+        _fill.color = pal.stone;
+        canvas.drawRect(Rect.fromLTRB(px - 0.14 * s, gy - colH, px + 0.14 * s, gy), _fill);
+      }
+    }
+    final top = gy - colH + 0.05 * s;
+    _fill.color = const Color(0xFFB9A78E);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTRB(cx - halfW * 1.35, top - 0.1 * s, cx + halfW * 1.35, gy - under),
+        Radius.circular(0.06 * s),
+      ),
+      _fill,
+    );
+    _fill.color = const Color(0xFFD8C7AE);
+    canvas.drawRect(Rect.fromLTRB(cx - halfW * 1.35, top - 0.1 * s, cx + halfW * 1.35, top + 0.12 * s), _fill);
+    // A plain band of geometric carving.
+    _fill.color = const Color(0x55806A50);
+    for (var k = -4; k <= 4; k++) {
+      canvas.drawRect(
+        Rect.fromCenter(
+          center: Offset(cx + k * halfW * 0.28, (top + gy - under) / 2 + 0.05 * s),
+          width: 0.1 * s,
+          height: 0.14 * s,
+        ),
+        _fill,
+      );
     }
   }
 
@@ -803,13 +1000,14 @@ class TrackPainter {
   ];
   static const _monumentWidth = [13.0, 26.0, 22.0, 9.0, 4.5];
 
-  bool _paintCitySky(Canvas canvas, TrackCamera cam) {
-    final sky = art['backgrounds/sky_india'];
+  /// A sky image with two horizon bands (far hills, near skyline).
+  bool _paintBandSky(Canvas canvas, TrackCamera cam, String skyName, String far, String near) {
+    final sky = art[skyName];
     if (sky == null) return false;
     final hz = cam.horizon + 1;
     if (_skySrc == null) {
       // Cover-fit the sky image to the sky area (made once, then reused).
-      final src = art.src('backgrounds/sky_india')!;
+      final src = art.src(skyName)!;
       final want = _w / hz;
       final have = src.width / src.height;
       _skySrc = want > have
@@ -817,8 +1015,8 @@ class TrackPainter {
           : Rect.fromLTWH((src.width - src.height * want) / 2, 0, src.height * want, src.height);
     }
     canvas.drawImageRect(sky, _skySrc!, Rect.fromLTWH(0, 0, _w, hz), _image);
-    _band(canvas, 'backgrounds/temple_hills', cam.horizon + 2, _h * 0.13, -cam.camX * 2);
-    _band(canvas, 'backgrounds/skyline_dwarka', cam.horizon + 2, _h * 0.085, -cam.camX * 5);
+    _band(canvas, far, cam.horizon + 2, _h * 0.13, -cam.camX * 2);
+    _band(canvas, near, cam.horizon + 2, _h * 0.085, -cam.camX * 5);
     return true;
   }
 
@@ -870,6 +1068,58 @@ class TrackPainter {
     final s = cam.scaleAt(z);
     if (s <= 0) return;
     _sprite(canvas, 'monuments/ancient_gateway', cam.sx(0, z), cam.sy(0, z), 19 * s);
+  }
+
+  // ── Pharaoh Run onwards (one art pack per stage) ──
+  /// Houses along the path, wild scenery behind them, monuments set well
+  /// back and small props on the kerb. Beside a crevasse, only wild scenery.
+  void _paintStageScenery(Canvas canvas, TrackCamera cam, int i, RunSimulation sim, StageArt st) {
+    final z = i * sceneryEvery;
+    final s = cam.scaleAt(z);
+    if (s <= 0) return;
+    final gapped = z >= sim.waterStart - 4;
+    for (final side in const [-1, 1]) {
+      // A monument now and then, far back.
+      if ((i + (side > 0 ? 0 : 6)) % 12 == 0) {
+        final m = st.monuments[(i ~/ 12 * 2 + (side > 0 ? 1 : 0)) % st.monuments.length];
+        _sprite(canvas, m.name, cam.sx(side * (pathHalfWidth + 12 + m.width / 2), z), cam.sy(0, z), m.width * s);
+      }
+      final h = _hash(i, side + 3);
+      if (z >= sim.bridgeStart && i.isEven) {
+        _railPost(canvas, cam, side * (RunSimulation.laneWidth * 1.5 + 0.15), z);
+      }
+      if (gapped && st.gapWild.isNotEmpty) {
+        // Ice cliffs, rocks and pines along the crevasse.
+        if (h < 0.75) {
+          final p = st.gapWild[(_hash(i, side + 5) * st.gapWild.length).floor() % st.gapWild.length];
+          final x = side * (pathHalfWidth + 1.4 + p.width / 2 + _hash(i, side + 7) * 3);
+          _sprite(canvas, p.name, cam.sx(x, z), cam.sy(0, z), p.width * s);
+        }
+        continue;
+      }
+      // Wild scenery behind the houses.
+      final hw = _hash(i, side + 11);
+      if (hw < 0.6) {
+        final p = st.wild[(hw * 17).floor() % st.wild.length];
+        final x = side * (pathHalfWidth + st.buildingWidth + 1 + p.width / 2 + _hash(i, side + 13) * 4);
+        _sprite(canvas, p.name, cam.sx(x, z + 3), cam.sy(0, z + 3), p.width * cam.scaleAt(z + 3));
+      }
+      // Houses along the path.
+      if (h < st.buildingChance) {
+        final b = st.buildings[(_hash(i, side + 5) * st.buildings.length).floor() % st.buildings.length];
+        final bx = side * (pathHalfWidth + 1.2 + st.buildingWidth / 2);
+        if (!_sprite(canvas, b, cam.sx(bx, z), cam.sy(0, z), st.buildingWidth * s, pad: 0.04)) {
+          _ruin(canvas, cam, bx, z, h);
+        }
+      }
+      // Lamps, vases and columns along the kerb: decoration only.
+      final hp = _hash(i, side + 9);
+      if (hp < 0.5) {
+        final p = st.kerb[(hp * 7).floor() % st.kerb.length];
+        final px = side * (pathHalfWidth + 0.8);
+        _sprite(canvas, p.name, cam.sx(px, z + 3), cam.sy(0, z + 3), p.width * cam.scaleAt(z + 3));
+      }
+    }
   }
 
   // ── pickups ──
@@ -945,6 +1195,15 @@ class TrackPainter {
   void _paintHero(Canvas canvas, TrackCamera cam, RunSimulation sim) {
     final z = sim.distance;
     final s = cam.scaleAt(z);
+    if (sim.fellInWater && realm.hasCrevasse) {
+      // Down into the crevasse: a puff of snow where the hero slipped.
+      _fill.color = const Color(0xDDFFFFFF);
+      final px = cam.sx(sim.x, z), py = cam.sy(0, z);
+      for (var k = -1; k <= 1; k++) {
+        canvas.drawCircle(Offset(px + k * 0.45 * s, py - (0.3 - 0.1 * k.abs()) * s), (0.42 - 0.1 * k.abs()) * s, _fill);
+      }
+      return;
+    }
     if (sim.fellInWater) {
       // Into the river: just the splash.
       if (!_sprite(canvas, 'river/water_splash', cam.sx(sim.x, z), cam.sy(0, z), 2.6 * s)) {

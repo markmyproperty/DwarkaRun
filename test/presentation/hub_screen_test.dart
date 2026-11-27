@@ -49,12 +49,12 @@ void main() {
 
   testWidgets('past the playable stages, Play repeats the last one', (tester) async {
     final s = await TestServices.create({
-      'dr.realmsDone': ['ayodhya', 'ganga'],
+      'dr.realmsDone': ['ayodhya', 'ganga', 'pharaoh', 'himalayan', 'vijayanagar'],
     });
     await tester.pumpWidget(s.app());
     await tester.pump();
-    expect(find.text('Pharaoh Run'), findsWidgets);
-    expect(find.text('Play Ganga Run again'), findsOneWidget);
+    expect(find.text('Dragon Valley'), findsWidgets);
+    expect(find.text('Play Vijayanagar Run again'), findsOneWidget);
   });
 
   testWidgets('the Play button pulses', (tester) async {

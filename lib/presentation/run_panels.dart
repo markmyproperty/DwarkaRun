@@ -162,6 +162,7 @@ class GameOverPanel extends StatelessWidget {
     required this.onRetry,
     required this.onBack,
     this.splash = false,
+    this.crevasse = false,
   });
 
   final int score;
@@ -170,6 +171,9 @@ class GameOverPanel extends StatelessWidget {
 
   /// The run ended in the river.
   final bool splash;
+
+  /// The fall was into an ice crevasse, not a river.
+  final bool crevasse;
   final VoidCallback onRetry;
   final VoidCallback onBack;
 
@@ -182,7 +186,7 @@ class GameOverPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Title(splash ? l.gameOverSplash : l.gameOverTitle),
+          _Title(splash ? (crevasse ? l.gameOverCrevasse : l.gameOverSplash) : l.gameOverTitle),
           if (newBest) ...[
             const SizedBox(height: 8),
             Text(

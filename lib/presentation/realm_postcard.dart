@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:material_ui/material_ui.dart';
 
 import '../game/realm.dart';
+import '../game/stage_art.dart';
 
 /// A small painted view of a realm for the hub: sky, hills and a path running
 /// into the distance, in the realm's colours.
@@ -12,12 +13,16 @@ class RealmPostcard extends StatelessWidget {
   final Realm realm;
 
   /// Art-pack backdrops, where a realm has one.
-  static const _art = {Realm.ayodhya: 'assets/images/backgrounds/ancient_city_background.webp'};
+  static const _art = {
+    Realm.ayodhya: 'assets/images/backgrounds/ancient_city_background.webp',
+    Realm.ganga: 'assets/images/backgrounds/coastal_background.webp',
+  };
 
   @override
   Widget build(BuildContext context) {
     final painted = CustomPaint(painter: _PostcardPainter(realm.palette), size: Size.infinite);
-    final asset = _art[realm];
+    final stage = StageArt.of(realm);
+    final asset = _art[realm] ?? (stage == null ? null : 'assets/images/${stage.postcard}.webp');
     return ExcludeSemantics(
       child: asset == null
           ? painted

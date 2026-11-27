@@ -18,6 +18,18 @@ Licence: owned by the project (the owner supplied it for this game). If any part
 
 Temples, shrines, the temple bell and the sacred lamp are never used as obstacles. They appear only in the background or beside the path.
 
+## Stage art packs: Pharaoh Run, Himalayan Run, Vijayanagar Run
+
+Supplied by the project owner as one zip per stage (stage 03, 04 and 05), in the same pastel clay-3D style. The packs' notes describe every image as original, with no people, text, logos or watermarks, no deity figures, empty shrine niches, and blank prayer flags. They live in `assets/images/<stage>/`, resized and converted to WebP. Horizon strips were trimmed of their side padding so they tile; nothing else was changed.
+
+| Stage | Obstacles (props only) | Backdrop only |
+| --- | --- | --- |
+| Pharaoh Run | stone blocks, spike trap, sand pit, collapsing tiles, broken column, rolling boulder, swinging-blade doorway | pyramids, sphinx, obelisk, temples, tomb, houses, palms and dunes |
+| Himalayan Run | snow mound, cracked ice, falling rocks, snowy crate, snow boulder, icicles under an ice ledge | monasteries, gompa, stupa, gates, prayer hall, houses, pines; prayer-flag poles and lanterns on the kerb |
+| Vijayanagar Run | bazaar pot, rubble, leaning palace pillar, fallen lintel, ox cart, granite boulder, granite lintel on columns, monkeys | gopuram, palace, stone chariot, mandapa, stepped tank, stables, houses and boulders |
+
+Licence: owned by the project, as for the first pack. Temples, shrines, stupas, the stone chariot and the sacred relics are never obstacles. The guardians and relics in these packs are kept for the guardian chases and relic hunt in a later version.
+
 ## Code-drawn art
 
 These parts are original and drawn in code by this project, with no image files:

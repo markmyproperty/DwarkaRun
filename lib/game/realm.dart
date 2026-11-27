@@ -34,6 +34,9 @@ class RealmPalette {
   final Color stoneDark;
 }
 
+/// What the gaps in a gapped stretch are: open water or an ice crevasse.
+enum GapStyle { river, crevasse }
+
 /// One stage of the adventure. The order of the values is the final stage
 /// order from the master brief; do not reorder.
 enum Realm {
@@ -97,61 +100,88 @@ enum Realm {
   pharaoh(
     id: 'pharaoh',
     targetMetres: 1600,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    playable: true,
+    obstacles: [
+      ObstacleKind.stoneBlocks,
+      ObstacleKind.bladeGate,
+      ObstacleKind.brokenColumn,
+      ObstacleKind.spikeTrap,
+      ObstacleKind.sandBoulder,
+      ObstacleKind.sandPit,
+      ObstacleKind.collapsingTiles,
+    ],
     palette: RealmPalette(
-      skyTop: Color(0xFF6FA8DC),
-      skyBottom: Color(0xFFFBE7C0),
-      haze: Color(0xFFF5DCB0),
-      ground: Color(0xFFE2B66E),
-      groundFar: Color(0xFFEFCB8B),
-      pathA: Color(0xFFD49A5A),
-      pathB: Color(0xFFC88B4C),
-      pathEdge: Color(0xFFA06A35),
-      foliageDark: Color(0xFF6B7A3A),
-      foliageLight: Color(0xFF9AA552),
-      stone: Color(0xFFD9935A),
-      stoneDark: Color(0xFFA9683A),
+      skyTop: Color(0xFF8CC4EA),
+      skyBottom: Color(0xFFFCE3BE),
+      haze: Color(0xFFFBE3C0),
+      ground: Color(0xFFF0CF9A),
+      groundFar: Color(0xFFF6DDB4),
+      pathA: Color(0xFFE9CFA6),
+      pathB: Color(0xFFE0C094),
+      pathEdge: Color(0xFFC79A5E),
+      foliageDark: Color(0xFF5C9F99),
+      foliageLight: Color(0xFFBDE8D9),
+      stone: Color(0xFFE9CFA6),
+      stoneDark: Color(0xFFC8A472),
     ),
   ),
   himalayan(
     id: 'himalayan',
     targetMetres: 1600,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    playable: true,
+    waterFrom: 0.42,
+    bridgeFrom: 0.84,
+    gapStyle: GapStyle.crevasse,
+    obstacles: [
+      ObstacleKind.snowMound,
+      ObstacleKind.icicles,
+      ObstacleKind.snowCrate,
+      ObstacleKind.crackedIce,
+      ObstacleKind.fallenRocks,
+      ObstacleKind.snowBoulder,
+    ],
     palette: RealmPalette(
-      skyTop: Color(0xFF5B8FC7),
-      skyBottom: Color(0xFFDDEBF5),
-      haze: Color(0xFFE8F0F6),
-      ground: Color(0xFFF2F5F8),
-      groundFar: Color(0xFFDDE6EE),
-      pathA: Color(0xFFBFD3E3),
-      pathB: Color(0xFFAFC6D9),
-      pathEdge: Color(0xFF8AA4BB),
+      skyTop: Color(0xFF8FC3EA),
+      skyBottom: Color(0xFFE4EFF7),
+      haze: Color(0xFFEAF2F8),
+      ground: Color(0xFFF7FAFC),
+      groundFar: Color(0xFFE3EBF2),
+      pathA: Color(0xFFE6ECF3),
+      pathB: Color(0xFFD9E2EC),
+      pathEdge: Color(0xFFB9A78E),
       foliageDark: Color(0xFF2F5249),
       foliageLight: Color(0xFF4F7A6C),
-      stone: Color(0xFF9AA3AD),
-      stoneDark: Color(0xFF6E7781),
+      stone: Color(0xFFB9A78E),
+      stoneDark: Color(0xFF8C7C66),
     ),
   ),
   vijayanagar(
     id: 'vijayanagar',
     targetMetres: 1700,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    playable: true,
+    obstacles: [
+      ObstacleKind.bazaarPot,
+      ObstacleKind.mandapaBeam,
+      ObstacleKind.leaningPillar,
+      ObstacleKind.graniteRubble,
+      ObstacleKind.oxCart,
+      ObstacleKind.fallenLintel,
+      ObstacleKind.graniteBoulder,
+      ObstacleKind.monkey,
+    ],
     palette: RealmPalette(
-      skyTop: Color(0xFF8EC5E8),
-      skyBottom: Color(0xFFFBE3C4),
+      skyTop: Color(0xFF9FCFEA),
+      skyBottom: Color(0xFFFBE0C0),
       haze: Color(0xFFF6DDBE),
-      ground: Color(0xFFC9A27A),
-      groundFar: Color(0xFFD9B892),
-      pathA: Color(0xFFC2A07E),
-      pathB: Color(0xFFB39070),
-      pathEdge: Color(0xFF8C6B4F),
-      foliageDark: Color(0xFF5E7A3A),
+      ground: Color(0xFFD9BE94),
+      groundFar: Color(0xFFE6CFAA),
+      pathA: Color(0xFFD8C7AE),
+      pathB: Color(0xFFCDBB9F),
+      pathEdge: Color(0xFFA8957A),
+      foliageDark: Color(0xFF5C7A3A),
       foliageLight: Color(0xFF8FA65A),
-      stone: Color(0xFFB59C80),
-      stoneDark: Color(0xFF86705A),
+      stone: Color(0xFFD8C7AE),
+      stoneDark: Color(0xFFA8957A),
     ),
   ),
   dragonValley(
@@ -263,6 +293,7 @@ enum Realm {
     required this.palette,
     this.waterFrom,
     this.bridgeFrom,
+    this.gapStyle = GapStyle.river,
   });
 
   /// Stable id, used in saved progress and widget keys.
@@ -284,7 +315,13 @@ enum Realm {
   final double? waterFrom;
   final double? bridgeFrom;
 
+  /// What falls away under the gaps.
+  final GapStyle gapStyle;
+
+  /// Whether the stage has a gapped stretch (river or crevasse).
   bool get hasRiver => waterFrom != null;
+
+  bool get hasCrevasse => hasRiver && gapStyle == GapStyle.crevasse;
 
   /// Metres at which open water starts (infinity on dry land).
   double get waterStart => waterFrom == null ? double.infinity : (waterFrom! * targetMetres).roundToDouble();

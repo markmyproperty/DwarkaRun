@@ -26,9 +26,10 @@ Each step lands as its own pull request.
 | Step | What it adds | State |
 | --- | --- | --- |
 | 1 | Core run, Ayodhya Run (art pack part 1), the hub with all ten stages on the route, saving, English and Hindi | Done |
-| 2 | Ganga Run (art pack part 2): ghats, a river crossing on boats and floating planks, and the bridge finale | This version |
-| 3 | Relics, keys, missions, guardian chases and the shop | After that |
-| 4+ | One stage per pull request, each built when its art pack arrives | Later |
+| 2 | Ganga Run (art pack part 2): ghats, a river crossing on boats and floating planks, and the bridge finale | Done |
+| 3 | Pharaoh Run, Himalayan Run (ice crevasses and a rope bridge) and Vijayanagar Run, each from its own art pack | This version |
+| 4 | Dragon Valley | When its art pack arrives |
+| 5 | Relics, keys, missions, guardian chases and the shop | Later |
 
 ## How to play
 
@@ -40,6 +41,7 @@ Each step lands as its own pull request.
 - Cheeky **monkeys** snatch a few mudra if you run into them. Jump over them.
 - Run the stage's distance to cross it. A crash ends the run.
 - In Ganga Run, the path gives way to open water: run along boats and floating planks, and jump the gaps or change lane. Falling in ends the run.
+- In Himalayan Run, the path crosses ice crevasses: keep to the ice slabs and snow ledges, then race over the rope bridge.
 
 The very first run opens gently: slower, with one obstacle at a time and swipe hints.
 

@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../app_scope.dart';
+import '../game/art_library.dart';
 import '../game/realm.dart';
 import '../l10n/gen/app_localizations.dart';
 import 'dr_theme.dart';
@@ -42,6 +43,8 @@ class _HubScreenState extends State<HubScreen> {
     final progress = scope.progress;
     final next = progress.nextRealm;
     final playRealm = progress.playRealm;
+    // Get the next stage's art pack ready while the player is on the hub.
+    ArtLibrary.instance.loadStage(playRealm);
 
     final String playLabel;
     if (next == null || !next.playable) {

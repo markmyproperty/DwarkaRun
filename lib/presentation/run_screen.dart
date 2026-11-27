@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../app_scope.dart';
+import '../game/art_library.dart';
 import '../game/dwarka_run_game.dart';
 import '../game/realm.dart';
 import '../game/run_simulation.dart';
@@ -66,6 +67,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _seed = widget.seed ?? math.Random().nextInt(1 << 31);
+    ArtLibrary.instance.loadStage(widget.realm);
   }
 
   @override
@@ -125,9 +127,9 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
       case RunEvent.lotus:
         _showToast(l.lotusGot);
       case RunEvent.riverStart:
-        _showToast(l.riverStart);
+        _showToast(widget.realm.hasCrevasse ? l.crevasseStart : l.riverStart);
       case RunEvent.bridgeStart:
-        _showToast(l.bridgeStart);
+        _showToast(widget.realm.hasCrevasse ? l.ropeBridgeStart : l.bridgeStart);
       case RunEvent.crash:
         HapticFeedback.heavyImpact();
       default:
@@ -298,6 +300,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
                   coins: _game.sim.coins,
                   newBest: _newBest,
                   splash: _game.sim.fellInWater,
+                  crevasse: widget.realm.hasCrevasse,
                   onRetry: _restart,
                   onBack: _back,
                 ),

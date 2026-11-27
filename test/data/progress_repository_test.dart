@@ -44,10 +44,16 @@ void main() {
     expect(repo.playRealm, Realm.ganga);
     await repo.completeRealm(Realm.ganga);
     expect(repo.nextRealm, Realm.pharaoh);
-    // Pharaoh Run is not playable in this build yet, so Play runs Ganga again.
-    expect(repo.playRealm, Realm.ganga);
+    expect(repo.playRealm, Realm.pharaoh);
+    for (final r in [Realm.pharaoh, Realm.himalayan, Realm.vijayanagar]) {
+      await repo.completeRealm(r);
+    }
+    expect(repo.nextRealm, Realm.dragonValley);
+    // Dragon Valley is not playable in this build yet, so Play repeats the
+    // last playable stage.
+    expect(repo.playRealm, Realm.vijayanagar);
     final again = await ProgressRepository.load();
-    expect(again.realmsDone, {'ayodhya', 'ganga'});
+    expect(again.realmsDone, {'ayodhya', 'ganga', 'pharaoh', 'himalayan', 'vijayanagar'});
   });
 
   test('the stages follow the final order of the master brief', () {

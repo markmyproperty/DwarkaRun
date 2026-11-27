@@ -178,5 +178,8 @@
   },
   "riverStart": "Open water! Jump the gaps between boats and planks",
   "bridgeStart": "The current is rising! Race across the bridge",
-  "gameOverSplash": "Splash! Into the river"
+  "gameOverSplash": "Splash! Into the river",
+  "crevasseStart": "Ice crevasses! Keep to the ice and jump the gaps",
+  "ropeBridgeStart": "The rope bridge! Run across before the wind rises",
+  "gameOverCrevasse": "Whoosh! Down the crevasse"
 }

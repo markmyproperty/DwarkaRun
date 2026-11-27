@@ -33,7 +33,60 @@ enum ObstacleKind {
 
   // Ganga Run.
   stoneSteps(Clearance.jump, height: 0.65, depth: 1.6),
-  hangingLanterns(Clearance.slide, height: 1.1, depth: 0.5);
+  hangingLanterns(Clearance.slide, height: 1.1, depth: 0.5),
+
+  // Pharaoh Run.
+  sandBoulder(
+    Clearance.lane,
+    height: 2.0,
+    depth: 1.0,
+    speed: 5,
+    sprite: 'pharaoh/props/rolling_boulder',
+    spriteWidth: 2.1,
+  ),
+  brokenColumn(Clearance.lane, height: 2.4, depth: 1.0, sprite: 'pharaoh/props/broken_column', spriteWidth: 2.0),
+  stoneBlocks(Clearance.jump, height: 0.7, depth: 1.0, sprite: 'pharaoh/props/stone_block', spriteWidth: 2.0),
+  spikeTrap(Clearance.jump, height: 0.65, depth: 1.2, sprite: 'pharaoh/props/spike_trap', spriteWidth: 1.8),
+  sandPit(Clearance.jump, height: 0.3, depth: 1.6, sprite: 'pharaoh/props/sand_pit', spriteWidth: 2.2),
+  collapsingTiles(Clearance.jump, height: 0.3, depth: 1.6, sprite: 'pharaoh/props/collapsing_tiles', spriteWidth: 2.2),
+  bladeGate(Clearance.slide, height: 1.1, depth: 0.6, sprite: 'pharaoh/props/swinging_blades'),
+
+  // Himalayan Run.
+  snowBoulder(
+    Clearance.lane,
+    height: 2.0,
+    depth: 1.0,
+    speed: 5,
+    sprite: 'himalayan/props/snow_boulder',
+    spriteWidth: 2.0,
+  ),
+  fallenRocks(Clearance.lane, height: 1.8, depth: 1.2, sprite: 'himalayan/props/falling_rock', spriteWidth: 2.2),
+  snowCrate(Clearance.lane, height: 1.6, depth: 1.4, sprite: 'himalayan/props/wooden_crate_snow', spriteWidth: 2.0),
+  snowMound(Clearance.jump, height: 0.6, depth: 1.0, sprite: 'himalayan/props/snow_gap_mound', spriteWidth: 2.3),
+  crackedIce(Clearance.jump, height: 0.5, depth: 1.4, sprite: 'himalayan/props/breaking_ice', spriteWidth: 2.3),
+  icicles(Clearance.slide, height: 1.1, depth: 0.5, sprite: 'himalayan/props/falling_icicle'),
+
+  // Vijayanagar Run.
+  graniteBoulder(
+    Clearance.lane,
+    height: 2.0,
+    depth: 1.0,
+    speed: 5,
+    sprite: 'vijayanagar/props/rolling_boulder',
+    spriteWidth: 2.1,
+  ),
+  leaningPillar(
+    Clearance.lane,
+    height: 2.8,
+    depth: 1.0,
+    sprite: 'vijayanagar/props/collapsing_pillar',
+    spriteWidth: 1.7,
+  ),
+  fallenLintel(Clearance.lane, height: 2.2, depth: 1.4, sprite: 'vijayanagar/props/falling_lintel', spriteWidth: 2.8),
+  oxCart(Clearance.lane, height: 1.6, depth: 2.0, sprite: 'vijayanagar/props/wooden_cart', spriteWidth: 2.6),
+  bazaarPot(Clearance.jump, height: 0.9, depth: 0.9, sprite: 'vijayanagar/props/bazaar_pot', spriteWidth: 1.3),
+  graniteRubble(Clearance.jump, height: 0.7, depth: 1.2, sprite: 'props/stone_debris', spriteWidth: 2.0),
+  mandapaBeam(Clearance.slide, height: 1.1, depth: 0.5, sprite: 'vijayanagar/props/stone_column');
 
   const ObstacleKind(
     this.clearance, {
@@ -57,7 +110,8 @@ enum ObstacleKind {
   final double speed;
 
   /// Art-pack image (path under assets/images, without extension). Drawn in
-  /// code when null or not loaded yet.
+  /// code when null or not loaded yet. Slide obstacles use it as a part
+  /// (blades, icicles, posts) of a frame drawn over the lane.
   final String? sprite;
 
   /// Width of the sprite on the path (metres).

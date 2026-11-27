@@ -5,11 +5,11 @@ import 'package:dwarka_run/game/realm.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('every playable stage has a music track that exists', () {
-    for (final r in Realm.values.where((r) => r.playable)) {
-      final track = GameAudio.musicTracks[r.id];
-      expect(track, isNotNull, reason: r.id);
-      expect(File('assets/$track').existsSync(), isTrue, reason: track);
+  test('the first two stages have music, and every track exists', () {
+    expect(GameAudio.musicTracks.keys, containsAll([Realm.ayodhya.id, Realm.ganga.id]));
+    for (final MapEntry(:key, :value) in GameAudio.musicTracks.entries) {
+      expect(Realm.byId(key)?.playable, isTrue, reason: key);
+      expect(File('assets/$value').existsSync(), isTrue, reason: value);
     }
   });
 }

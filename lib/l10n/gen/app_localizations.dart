@@ -553,6 +553,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Splash! Into the river'**
   String get gameOverSplash;
+
+  /// No description provided for @crevasseStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice crevasses! Keep to the ice and jump the gaps'**
+  String get crevasseStart;
+
+  /// No description provided for @ropeBridgeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'The rope bridge! Run across before the wind rises'**
+  String get ropeBridgeStart;
+
+  /// No description provided for @gameOverCrevasse.
+  ///
+  /// In en, this message translates to:
+  /// **'Whoosh! Down the crevasse'**
+  String get gameOverCrevasse;
 }
 
 class _AppLocalizationsDelegate

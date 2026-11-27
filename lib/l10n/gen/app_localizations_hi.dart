@@ -268,4 +268,13 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get gameOverSplash => 'छपाक! नदी में गिर गए';
+
+  @override
+  String get crevasseStart => 'बर्फ़ की दरारें! बर्फ़ पर रहो और दरारें कूदो';
+
+  @override
+  String get ropeBridgeStart => 'रस्सी का पुल! हवा तेज़ होने से पहले पार करो';
+
+  @override
+  String get gameOverCrevasse => 'अरे! दरार में फिसल गए';
 }

@@ -271,4 +271,15 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get gameOverSplash => 'Splash! Into the river';
+
+  @override
+  String get crevasseStart =>
+      'Ice crevasses! Keep to the ice and jump the gaps';
+
+  @override
+  String get ropeBridgeStart =>
+      'The rope bridge! Run across before the wind rises';
+
+  @override
+  String get gameOverCrevasse => 'Whoosh! Down the crevasse';
 }
