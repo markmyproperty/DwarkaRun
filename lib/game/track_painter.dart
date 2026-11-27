@@ -8,6 +8,7 @@ import 'entities.dart';
 import 'realm.dart';
 import 'run_simulation.dart';
 import 'stage_art.dart';
+import 'track_tiles.dart';
 
 /// Paints a run: sky, path, scenery, obstacles, pickups and the hero.
 ///
@@ -166,6 +167,8 @@ class TrackPainter {
     const tile = 3.0;
     final near = cam.camZ + 0.8;
     final far = cam.camZ + 170;
+    final tex = _tilePaint(TrackTiles.path(realm));
+    if (tex != null) _paintVerge(canvas, cam, sim, near, far);
     var z = (far / tile).floor() * tile;
     while (z + tile > near) {
       final z0 = math.max(z, near);
@@ -216,6 +219,10 @@ class TrackPainter {
         // Along the ghats: stone bank on the right, river on the left.
         _quad(canvas, cam, pathHalfWidth, 60, z0, z1, even ? pal.stone : pal.stoneDark);
       }
+      if (tex != null) {
+        z -= tile;
+        continue;
+      }
       // Edge strip, then the stone path.
       _quad(canvas, cam, -pathHalfWidth - 0.35, pathHalfWidth + 0.35, z0, z1, pal.pathEdge);
       _quad(canvas, cam, -pathHalfWidth, pathHalfWidth, z0, z1, even ? pal.pathA : pal.pathB);
@@ -230,6 +237,216 @@ class TrackPainter {
       }
       z -= tile;
     }
+    if (tex != null) _paintTexturedPath(canvas, cam, sim, tex, near, far);
+  }
+
+  // ── textured track ──
+  /// Kerb strip width in metres, just outside the path on each side.
+  static const double kerbWidth = 1.5;
+  static const double _vergeOut = 40;
+
+  final Map<String, Paint> _tilePaints = {};
+  final Map<String, Image> _tileImages = {};
+  final List<double> _pos = [];
+  final List<double> _uv = [];
+
+  /// A paint that fills with [name] tiled in image pixels, or null while
+  /// the image is not loaded.
+  Paint? _tilePaint(String? name, {TileMode x = TileMode.repeated, TileMode y = TileMode.repeated}) {
+    if (name == null) return null;
+    final img = art[name];
+    if (img == null) return null;
+    final cached = _tilePaints[name];
+    if (cached != null && identical(_tileImages[name], img)) return cached;
+    final identity = Float64List(16)
+      ..[0] = 1
+      ..[5] = 1
+      ..[10] = 1
+      ..[15] = 1;
+    _tileImages[name] = img;
+    return _tilePaints[name] = Paint()
+      ..isAntiAlias = false
+      ..shader = ImageShader(img, x, y, identity, filterQuality: FilterQuality.medium);
+  }
+
+  /// Lays a flat ground rectangle [x0..x1] × [zNear..zFar] with [paint]'s
+  /// image. Texture u runs [u0] at x0 to [u1] at x1; v is [v0] at zNear and
+  /// changes by [dv] per metre. Rows get shorter near the camera so the
+  /// perspective stays true.
+  void _texGround(
+    Canvas canvas,
+    TrackCamera cam,
+    Paint paint,
+    double x0,
+    double x1,
+    double zNear,
+    double zFar,
+    double u0,
+    double u1,
+    double v0,
+    double dv,
+  ) {
+    if (zFar <= zNear) return;
+    _pos.clear();
+    _uv.clear();
+    var z = zNear;
+    while (z < zFar) {
+      final step = ((z - cam.camZ) * 0.1).clamp(0.3, 6.0);
+      final z2 = math.min(z + step, zFar);
+      final ya = cam.sy(0, z), yb = cam.sy(0, z2);
+      final ax = cam.sx(x0, z), bx = cam.sx(x1, z), cx = cam.sx(x1, z2), dx = cam.sx(x0, z2);
+      final va = v0 + (z - zNear) * dv, vb = v0 + (z2 - zNear) * dv;
+      _pos.addAll([ax, ya, bx, ya, cx, yb, ax, ya, cx, yb, dx, yb]);
+      _uv.addAll([u0, va, u1, va, u1, vb, u0, va, u1, vb, u0, vb]);
+      z = z2;
+    }
+    final v = Vertices.raw(
+      VertexMode.triangles,
+      Float32List.fromList(_pos),
+      textureCoordinates: Float32List.fromList(_uv),
+    );
+    canvas.drawVertices(v, BlendMode.srcOver, paint);
+    v.dispose();
+  }
+
+  /// Texture v at [z] for a tile [len] metres long, kept small so it stays
+  /// precise far into a run. Image top is the far end.
+  static double _vAt(double z, double len, double px) => -(z % len) / len * px;
+
+  void _paintVerge(Canvas canvas, TrackCamera cam, RunSimulation sim, double near, double far) {
+    final paint = _tilePaint(TrackTiles.verge(realm));
+    final img = art[TrackTiles.verge(realm)];
+    if (paint == null || img == null) return;
+    const len = TrackTiles.pathTileMetres;
+    final px = img.width.toDouble();
+    final inner = pathHalfWidth + kerbWidth;
+    final v0 = _vAt(near, len, px);
+    final dv = -px / len;
+    // Along the ghats the right bank is stone until the river opens out.
+    final ghats = realm.hasRiver && !realm.hasCrevasse && !realm.hasMoat && !realm.hasTrench;
+    final rightFrom = ghats ? math.max(near, sim.waterStart) : near;
+    // Out on the river the water runs under the boats and planks too.
+    if (ghats && rightFrom < far) {
+      final w = inner / len * px;
+      _texGround(canvas, cam, paint, -inner, inner, rightFrom, far, 0, 2 * w, _vAt(rightFrom, len, px), dv);
+    }
+    _texGround(canvas, cam, paint, -_vergeOut, -inner, near, far, -(_vergeOut - inner) / len * px, 0, v0, dv);
+    if (rightFrom < far) {
+      _texGround(
+        canvas,
+        cam,
+        paint,
+        inner,
+        _vergeOut,
+        rightFrom,
+        far,
+        ghats ? 2 * inner / len * px : 0,
+        (ghats ? _vergeOut + inner : _vergeOut - inner) / len * px,
+        _vAt(rightFrom, len, px),
+        dv,
+      );
+    }
+  }
+
+  void _paintTexturedPath(Canvas canvas, TrackCamera cam, RunSimulation sim, Paint tex, double near, double far) {
+    const len = TrackTiles.pathTileMetres;
+    final dryEnd = math.min(far, sim.waterStart);
+    if (dryEnd > near) {
+      final img = art[TrackTiles.path(realm)]!;
+      final px = img.width.toDouble();
+      _texGround(canvas, cam, tex, -pathHalfWidth, pathHalfWidth, near, dryEnd, 0, px, _vAt(near, len, px), -px / len);
+      final kerb = _tilePaint(TrackTiles.kerb(realm));
+      final kImg = art[TrackTiles.kerb(realm)];
+      if (kerb != null && kImg != null) {
+        // The band's carved lip faces the path: as drawn it sits on the left,
+        // so the right kerb is its mirror.
+        final kw = kImg.width.toDouble();
+        final kLen = kImg.height / kw * kerbWidth;
+        final kv0 = _vAt(near, kLen, kImg.height.toDouble());
+        final kdv = -kImg.height / kLen;
+        const o = pathHalfWidth + kerbWidth;
+        _texGround(canvas, cam, kerb, -o, -pathHalfWidth, near, dryEnd, 0, kw, kv0, kdv);
+        _texGround(canvas, cam, kerb, pathHalfWidth, o, near, dryEnd, kw, 0, kv0, kdv);
+      }
+      _paintInlays(canvas, cam, near, dryEnd);
+    }
+    _paintLip(canvas, cam, sim, near, far);
+  }
+
+  static const double _inlayEvery = 37;
+  static const double _inlaySize = 1.7;
+
+  void _paintInlays(Canvas canvas, TrackCamera cam, double near, double dryEnd) {
+    final name = TrackTiles.inlay(realm);
+    final paint = _tilePaint(name, x: TileMode.decal, y: TileMode.decal);
+    if (paint == null) return;
+    final px = art[name!]!.width.toDouble();
+    const h = _inlaySize / 2;
+    var k = ((near - 18) / _inlayEvery).ceil();
+    while (true) {
+      final zc = k * _inlayEvery + 18;
+      if (zc - h > dryEnd - 2) break;
+      if (zc + h > near && zc > 30) {
+        _texGround(
+          canvas,
+          cam,
+          paint,
+          -h,
+          h,
+          math.max(near, zc - h),
+          zc + h,
+          0,
+          px,
+          px - (math.max(near, zc - h) - (zc - h)) / _inlaySize * px,
+          -px / _inlaySize,
+        );
+      }
+      k++;
+    }
+  }
+
+  /// The carved edge where the path drops into the water or chasm.
+  void _paintLip(Canvas canvas, TrackCamera cam, RunSimulation sim, double near, double far) {
+    final name = TrackTiles.lip(realm);
+    final paint = _tilePaint(name, y: TileMode.decal);
+    if (paint == null) return;
+    final ws = sim.waterStart;
+    if (!ws.isFinite) return;
+    final img = art[name!]!;
+    const len = TrackTiles.pathTileMetres;
+    final depth = img.height / img.width * len;
+    final z0 = ws - depth * 0.3;
+    final z1 = z0 + depth;
+    if (z1 < near || z0 > far) return;
+    final zn = math.max(near, z0);
+    const o = pathHalfWidth + kerbWidth;
+    final px = img.width.toDouble();
+    // Opaque edge at the top of the image, toward the runner.
+    _texGround(
+      canvas,
+      cam,
+      paint,
+      -o,
+      o,
+      zn,
+      math.min(z1, far),
+      -kerbWidth / len * px,
+      px + kerbWidth / len * px,
+      (zn - z0) / depth * img.height,
+      img.height / depth,
+    );
+  }
+
+  /// Bridge decking from the stage's deck tile: the centre lane of the tile
+  /// across each platform.
+  void _paintDeck(Canvas canvas, TrackCamera cam, double x, double hw, double z0, double z1) {
+    final name = TrackTiles.deck(realm);
+    final paint = _tilePaint(name);
+    if (paint == null) return;
+    final px = art[name!]!.width.toDouble();
+    const len = TrackTiles.pathTileMetres;
+    final k = px / len;
+    _texGround(canvas, cam, paint, x - hw, x + hw, z0, z1, px / 2 - hw * k, px / 2 + hw * k, _vAt(z0, len, px), -k);
   }
 
   void _quad(Canvas canvas, TrackCamera cam, double x0, double x1, double z0, double z1, Color c) {
@@ -266,12 +483,15 @@ class TrackPainter {
       final z0 = math.max(p.z0, cam.camZ + 0.8);
       final z1 = math.min(p.z1, far);
       final x = p.lane * RunSimulation.laneWidth;
+      final decked = p.kind == PlatformKind.bridge || (p.kind == PlatformKind.plank && !realm.hasCrevasse);
       if (realm.hasCrevasse) {
         _paintIcePlatform(canvas, cam, x, z0, z1, p);
+        if (decked) _paintDeck(canvas, cam, x, 0.98, z0, z1);
         continue;
       }
       if (realm.hasMoat) {
         _paintMoatPlatform(canvas, cam, x, z0, z1, p);
+        if (decked) _paintDeck(canvas, cam, x, 0.94, z0, z1);
         continue;
       }
       if (realm.hasTrench) {
@@ -298,6 +518,7 @@ class TrackPainter {
           _quad(canvas, cam, x - 1.05, x + 1.05, z0, z1, const Color(0xFFC9A47A));
           _seams(canvas, cam, x, 1.05, z0, z1, 0.9, const Color(0x66704C2C));
       }
+      if (decked) _paintDeck(canvas, cam, x, p.kind == PlatformKind.bridge ? 1.05 : 0.92, z0, z1);
       // The near edge shows its thickness.
       if (p.z0 >= cam.camZ + 0.8 && p.kind != PlatformKind.boat) {
         final s0 = cam.scaleAt(p.z0);

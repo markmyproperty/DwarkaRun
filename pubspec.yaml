@@ -71,6 +71,16 @@ flutter:
     - assets/audio/
     - assets/audio/sfx/
     - assets/images/brand/
+    - assets/images/tracks/ayodhya/
+    - assets/images/tracks/ganga/
+    - assets/images/tracks/pharaoh/
+    - assets/images/tracks/himalayan/
+    - assets/images/tracks/vijayanagar/
+    - assets/images/tracks/dragon/
+    - assets/images/tracks/lanka/
+    - assets/images/tracks/indus/
+    - assets/images/tracks/sunken/
+    - assets/images/tracks/finale/
     - assets/images/pharaoh/backgrounds/
     - assets/images/pharaoh/buildings/
     - assets/images/pharaoh/env/

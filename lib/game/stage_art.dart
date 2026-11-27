@@ -1,5 +1,6 @@
 import 'entities.dart';
 import 'realm.dart';
+import 'track_tiles.dart';
 
 /// One art-pack image placed in the world: its path under `assets/images/`
 /// (no extension) and its width in metres.
@@ -75,6 +76,7 @@ class StageArt {
     for (final p in kerb) p.name,
     for (final p in gapWild) p.name,
     ...extra,
+    ...TrackTiles.names(realm),
     if (realm == Realm.lanka) 'lanka/props/golden_column',
     if (realm == Realm.ayodhya) 'monuments/ancient_gateway',
     if (realm == Realm.ganga) ...const ['river/coastal_steps', 'river/water_splash'],
