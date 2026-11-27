@@ -32,16 +32,16 @@ void main() {
   });
 
   test('the same seed lays out the same level', () {
-    final a = RunSimulation(realm: Realm.forest, seed: 7);
-    final b = RunSimulation(realm: Realm.forest, seed: 7);
-    final c = RunSimulation(realm: Realm.forest, seed: 8);
+    final a = RunSimulation(realm: Realm.ayodhya, seed: 7);
+    final b = RunSimulation(realm: Realm.ayodhya, seed: 7);
+    final c = RunSimulation(realm: Realm.ayodhya, seed: 8);
     expect(layout(a), layout(b));
     expect(layout(a), isNot(layout(c)));
   });
 
   test('every row leaves a lane the hero can get through', () {
     for (var seed = 0; seed < 40; seed++) {
-      final sim = RunSimulation(realm: Realm.forest, seed: seed);
+      final sim = RunSimulation(realm: Realm.ayodhya, seed: seed);
       final rows = <double, List<Obstacle>>{};
       for (final o in sim.pools.obstacles.where((o) => o.active)) {
         rows.putIfAbsent(o.z, () => []).add(o);
@@ -55,14 +55,14 @@ void main() {
   });
 
   test('standing still in the centre lane ends in a crash', () {
-    final sim = RunSimulation(realm: Realm.forest, seed: 3);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 3);
     run(sim, 60);
     expect(sim.state, RunState.crashed);
     expect(sim.crashedInto, isNotNull);
   });
 
   test('the speed rises gradually and is capped', () {
-    final sim = RunSimulation(realm: Realm.forest, seed: 1, targetMetres: 100000);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 1, targetMetres: 100000);
     final start = sim.speed;
     sim.boostCharges = 0;
     // Make the hero untouchable to watch the speed alone.
@@ -75,13 +75,13 @@ void main() {
   });
 
   test('a gentle start runs slower', () {
-    final gentle = RunSimulation(realm: Realm.forest, seed: 1, gentleStart: true);
-    final normal = RunSimulation(realm: Realm.forest, seed: 1);
+    final gentle = RunSimulation(realm: Realm.ayodhya, seed: 1, gentleStart: true);
+    final normal = RunSimulation(realm: Realm.ayodhya, seed: 1);
     expect(gentle.speed, lessThan(normal.speed));
   });
 
   test('jumping clears a fallen pillar, sliding clears a branch', () {
-    final sim = RunSimulation(realm: Realm.forest, seed: 1);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 1);
     sim.pools.clear();
     sim.pools.obstacles[0].spawn(ObstacleKind.fallenPillar, 0, 8, 0);
     sim.pools.obstacles[1].spawn(ObstacleKind.lowBranch, 0, 30, 0);
@@ -113,7 +113,7 @@ void main() {
   });
 
   test('a monkey snatches coins without ending the run', () {
-    final sim = RunSimulation(realm: Realm.forest, seed: 1);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 1);
     sim.pools.clear();
     sim.coins = 12;
     sim.pools.obstacles[0].spawn(ObstacleKind.monkey, 0, 5, 0);
@@ -128,7 +128,7 @@ void main() {
   });
 
   test('pickups: coins, gems, feathers and the lotus magnet', () {
-    final sim = RunSimulation(realm: Realm.forest, seed: 1);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 1);
     sim.pools.clear();
     sim.pools.pickups[0].spawn(PickupKind.coin, 0, 0.7, 3);
     sim.pools.pickups[1].spawn(PickupKind.gem, 0, 0.8, 5);
@@ -147,7 +147,7 @@ void main() {
   });
 
   test('a Garuda feather boost flies over obstacles', () {
-    final sim = RunSimulation(realm: Realm.forest, seed: 1);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 1);
     sim.pools.clear();
     sim.boostCharges = 1;
     expect(sim.boost(), isTrue);
@@ -165,7 +165,7 @@ void main() {
 
   test('reaching the distance target finishes the realm', () {
     final events = <RunEvent>[];
-    final sim = RunSimulation(realm: Realm.forest, seed: 1, targetMetres: 60, onEvent: events.add);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 1, targetMetres: 60, onEvent: events.add);
     for (var i = 0; i < 60 * 30 && sim.state == RunState.running; i++) {
       sim.boostLeft = 1; // untouchable
       sim.update(1 / 60);
@@ -175,7 +175,7 @@ void main() {
   });
 
   test('lane changes stay within the three lanes', () {
-    final sim = RunSimulation(realm: Realm.forest, seed: 1);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 1);
     sim.moveLeft();
     sim.moveLeft();
     expect(sim.lane, -1);
@@ -219,9 +219,9 @@ void main() {
   });
 
   test('a first run teaches with the realm\'s own obstacles', () {
-    final sim = RunSimulation(realm: Realm.dwarka, seed: 1, gentleStart: true);
+    final sim = RunSimulation(realm: Realm.ayodhya, seed: 1, gentleStart: true);
     final first = sim.pools.obstacles.where((o) => o.active).toList()..sort((a, b) => a.z.compareTo(b.z));
     expect(first.take(3).map((o) => o.kind.clearance), [Clearance.lane, Clearance.jump, Clearance.slide]);
-    expect(first.take(3).every((o) => Realm.dwarka.obstacles.contains(o.kind)), isTrue);
+    expect(first.take(3).every((o) => Realm.ayodhya.obstacles.contains(o.kind)), isTrue);
   });
 }

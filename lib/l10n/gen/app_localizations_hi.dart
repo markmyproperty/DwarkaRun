@@ -13,13 +13,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get appTitle => 'द्वारका रन';
 
   @override
-  String get hubTagline => 'प्राचीन लोकों की एक यात्रा';
+  String get hubTagline => 'दस महान लोकों की खोज-यात्रा';
 
   @override
   String get hubNextStop => 'अगला पड़ाव';
 
   @override
-  String get hubStartYatra => 'यात्रा शुरू करें';
+  String get hubStartYatra => 'साहसिक यात्रा शुरू करें';
 
   @override
   String hubContinueTo(String realm) {
@@ -28,7 +28,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String hubRunAgain(String realm) {
-    return '$realm फिर से दौड़ें';
+    return '$realm फिर से खेलें';
   }
 
   @override
@@ -113,35 +113,66 @@ class AppLocalizationsHi extends AppLocalizations {
   String get soundOff => 'आवाज़ बंद';
 
   @override
-  String get realmDwarka => 'प्राचीन द्वारका';
+  String get realmAyodhya => 'अयोध्या रन';
 
   @override
-  String get realmForest => 'वन राज्य';
+  String get realmGanga => 'गंगा रन';
 
   @override
-  String get realmRiver => 'घाटों की नदी';
+  String get realmPharaoh => 'फ़राओ रन';
 
   @override
-  String get realmDesert => 'मरु दुर्ग';
+  String get realmHimalayan => 'हिमालयन रन';
 
   @override
-  String get realmCelestial => 'स्वर्ण नगरी';
+  String get realmVijayanagar => 'विजयनगर रन';
 
   @override
-  String get realmDwarkaBlurb =>
-      'बलुआ पत्थर की गलियाँ, दुकान-घर और भव्य स्मारक';
+  String get realmDragonValley => 'ड्रैगन वैली';
 
   @override
-  String get realmForestBlurb => 'बरगद के जंगल और पुराने पत्थर के खंडहर';
+  String get realmLanka => 'लंका रन';
 
   @override
-  String get realmRiverBlurb => 'पत्थर की सीढ़ियाँ, नावें और बहते लट्ठे';
+  String get realmIndus => 'सिंधु रन';
 
   @override
-  String get realmDesertBlurb => 'खुले आसमान के नीचे बलुआ पत्थर की प्राचीरें';
+  String get realmSunkenDwarka => 'द्वारका: डूबा हुआ साम्राज्य';
 
   @override
-  String get realmCelestialBlurb => 'सोने की एक तैरती नगरी';
+  String get realmFinalLegend => 'द्वारका रन: अंतिम गाथा';
+
+  @override
+  String get realmAyodhyaBlurb => 'मंदिर, राजसी आँगन और बाज़ार की गलियाँ';
+
+  @override
+  String get realmGangaBlurb => 'नदी किनारे घाट, नावें और तैरते मंच';
+
+  @override
+  String get realmPharaohBlurb => 'पिरामिड, रेत के टीले और छिपे मकबरे';
+
+  @override
+  String get realmHimalayanBlurb => 'बर्फ़ीले दर्रे, रस्सी के पुल और मठ';
+
+  @override
+  String get realmVijayanagarBlurb =>
+      'पत्थर के रथ, बाज़ार और शिलाओं वाली पहाड़ियाँ';
+
+  @override
+  String get realmDragonValleyBlurb =>
+      'ज्वालामुखी, लावा गुफाएँ और ड्रैगन के किले';
+
+  @override
+  String get realmLankaBlurb => 'महलों और बागों वाला एक स्वर्णिम द्वीप राज्य';
+
+  @override
+  String get realmIndusBlurb => 'ईंटों के नगर, अन्नागार और जल नालियाँ';
+
+  @override
+  String get realmSunkenDwarkaBlurb => 'समुद्री मंदिर और जलमग्न महल';
+
+  @override
+  String get realmFinalLegendBlurb => 'स्वर्ण नगरी और अंतिम अवशेष कक्ष';
 
   @override
   String hudCoins(int count) {

@@ -44,19 +44,29 @@ bool reduceMotionOf(BuildContext context) => MediaQuery.maybeDisableAnimationsOf
 
 extension RealmText on Realm {
   String name(AppLocalizations l) => switch (this) {
-    Realm.dwarka => l.realmDwarka,
-    Realm.forest => l.realmForest,
-    Realm.river => l.realmRiver,
-    Realm.desert => l.realmDesert,
-    Realm.celestial => l.realmCelestial,
+    Realm.ayodhya => l.realmAyodhya,
+    Realm.ganga => l.realmGanga,
+    Realm.pharaoh => l.realmPharaoh,
+    Realm.himalayan => l.realmHimalayan,
+    Realm.vijayanagar => l.realmVijayanagar,
+    Realm.dragonValley => l.realmDragonValley,
+    Realm.lanka => l.realmLanka,
+    Realm.indus => l.realmIndus,
+    Realm.sunkenDwarka => l.realmSunkenDwarka,
+    Realm.finalLegend => l.realmFinalLegend,
   };
 
   String blurb(AppLocalizations l) => switch (this) {
-    Realm.dwarka => l.realmDwarkaBlurb,
-    Realm.forest => l.realmForestBlurb,
-    Realm.river => l.realmRiverBlurb,
-    Realm.desert => l.realmDesertBlurb,
-    Realm.celestial => l.realmCelestialBlurb,
+    Realm.ayodhya => l.realmAyodhyaBlurb,
+    Realm.ganga => l.realmGangaBlurb,
+    Realm.pharaoh => l.realmPharaohBlurb,
+    Realm.himalayan => l.realmHimalayanBlurb,
+    Realm.vijayanagar => l.realmVijayanagarBlurb,
+    Realm.dragonValley => l.realmDragonValleyBlurb,
+    Realm.lanka => l.realmLankaBlurb,
+    Realm.indus => l.realmIndusBlurb,
+    Realm.sunkenDwarka => l.realmSunkenDwarkaBlurb,
+    Realm.finalLegend => l.realmFinalLegendBlurb,
   };
 }
 

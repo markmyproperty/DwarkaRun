@@ -1,9 +1,9 @@
 {
   "@@locale": "en",
   "appTitle": "Dwarka Run",
-  "hubTagline": "A yatra through ancient realms",
+  "hubTagline": "A quest through ten legendary worlds",
   "hubNextStop": "NEXT STOP",
-  "hubStartYatra": "Start yatra",
+  "hubStartYatra": "Start the adventure",
   "hubContinueTo": "Continue to {realm}",
   "@hubContinueTo": {
     "placeholders": {
@@ -12,7 +12,7 @@
       }
     }
   },
-  "hubRunAgain": "Run {realm} again",
+  "hubRunAgain": "Play {realm} again",
   "@hubRunAgain": {
     "placeholders": {
       "realm": {
@@ -90,16 +90,26 @@
   "howToMonkey": "Cheeky monkeys snatch a few mudra. Jump over them!",
   "soundOn": "Sound on",
   "soundOff": "Sound off",
-  "realmDwarka": "Ancient Dwarka",
-  "realmForest": "Forest Kingdom",
-  "realmRiver": "River of Ghats",
-  "realmDesert": "Desert Fort",
-  "realmCelestial": "Celestial City",
-  "realmDwarkaBlurb": "Sandstone streets, shop-houses and grand monuments",
-  "realmForestBlurb": "Banyan forests and old stone ruins",
-  "realmRiverBlurb": "Stone steps, boats and drifting logs",
-  "realmDesertBlurb": "Sandstone ramparts under a wide sky",
-  "realmCelestialBlurb": "A floating city of gold",
+  "realmAyodhya": "Ayodhya Run",
+  "realmGanga": "Ganga Run",
+  "realmPharaoh": "Pharaoh Run",
+  "realmHimalayan": "Himalayan Run",
+  "realmVijayanagar": "Vijayanagar Run",
+  "realmDragonValley": "Dragon Valley",
+  "realmLanka": "Lanka Run",
+  "realmIndus": "Indus Run",
+  "realmSunkenDwarka": "Dwarka: The Sunken Kingdom",
+  "realmFinalLegend": "Dwarka Run: The Final Legend",
+  "realmAyodhyaBlurb": "Temples, royal courtyards and market streets",
+  "realmGangaBlurb": "Riverside ghats, boats and floating platforms",
+  "realmPharaohBlurb": "Pyramids, dunes and hidden tombs",
+  "realmHimalayanBlurb": "Snowy passes, rope bridges and monasteries",
+  "realmVijayanagarBlurb": "Stone chariots, bazaars and boulder hills",
+  "realmDragonValleyBlurb": "Volcanoes, lava caves and dragon fortresses",
+  "realmLankaBlurb": "A golden island kingdom of palaces and gardens",
+  "realmIndusBlurb": "Brick cities, granaries and water channels",
+  "realmSunkenDwarkaBlurb": "Ocean temples and submerged palaces",
+  "realmFinalLegendBlurb": "The golden city and the final relic chamber",
   "hudCoins": "Mudra: {count}",
   "@hudCoins": {
     "placeholders": {

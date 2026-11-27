@@ -28,7 +28,7 @@ Future<void> pumpUntil(WidgetTester tester, Finder finder, {double seconds = 90}
 void main() {
   testWidgets('a seeded run shows the HUD, a crash gives game over, and Retry restarts', (tester) async {
     final s = await TestServices.create({'dr.tutorialDone': true});
-    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.forest, seed: 3)));
+    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.ayodhya, seed: 3)));
     await tester.pump();
 
     for (final key in ['hud.coins', 'hud.distance', 'hud.pause', 'hud.boost']) {
@@ -61,7 +61,7 @@ void main() {
 
   testWidgets('the pause menu resumes, mutes and quits', (tester) async {
     final s = await TestServices.create({'dr.tutorialDone': true});
-    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.forest, seed: 11)));
+    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.ayodhya, seed: 11)));
     await tester.pump(const Duration(milliseconds: 100));
 
     await tester.tap(find.byKey(const Key('hud.pause')));
@@ -89,7 +89,7 @@ void main() {
 
   testWidgets('reaching the target completes the realm and saves it', (tester) async {
     final s = await TestServices.create({'dr.tutorialDone': true});
-    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.forest, seed: 5, targetMetres: 30)));
+    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.ayodhya, seed: 5, targetMetres: 30)));
     await tester.pump();
     // Hold a boost so nothing can stop the hero.
     final state = tester.state(find.byType(RunScreen));
@@ -101,20 +101,20 @@ void main() {
     }
     await tester.pump();
     expect(find.byKey(const Key('complete.panel')), findsOneWidget);
-    expect(s.progress.isDone(Realm.forest), isTrue);
+    expect(s.progress.isDone(Realm.ayodhya), isTrue);
     expect(s.analytics.names, contains('realm_complete'));
   });
 
   testWidgets('the first run opens gently with swipe hints', (tester) async {
     final s = await TestServices.create();
-    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.forest, seed: 2)));
+    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.ayodhya, seed: 2)));
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byKey(const Key('run.hint')), findsOneWidget);
   });
 
   testWidgets('swipes and keys steer the hero', (tester) async {
     final s = await TestServices.create({'dr.tutorialDone': true});
-    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.forest, seed: 2)));
+    await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.ayodhya, seed: 2)));
     await tester.pump(const Duration(milliseconds: 50));
     final state = tester.state(find.byType(RunScreen));
     // ignore: avoid_dynamic_calls

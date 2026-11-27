@@ -111,7 +111,7 @@ class TrackPainter {
         case _kPickup:
           _paintPickup(canvas, cam, sim.pools.pickups[idx], sim.time);
         case _kScenery:
-          realm == Realm.dwarka ? _paintCityScenery(canvas, cam, idx) : _paintScenery(canvas, cam, idx);
+          realm == Realm.ayodhya ? _paintCityScenery(canvas, cam, idx) : _paintScenery(canvas, cam, idx);
         case _kGate:
           _paintGate(canvas, cam, z);
       }
@@ -124,7 +124,7 @@ class TrackPainter {
 
   // ── backdrop ──
   void _paintSky(Canvas canvas, TrackCamera cam) {
-    if (realm == Realm.dwarka && _paintCitySky(canvas, cam)) return;
+    if (realm == Realm.ayodhya && _paintCitySky(canvas, cam)) return;
     canvas.drawRect(Rect.fromLTWH(0, 0, _w, cam.horizon + 1), _sky);
     _fill.color = const Color(0xFFFFF3D0);
     canvas.drawCircle(Offset(_w * 0.78, cam.horizon * 0.42), _h * 0.045, _fill);
@@ -199,8 +199,8 @@ class TrackPainter {
     for (var i = first; i <= last; i++) {
       _push(i * sceneryEvery, (_kScenery << 16) | (i & 0xFFFF));
     }
-    // City gateways at the start and at the far edge of Ancient Dwarka.
-    if (realm == Realm.dwarka) {
+    // City gateways at the start and at the far edge of Ayodhya.
+    if (realm == Realm.ayodhya) {
       for (final gz in [gateStartZ, sim.targetMetres.toDouble()]) {
         if (cam.visible(gz) && gz < far) _push(gz, (_kGate << 16));
       }
@@ -545,7 +545,7 @@ class TrackPainter {
     }
   }
 
-  // ── Ancient Dwarka (art pack) ──
+  // ── Ayodhya Run (art pack) ──
   static const double gateStartZ = 18;
   static const _buildings = [
     'buildings/ancient_b01',

@@ -13,13 +13,13 @@ class AppLocalizationsMr extends AppLocalizations {
   String get appTitle => 'Dwarka Run';
 
   @override
-  String get hubTagline => 'A yatra through ancient realms';
+  String get hubTagline => 'A quest through ten legendary worlds';
 
   @override
   String get hubNextStop => 'NEXT STOP';
 
   @override
-  String get hubStartYatra => 'Start yatra';
+  String get hubStartYatra => 'Start the adventure';
 
   @override
   String hubContinueTo(String realm) {
@@ -28,7 +28,7 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String hubRunAgain(String realm) {
-    return 'Run $realm again';
+    return 'Play $realm again';
   }
 
   @override
@@ -113,35 +113,70 @@ class AppLocalizationsMr extends AppLocalizations {
   String get soundOff => 'Sound off';
 
   @override
-  String get realmDwarka => 'Ancient Dwarka';
+  String get realmAyodhya => 'Ayodhya Run';
 
   @override
-  String get realmForest => 'Forest Kingdom';
+  String get realmGanga => 'Ganga Run';
 
   @override
-  String get realmRiver => 'River of Ghats';
+  String get realmPharaoh => 'Pharaoh Run';
 
   @override
-  String get realmDesert => 'Desert Fort';
+  String get realmHimalayan => 'Himalayan Run';
 
   @override
-  String get realmCelestial => 'Celestial City';
+  String get realmVijayanagar => 'Vijayanagar Run';
 
   @override
-  String get realmDwarkaBlurb =>
-      'Sandstone streets, shop-houses and grand monuments';
+  String get realmDragonValley => 'Dragon Valley';
 
   @override
-  String get realmForestBlurb => 'Banyan forests and old stone ruins';
+  String get realmLanka => 'Lanka Run';
 
   @override
-  String get realmRiverBlurb => 'Stone steps, boats and drifting logs';
+  String get realmIndus => 'Indus Run';
 
   @override
-  String get realmDesertBlurb => 'Sandstone ramparts under a wide sky';
+  String get realmSunkenDwarka => 'Dwarka: The Sunken Kingdom';
 
   @override
-  String get realmCelestialBlurb => 'A floating city of gold';
+  String get realmFinalLegend => 'Dwarka Run: The Final Legend';
+
+  @override
+  String get realmAyodhyaBlurb =>
+      'Temples, royal courtyards and market streets';
+
+  @override
+  String get realmGangaBlurb => 'Riverside ghats, boats and floating platforms';
+
+  @override
+  String get realmPharaohBlurb => 'Pyramids, dunes and hidden tombs';
+
+  @override
+  String get realmHimalayanBlurb =>
+      'Snowy passes, rope bridges and monasteries';
+
+  @override
+  String get realmVijayanagarBlurb =>
+      'Stone chariots, bazaars and boulder hills';
+
+  @override
+  String get realmDragonValleyBlurb =>
+      'Volcanoes, lava caves and dragon fortresses';
+
+  @override
+  String get realmLankaBlurb =>
+      'A golden island kingdom of palaces and gardens';
+
+  @override
+  String get realmIndusBlurb => 'Brick cities, granaries and water channels';
+
+  @override
+  String get realmSunkenDwarkaBlurb => 'Ocean temples and submerged palaces';
+
+  @override
+  String get realmFinalLegendBlurb =>
+      'The golden city and the final relic chamber';
 
   @override
   String hudCoins(int count) {

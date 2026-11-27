@@ -10,8 +10,8 @@ void main() {
     final repo = await ProgressRepository.load();
     expect(repo.wallet, 0);
     expect(repo.bestMetres, 0);
-    expect(repo.nextRealm, Realm.dwarka);
-    expect(repo.playRealm, Realm.dwarka);
+    expect(repo.nextRealm, Realm.ayodhya);
+    expect(repo.playRealm, Realm.ayodhya);
     expect(repo.tutorialDone, isFalse);
   });
 
@@ -38,16 +38,28 @@ void main() {
 
   test('completing a realm moves the route on and persists', () async {
     final repo = await ProgressRepository.load();
-    await repo.completeRealm(Realm.dwarka);
-    expect(repo.isDone(Realm.dwarka), isTrue);
-    expect(repo.nextRealm, Realm.forest);
-    expect(repo.playRealm, Realm.forest);
-    await repo.completeRealm(Realm.forest);
-    expect(repo.nextRealm, Realm.river);
-    // The river is not playable in this build, so Play runs the forest.
-    expect(repo.playRealm, Realm.forest);
+    await repo.completeRealm(Realm.ayodhya);
+    expect(repo.isDone(Realm.ayodhya), isTrue);
+    expect(repo.nextRealm, Realm.ganga);
+    // Ganga Run is not playable in this build yet, so Play runs Ayodhya again.
+    expect(repo.playRealm, Realm.ayodhya);
     final again = await ProgressRepository.load();
-    expect(again.realmsDone, {'dwarka', 'forest'});
+    expect(again.realmsDone, {'ayodhya'});
+  });
+
+  test('the stages follow the final order of the master brief', () {
+    expect(Realm.values.map((r) => r.id), [
+      'ayodhya',
+      'ganga',
+      'pharaoh',
+      'himalayan',
+      'vijayanagar',
+      'dragon',
+      'lanka',
+      'indus',
+      'sunken',
+      'finale',
+    ]);
   });
 
   test('mute and tutorial settings persist', () async {

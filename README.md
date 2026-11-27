@@ -1,18 +1,34 @@
 # Dwarka Run
 
-An original, 3D-feel endless runner built with Flutter and Flame. A young traveller sets out on a yatra through ancient Indian realms: the streets of ancient Dwarka, banyan forests, river ghats, desert forts and a golden celestial city.
+An original, 3D-feel endless runner built with Flutter and Flame. A young traveller sets out on a quest through ten legendary worlds inspired by ancient India, other ancient civilisations and fantasy.
 
 It runs on Android, iOS and the web from one codebase, with no backend. Progress is saved on the device.
 
+## The ten stages
+
+The order is final (see the master brief):
+
+1. Ayodhya Run
+2. Ganga Run
+3. Pharaoh Run
+4. Himalayan Run
+5. Vijayanagar Run
+6. Dragon Valley
+7. Lanka Run
+8. Indus Run
+9. Dwarka: The Sunken Kingdom
+10. Dwarka Run: The Final Legend
+
 ## Status
 
-The game is being built in three stages, each as its own pull request.
+Each step lands as its own pull request.
 
-| Stage | What it adds | State |
+| Step | What it adds | State |
 | --- | --- | --- |
-| 1 | Core run, Ancient Dwarka (art pack) and the Forest Kingdom, the hub, saving, English and Hindi | This version |
-| 2 | River of Ghats (boat and log stage), Desert Fort, Celestial City, and flights between realms | Next |
-| 3 | Sites to own, daily blessing, outfits, trip summary and sharing, sound and music, monsoon rain, release builds | After that |
+| 1 | Core run, Ayodhya Run (art pack part 1), the hub with all ten stages on the route, saving, English and Hindi | This version |
+| 2 | Ganga Run (art pack part 2): boats, floating platforms and the bridge finale | Next |
+| 3 | Relics, keys, missions, guardian chases and the shop | After that |
+| 4+ | One stage per pull request, each built when its art pack arrives | Later |
 
 ## How to play
 

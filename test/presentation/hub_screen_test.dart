@@ -11,11 +11,22 @@ void main() {
 
     expect(find.text('Dwarka Run'), findsOneWidget);
     expect(find.byKey(const Key('hub.nextStop')), findsOneWidget);
-    expect(find.text('Ancient Dwarka'), findsWidgets);
-    expect(find.text('Start yatra'), findsOneWidget);
+    expect(find.text('Ayodhya Run'), findsWidgets);
+    expect(find.text('Start the adventure'), findsOneWidget);
     expect(find.text('120 mudra'), findsOneWidget);
     expect(find.text('640 m'), findsOneWidget);
-    for (final id in ['dwarka', 'forest', 'river', 'desert', 'celestial']) {
+    for (final id in [
+      'ayodhya',
+      'ganga',
+      'pharaoh',
+      'himalayan',
+      'vijayanagar',
+      'dragon',
+      'lanka',
+      'indus',
+      'sunken',
+      'finale',
+    ]) {
       expect(find.byKey(Key('play.route.$id.todo')), findsOneWidget, reason: id);
     }
     await tester.scrollUntilVisible(find.byKey(const Key('play.howto')), 200);
@@ -23,26 +34,17 @@ void main() {
     expect(s.analytics.names, contains('game_open'));
   });
 
-  testWidgets('a finished realm shows as done on the route', (tester) async {
+  testWidgets('a finished stage shows as done, and Play repeats it until the next one opens', (tester) async {
     final s = await TestServices.create({
-      'dr.realmsDone': ['dwarka'],
+      'dr.realmsDone': ['ayodhya'],
     });
     await tester.pumpWidget(s.app());
     await tester.pump();
-    expect(find.byKey(const Key('play.route.dwarka.done')), findsOneWidget);
-    expect(find.byKey(const Key('play.route.forest.todo')), findsOneWidget);
-    expect(find.text('Continue to Forest Kingdom'), findsOneWidget);
-  });
-
-  testWidgets('past the playable realms, Play runs the last one again', (tester) async {
-    final s = await TestServices.create({
-      'dr.realmsDone': ['dwarka', 'forest'],
-    });
-    await tester.pumpWidget(s.app());
-    await tester.pump();
-    expect(find.byKey(const Key('play.route.forest.done')), findsOneWidget);
-    expect(find.byKey(const Key('play.route.river.todo')), findsOneWidget);
-    expect(find.text('Run Forest Kingdom again'), findsOneWidget);
+    expect(find.text('Ganga Run'), findsWidgets);
+    expect(find.text('Play Ayodhya Run again'), findsOneWidget);
+    await tester.scrollUntilVisible(find.byKey(const Key('play.route.ayodhya.done')), 200);
+    expect(find.byKey(const Key('play.route.ayodhya.done')), findsOneWidget);
+    expect(find.byKey(const Key('play.route.ganga.todo')), findsOneWidget);
   });
 
   testWidgets('the Play button pulses', (tester) async {
@@ -78,7 +80,7 @@ void main() {
     await tester.pumpWidget(s.app(locale: const Locale('hi')));
     await tester.pump();
     expect(find.text('द्वारका रन'), findsOneWidget);
-    expect(find.text('यात्रा शुरू करें'), findsOneWidget);
+    expect(find.text('साहसिक यात्रा शुरू करें'), findsOneWidget);
   });
 
   testWidgets('Play opens a run', (tester) async {

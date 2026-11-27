@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @hubTagline.
   ///
   /// In en, this message translates to:
-  /// **'A yatra through ancient realms'**
+  /// **'A quest through ten legendary worlds'**
   String get hubTagline;
 
   /// No description provided for @hubNextStop.
@@ -125,7 +125,7 @@ abstract class AppLocalizations {
   /// No description provided for @hubStartYatra.
   ///
   /// In en, this message translates to:
-  /// **'Start yatra'**
+  /// **'Start the adventure'**
   String get hubStartYatra;
 
   /// No description provided for @hubContinueTo.
@@ -137,7 +137,7 @@ abstract class AppLocalizations {
   /// No description provided for @hubRunAgain.
   ///
   /// In en, this message translates to:
-  /// **'Run {realm} again'**
+  /// **'Play {realm} again'**
   String hubRunAgain(String realm);
 
   /// No description provided for @hubPlayLabel.
@@ -272,65 +272,125 @@ abstract class AppLocalizations {
   /// **'Sound off'**
   String get soundOff;
 
-  /// No description provided for @realmDwarka.
+  /// No description provided for @realmAyodhya.
   ///
   /// In en, this message translates to:
-  /// **'Ancient Dwarka'**
-  String get realmDwarka;
+  /// **'Ayodhya Run'**
+  String get realmAyodhya;
 
-  /// No description provided for @realmForest.
+  /// No description provided for @realmGanga.
   ///
   /// In en, this message translates to:
-  /// **'Forest Kingdom'**
-  String get realmForest;
+  /// **'Ganga Run'**
+  String get realmGanga;
 
-  /// No description provided for @realmRiver.
+  /// No description provided for @realmPharaoh.
   ///
   /// In en, this message translates to:
-  /// **'River of Ghats'**
-  String get realmRiver;
+  /// **'Pharaoh Run'**
+  String get realmPharaoh;
 
-  /// No description provided for @realmDesert.
+  /// No description provided for @realmHimalayan.
   ///
   /// In en, this message translates to:
-  /// **'Desert Fort'**
-  String get realmDesert;
+  /// **'Himalayan Run'**
+  String get realmHimalayan;
 
-  /// No description provided for @realmCelestial.
+  /// No description provided for @realmVijayanagar.
   ///
   /// In en, this message translates to:
-  /// **'Celestial City'**
-  String get realmCelestial;
+  /// **'Vijayanagar Run'**
+  String get realmVijayanagar;
 
-  /// No description provided for @realmDwarkaBlurb.
+  /// No description provided for @realmDragonValley.
   ///
   /// In en, this message translates to:
-  /// **'Sandstone streets, shop-houses and grand monuments'**
-  String get realmDwarkaBlurb;
+  /// **'Dragon Valley'**
+  String get realmDragonValley;
 
-  /// No description provided for @realmForestBlurb.
+  /// No description provided for @realmLanka.
   ///
   /// In en, this message translates to:
-  /// **'Banyan forests and old stone ruins'**
-  String get realmForestBlurb;
+  /// **'Lanka Run'**
+  String get realmLanka;
 
-  /// No description provided for @realmRiverBlurb.
+  /// No description provided for @realmIndus.
   ///
   /// In en, this message translates to:
-  /// **'Stone steps, boats and drifting logs'**
-  String get realmRiverBlurb;
+  /// **'Indus Run'**
+  String get realmIndus;
 
-  /// No description provided for @realmDesertBlurb.
+  /// No description provided for @realmSunkenDwarka.
   ///
   /// In en, this message translates to:
-  /// **'Sandstone ramparts under a wide sky'**
-  String get realmDesertBlurb;
+  /// **'Dwarka: The Sunken Kingdom'**
+  String get realmSunkenDwarka;
 
-  /// No description provided for @realmCelestialBlurb.
+  /// No description provided for @realmFinalLegend.
   ///
   /// In en, this message translates to:
-  /// **'A floating city of gold'**
-  String get realmCelestialBlurb;
+  /// **'Dwarka Run: The Final Legend'**
+  String get realmFinalLegend;
+
+  /// No description provided for @realmAyodhyaBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Temples, royal courtyards and market streets'**
+  String get realmAyodhyaBlurb;
+
+  /// No description provided for @realmGangaBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Riverside ghats, boats and floating platforms'**
+  String get realmGangaBlurb;
+
+  /// No description provided for @realmPharaohBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Pyramids, dunes and hidden tombs'**
+  String get realmPharaohBlurb;
+
+  /// No description provided for @realmHimalayanBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Snowy passes, rope bridges and monasteries'**
+  String get realmHimalayanBlurb;
+
+  /// No description provided for @realmVijayanagarBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Stone chariots, bazaars and boulder hills'**
+  String get realmVijayanagarBlurb;
+
+  /// No description provided for @realmDragonValleyBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Volcanoes, lava caves and dragon fortresses'**
+  String get realmDragonValleyBlurb;
+
+  /// No description provided for @realmLankaBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'A golden island kingdom of palaces and gardens'**
+  String get realmLankaBlurb;
+
+  /// No description provided for @realmIndusBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Brick cities, granaries and water channels'**
+  String get realmIndusBlurb;
+
+  /// No description provided for @realmSunkenDwarkaBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean temples and submerged palaces'**
+  String get realmSunkenDwarkaBlurb;
+
+  /// No description provided for @realmFinalLegendBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'The golden city and the final relic chamber'**
+  String get realmFinalLegendBlurb;
 
   /// No description provided for @hudCoins.
   ///

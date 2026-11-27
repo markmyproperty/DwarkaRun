@@ -12,7 +12,7 @@ class RealmPostcard extends StatelessWidget {
   final Realm realm;
 
   /// Art-pack backdrops, where a realm has one.
-  static const _art = {Realm.dwarka: 'assets/images/backgrounds/ancient_city_background.webp'};
+  static const _art = {Realm.ayodhya: 'assets/images/backgrounds/ancient_city_background.webp'};
 
   @override
   Widget build(BuildContext context) {
