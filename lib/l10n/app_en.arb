@@ -1,0 +1,179 @@
+{
+  "@@locale": "en",
+  "appTitle": "Dwarka Run",
+  "hubTagline": "A quest through ten legendary worlds",
+  "hubNextStop": "NEXT STOP",
+  "hubStartYatra": "Start the adventure",
+  "hubContinueTo": "Continue to {realm}",
+  "@hubContinueTo": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      }
+    }
+  },
+  "hubRunAgain": "Play {realm} again",
+  "@hubRunAgain": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      }
+    }
+  },
+  "hubPlayLabel": "Play {realm}",
+  "@hubPlayLabel": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      }
+    }
+  },
+  "hubComingSoon": "{realm} opens in the next update. Until then, run {current} again.",
+  "@hubComingSoon": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "hubTarget": "Run {metres} m to cross the realm",
+  "@hubTarget": {
+    "placeholders": {
+      "metres": {
+        "type": "int"
+      }
+    }
+  },
+  "walletLabel": "Wallet",
+  "mudraCount": "{count} mudra",
+  "@mudraCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bestLabel": "Best run",
+  "metresValue": "{metres} m",
+  "@metresValue": {
+    "placeholders": {
+      "metres": {
+        "type": "int"
+      }
+    }
+  },
+  "routeTitle": "Your yatra",
+  "routeDone": "Done",
+  "routeTodo": "To do",
+  "routeComingSoon": "Coming soon",
+  "routeStateLabel": "{realm}: {state}",
+  "@routeStateLabel": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "howToTitle": "How to play",
+  "howToLanes": "Swipe left or right to change lanes",
+  "howToJump": "Swipe up to jump",
+  "howToSlide": "Swipe down to slide",
+  "howToKeys": "On a keyboard: arrow keys or WASD, and space for a boost",
+  "howToBoost": "Collect a Garuda feather, then tap it to fly over everything",
+  "howToLotus": "A Lotus charm pulls nearby mudra towards you",
+  "howToMonkey": "Cheeky monkeys snatch a few mudra. Jump over them!",
+  "soundOn": "Sound on",
+  "soundOff": "Sound off",
+  "realmAyodhya": "Ayodhya Run",
+  "realmGanga": "Ganga Run",
+  "realmPharaoh": "Pharaoh Run",
+  "realmHimalayan": "Himalayan Run",
+  "realmVijayanagar": "Vijayanagar Run",
+  "realmDragonValley": "Dragon Valley",
+  "realmLanka": "Lanka Run",
+  "realmIndus": "Indus Run",
+  "realmSunkenDwarka": "Dwarka: The Sunken Kingdom",
+  "realmFinalLegend": "Dwarka Run: The Final Legend",
+  "realmAyodhyaBlurb": "Temples, royal courtyards and market streets",
+  "realmGangaBlurb": "Riverside ghats, boats and floating platforms",
+  "realmPharaohBlurb": "Pyramids, dunes and hidden tombs",
+  "realmHimalayanBlurb": "Snowy passes, rope bridges and monasteries",
+  "realmVijayanagarBlurb": "Stone chariots, bazaars and boulder hills",
+  "realmDragonValleyBlurb": "Volcanoes, lava caves and dragon fortresses",
+  "realmLankaBlurb": "A golden island kingdom of palaces and gardens",
+  "realmIndusBlurb": "Brick cities, granaries and water channels",
+  "realmSunkenDwarkaBlurb": "Ocean temples and submerged palaces",
+  "realmFinalLegendBlurb": "The golden city and the final relic chamber",
+  "hudCoins": "Mudra: {count}",
+  "@hudCoins": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hudDistance": "Distance: {metres} metres",
+  "@hudDistance": {
+    "placeholders": {
+      "metres": {
+        "type": "int"
+      }
+    }
+  },
+  "hudPause": "Pause",
+  "hudBoost": "Garuda feather boost, {count} left",
+  "@hudBoost": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pauseTitle": "Paused",
+  "pauseResume": "Resume",
+  "pauseRestart": "Restart",
+  "pauseQuit": "Quit to hub",
+  "gameOverTitle": "Your run ends here",
+  "scoreLabel": "Score",
+  "coinsCollected": "Mudra collected",
+  "newBest": "New best run!",
+  "retry": "Retry",
+  "backToHub": "Back to hub",
+  "realmCompleteTitle": "{realm} crossed!",
+  "@realmCompleteTitle": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      }
+    }
+  },
+  "realmCompleteBody": "You reached the far side of the realm. Your mudra are safe in your wallet.",
+  "continueLabel": "Continue",
+  "hintLanes": "Swipe left or right to dodge",
+  "hintJump": "Swipe up to jump",
+  "hintSlide": "Swipe down to slide",
+  "monkeyStole": "A monkey snatched {count} mudra!",
+  "@monkeyStole": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "featherGot": "Garuda feather! Tap the feather to fly",
+  "lotusGot": "Lotus charm! Mudra come to you",
+  "distanceToGo": "{metres} m to go",
+  "@distanceToGo": {
+    "placeholders": {
+      "metres": {
+        "type": "int"
+      }
+    }
+  }
+}
