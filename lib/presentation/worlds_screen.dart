@@ -193,7 +193,7 @@ class _WorldCard extends StatelessWidget {
       status = l.worldArtSoon;
       statusColor = const Color(0xFF7E7896);
     } else {
-      final before = Realm.values[(realm.index - 1).clamp(0, Realm.values.length - 1)];
+      final before = Realm.values.take(realm.index).lastWhere((r) => r.playable, orElse: () => Realm.values.first);
       status = l.worldLockedHint(before.name(l));
       statusColor = const Color(0xFF7E7896);
     }

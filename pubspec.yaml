@@ -137,6 +137,10 @@ flutter:
     - assets/images/vijayanagar/rewards/
     - assets/images/vijayanagar/vfx/
     - assets/images/menu/
+    - assets/images/indus/backgrounds/
+    - assets/images/indus/buildings/
+    - assets/images/indus/env/
+    - assets/images/indus/monuments/
     - assets/lottie/
   fonts:
     - family: Lilita

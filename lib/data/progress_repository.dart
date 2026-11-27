@@ -184,25 +184,21 @@ class ProgressRepository extends ChangeNotifier {
 
   bool isDone(Realm r) => realmsDone.contains(r.id);
 
-  /// The first realm on the route not finished yet, or null when the whole
-  /// yatra is complete.
+  /// The first realm on the route not finished yet that this build can
+  /// run, or null when every built realm is complete. A stage still waiting
+  /// for its art is stepped over, so the player is never held back; it joins
+  /// the route as soon as an update brings it.
   Realm? get nextRealm {
     final done = realmsDone;
     for (final r in Realm.values) {
-      if (!done.contains(r.id)) return r;
+      if (r.playable && !done.contains(r.id)) return r;
     }
     return null;
   }
 
-  /// The realm the Play button starts: the next one if this build can run
-  /// it, otherwise the latest playable realm before it. The route is never
-  /// skipped, so a stage still waiting for its art holds the player back.
-  Realm get playRealm {
-    final next = nextRealm;
-    if (next != null && next.playable) return next;
-    final upTo = next?.index ?? Realm.values.length;
-    return Realm.values.take(upTo).lastWhere((r) => r.playable, orElse: () => Realm.values.first);
-  }
+  /// The realm the Play button starts: the next one, or the last stage when
+  /// everything built is cleared.
+  Realm get playRealm => nextRealm ?? Realm.values.lastWhere((r) => r.playable);
 
   bool get yatraComplete => nextRealm == null;
 

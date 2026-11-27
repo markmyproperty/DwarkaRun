@@ -85,6 +85,44 @@ class StageArt {
   static StageArt? of(Realm realm) => _byRealm[realm];
 
   static const _byRealm = {
+    Realm.indus: StageArt(
+      sky: 'indus/backgrounds/sky_indus',
+      farBand: 'indus/backgrounds/alluvial_hills',
+      nearBand: 'indus/backgrounds/skyline_indus',
+      postcard: 'indus/backgrounds/citadel_background',
+      buildings: [
+        'indus/buildings/indus_b01',
+        'indus/buildings/indus_b02',
+        'indus/buildings/indus_b03',
+        'indus/buildings/indus_b04',
+        'indus/buildings/indus_b05',
+        'indus/buildings/indus_b06',
+      ],
+      buildingChance: 0.85,
+      monuments: [
+        Piece('indus/monuments/great_granary', 24),
+        Piece('indus/monuments/city_gateway', 19.2),
+        Piece('indus/monuments/great_bath', 24),
+        Piece('indus/monuments/citadel_platform', 24),
+        Piece('indus/monuments/courtyard_house', 24),
+        Piece('indus/monuments/ruined_brick_structure', 24),
+        Piece('indus/monuments/brick_stair_platform', 23.1),
+        Piece('indus/monuments/warehouse_block', 24),
+        Piece('indus/monuments/brick_well', 4.0),
+      ],
+      wild: [
+        Piece('indus/env/acacia_tree', 5.7),
+        Piece('indus/env/dusty_scrub', 2.1),
+        Piece('indus/env/brick_rubble', 1.9),
+        Piece('indus/env/acacia_tree', 4.7),
+      ],
+      kerb: [
+        Piece('indus/env/reed_grass', 1.1),
+        Piece('indus/env/dusty_scrub', 1.4),
+        Piece('props/ancient_pot', 0.9),
+        Piece('indus/env/brick_rubble', 1.1),
+      ],
+    ),
     Realm.ayodhya: StageArt(
       sky: 'ayodhya/backgrounds/sky_ayodhya',
       farBand: 'ayodhya/backgrounds/ayodhya_hills',

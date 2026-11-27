@@ -238,8 +238,14 @@ enum Realm {
   indus(
     id: 'indus',
     targetMetres: 1800,
-    playable: false,
-    obstacles: [ObstacleKind.fallenPillar, ObstacleKind.lowBranch, ObstacleKind.marketCart],
+    playable: true,
+    obstacles: [
+      ObstacleKind.clayPot,
+      ObstacleKind.lowBranch,
+      ObstacleKind.woodenCrate,
+      ObstacleKind.stoneDebris,
+      ObstacleKind.marketCart,
+    ],
     palette: RealmPalette(
       skyTop: Color(0xFFA8C8DC),
       skyBottom: Color(0xFFF3E2C8),
