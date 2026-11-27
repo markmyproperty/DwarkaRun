@@ -65,7 +65,8 @@ import 'app_localizations_ta.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -73,7 +74,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -85,12 +87,13 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -440,7 +443,7 @@ abstract class AppLocalizations {
   /// No description provided for @gameOverTitle.
   ///
   /// In en, this message translates to:
-  /// **'Your run ends here'**
+  /// **'Run over!'**
   String get gameOverTitle;
 
   /// No description provided for @scoreLabel.
@@ -622,9 +625,424 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Whoosh! Down into the trench'**
   String get gameOverTrench;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAY'**
+  String get play;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @beginOdyssey.
+  ///
+  /// In en, this message translates to:
+  /// **'Begin the odyssey'**
+  String get beginOdyssey;
+
+  /// No description provided for @presents.
+  ///
+  /// In en, this message translates to:
+  /// **'presents'**
+  String get presents;
+
+  /// No description provided for @intro1.
+  ///
+  /// In en, this message translates to:
+  /// **'Long ago, every age of the world was bound by one thread of golden light.'**
+  String get intro1;
+
+  /// No description provided for @intro2.
+  ///
+  /// In en, this message translates to:
+  /// **'Then the thread broke, and its relics scattered across Jambudvīpa.'**
+  String get intro2;
+
+  /// No description provided for @intro3.
+  ///
+  /// In en, this message translates to:
+  /// **'Along sacred rivers, through burning deserts and over frozen peaks…'**
+  String get intro3;
+
+  /// No description provided for @intro4.
+  ///
+  /// In en, this message translates to:
+  /// **'…into golden palaces and kingdoms the world forgot.'**
+  String get intro4;
+
+  /// No description provided for @intro5.
+  ///
+  /// In en, this message translates to:
+  /// **'Beneath the waves, the legendary city of Dwarka still waits.'**
+  String get intro5;
+
+  /// No description provided for @intro6.
+  ///
+  /// In en, this message translates to:
+  /// **'One runner. Ten worlds. Your odyssey begins now.'**
+  String get intro6;
+
+  /// No description provided for @levelShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Lv {level}'**
+  String levelShort(int level);
+
+  /// No description provided for @levelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level}'**
+  String levelLabel(int level);
+
+  /// No description provided for @worldsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Worlds'**
+  String get worldsTitle;
+
+  /// No description provided for @missionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Missions'**
+  String get missionsTitle;
+
+  /// No description provided for @dailyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reward'**
+  String get dailyTitle;
+
+  /// No description provided for @shopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get shopTitle;
+
+  /// No description provided for @heroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Heroes'**
+  String get heroTitle;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @claim.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim'**
+  String get claim;
+
+  /// No description provided for @dayN.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day}'**
+  String dayN(int day);
+
+  /// No description provided for @dailyCome.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back tomorrow for the next reward'**
+  String get dailyCome;
+
+  /// No description provided for @dailyStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in every day for bigger rewards'**
+  String get dailyStreak;
+
+  /// No description provided for @missionCoinsInRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect {goal} mudra in one run'**
+  String missionCoinsInRun(int goal);
+
+  /// No description provided for @missionMetresInRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Run {goal} m in one run'**
+  String missionMetresInRun(int goal);
+
+  /// No description provided for @missionJumps.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump {goal} times'**
+  String missionJumps(int goal);
+
+  /// No description provided for @missionSlides.
+  ///
+  /// In en, this message translates to:
+  /// **'Slide {goal} times'**
+  String missionSlides(int goal);
+
+  /// No description provided for @missionNearMisses.
+  ///
+  /// In en, this message translates to:
+  /// **'Make {goal} close calls'**
+  String missionNearMisses(int goal);
+
+  /// No description provided for @missionGems.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect {goal} gems'**
+  String missionGems(int goal);
+
+  /// No description provided for @missionBoosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Fly with {goal} Garuda feathers'**
+  String missionBoosts(int goal);
+
+  /// No description provided for @missionFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Cross a world'**
+  String get missionFinish;
+
+  /// No description provided for @missionRuns.
+  ///
+  /// In en, this message translates to:
+  /// **'Play {goal} runs'**
+  String missionRuns(int goal);
+
+  /// No description provided for @missionCoinsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect {goal} mudra in total'**
+  String missionCoinsTotal(int goal);
+
+  /// No description provided for @missionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish missions to earn mudra, gems and XP'**
+  String get missionsHint;
+
+  /// No description provided for @upgradeFeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Garuda feather flight'**
+  String get upgradeFeather;
+
+  /// No description provided for @upgradeLotus.
+  ///
+  /// In en, this message translates to:
+  /// **'Lotus charm'**
+  String get upgradeLotus;
+
+  /// No description provided for @upgradeSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Lasts {seconds} s'**
+  String upgradeSeconds(String seconds);
+
+  /// No description provided for @upgradesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Power-up upgrades'**
+  String get upgradesTitle;
+
+  /// No description provided for @maxed.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get maxed;
+
+  /// No description provided for @heroKing.
+  ///
+  /// In en, this message translates to:
+  /// **'The Wandering King'**
+  String get heroKing;
+
+  /// No description provided for @heroKingBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'A young king on a yatra through the ages.'**
+  String get heroKingBlurb;
+
+  /// No description provided for @heroSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get heroSelected;
+
+  /// No description provided for @heroComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'More heroes are on the way'**
+  String get heroComingSoon;
+
+  /// No description provided for @musicVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get musicVolume;
+
+  /// No description provided for @sfxVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get sfxVolume;
+
+  /// No description provided for @muteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute all sound'**
+  String get muteAll;
+
+  /// No description provided for @replayIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay the story'**
+  String get replayIntro;
+
+  /// No description provided for @creditsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'A game by MMYP Technologies'**
+  String get creditsLine;
+
+  /// No description provided for @worldCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared'**
+  String get worldCleared;
+
+  /// No description provided for @worldCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'You are here'**
+  String get worldCurrent;
+
+  /// No description provided for @worldLockedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Cross {world} to unlock'**
+  String worldLockedHint(String world);
+
+  /// No description provided for @worldArtSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Arriving soon'**
+  String get worldArtSoon;
+
+  /// No description provided for @worldPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play this world'**
+  String get worldPlay;
+
+  /// No description provided for @stageNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Stage {number}'**
+  String stageNumber(int number);
+
+  /// No description provided for @newWorldUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'New world unlocked!'**
+  String get newWorldUnlocked;
+
+  /// No description provided for @letsGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go!'**
+  String get letsGo;
+
+  /// No description provided for @countdownGo.
+  ///
+  /// In en, this message translates to:
+  /// **'GO!'**
+  String get countdownGo;
+
+  /// No description provided for @nearMiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Close call!'**
+  String get nearMiss;
+
+  /// No description provided for @distanceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distanceLabel;
+
+  /// No description provided for @gemsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gems'**
+  String get gemsLabel;
+
+  /// No description provided for @missionsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Missions completed'**
+  String get missionsDone;
+
+  /// No description provided for @revive.
+  ///
+  /// In en, this message translates to:
+  /// **'Revive'**
+  String get revive;
+
+  /// No description provided for @reviveFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Revive for {count} gems'**
+  String reviveFor(int count);
+
+  /// No description provided for @homeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get homeLabel;
+
+  /// No description provided for @victoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'World cleared!'**
+  String get victoryTitle;
+
+  /// No description provided for @nextWorld.
+  ///
+  /// In en, this message translates to:
+  /// **'Next world'**
+  String get nextWorld;
+
+  /// No description provided for @levelUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Level up!'**
+  String get levelUp;
+
+  /// No description provided for @xpEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'+{xp} XP'**
+  String xpEarned(int xp);
+
+  /// No description provided for @selectWorld.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a world'**
+  String get selectWorld;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading…'**
+  String get loading;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -633,7 +1051,8 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['bn', 'en', 'hi', 'mr', 'ta'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['bn', 'en', 'hi', 'mr', 'ta'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;

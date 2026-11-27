@@ -92,16 +92,19 @@ class AppLocalizationsHi extends AppLocalizations {
   String get howToSlide => 'फिसलने के लिए नीचे स्वाइप करें';
 
   @override
-  String get howToKeys => 'कीबोर्ड पर: तीर कुंजियाँ या WASD, और बूस्ट के लिए स्पेस';
+  String get howToKeys =>
+      'कीबोर्ड पर: तीर कुंजियाँ या WASD, और बूस्ट के लिए स्पेस';
 
   @override
-  String get howToBoost => 'गरुड़ पंख इकट्ठा करें, फिर सब कुछ पार उड़ने के लिए उसे टैप करें';
+  String get howToBoost =>
+      'गरुड़ पंख इकट्ठा करें, फिर सब कुछ पार उड़ने के लिए उसे टैप करें';
 
   @override
   String get howToLotus => 'कमल ताबीज़ पास की मुद्राएँ आपकी ओर खींचता है';
 
   @override
-  String get howToMonkey => 'शरारती बंदर कुछ मुद्राएँ छीन लेते हैं। उनके ऊपर से कूदें!';
+  String get howToMonkey =>
+      'शरारती बंदर कुछ मुद्राएँ छीन लेते हैं। उनके ऊपर से कूदें!';
 
   @override
   String get soundOn => 'आवाज़ चालू';
@@ -146,16 +149,19 @@ class AppLocalizationsHi extends AppLocalizations {
   String get realmGangaBlurb => 'नदी किनारे घाट, नावें और तैरते मंच';
 
   @override
-  String get realmPharaohBlurb => 'सुनहरे टीले, बलुआ पत्थर की गलियाँ और छिपा ख़ज़ाना';
+  String get realmPharaohBlurb =>
+      'सुनहरे टीले, बलुआ पत्थर की गलियाँ और छिपा ख़ज़ाना';
 
   @override
   String get realmHimalayanBlurb => 'बर्फ़ीले दर्रे, रस्सी के पुल और मठ';
 
   @override
-  String get realmVijayanagarBlurb => 'पत्थर के रथ, बाज़ार और शिलाओं वाली पहाड़ियाँ';
+  String get realmVijayanagarBlurb =>
+      'पत्थर के रथ, बाज़ार और शिलाओं वाली पहाड़ियाँ';
 
   @override
-  String get realmDragonValleyBlurb => 'ज्वालामुखी, लावा गुफाएँ और ड्रैगन के किले';
+  String get realmDragonValleyBlurb =>
+      'ज्वालामुखी, लावा गुफाएँ और ड्रैगन के किले';
 
   @override
   String get realmLankaBlurb => 'महलों और बागों वाला एक स्वर्णिम द्वीप राज्य';
@@ -200,7 +206,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get pauseQuit => 'मुख्य पृष्ठ पर जाएँ';
 
   @override
-  String get gameOverTitle => 'आपकी दौड़ यहीं थमी';
+  String get gameOverTitle => 'दौड़ ख़त्म!';
 
   @override
   String get scoreLabel => 'स्कोर';
@@ -223,7 +229,8 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get realmCompleteBody => 'आप लोक के दूसरे छोर तक पहुँच गए। आपकी मुद्राएँ बटुए में सुरक्षित हैं।';
+  String get realmCompleteBody =>
+      'आप लोक के दूसरे छोर तक पहुँच गए। आपकी मुद्राएँ बटुए में सुरक्षित हैं।';
 
   @override
   String get continueLabel => 'आगे बढ़ें';
@@ -254,7 +261,8 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get riverStart => 'खुला पानी! नावों और तख्तों के बीच की दूरी कूदकर पार करें';
+  String get riverStart =>
+      'खुला पानी! नावों और तख्तों के बीच की दूरी कूदकर पार करें';
 
   @override
   String get bridgeStart => 'धारा तेज़ हो रही है! पुल पर दौड़ लगाएँ';
@@ -299,4 +307,249 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get gameOverTrench => 'अरे! गहरी खाई में गिर गए';
+
+  @override
+  String get play => 'खेलें';
+
+  @override
+  String get skip => 'छोड़ें';
+
+  @override
+  String get beginOdyssey => 'यात्रा शुरू करें';
+
+  @override
+  String get presents => 'प्रस्तुत करता है';
+
+  @override
+  String get intro1 =>
+      'बहुत पहले, संसार के हर युग को सुनहरी रोशनी का एक धागा जोड़ता था।';
+
+  @override
+  String get intro2 =>
+      'फिर वह धागा टूट गया, और उसके अवशेष जम्बूद्वीप में बिखर गए।';
+
+  @override
+  String get intro3 =>
+      'पवित्र नदियों के किनारे, तपते रेगिस्तानों और बर्फ़ीली चोटियों के पार…';
+
+  @override
+  String get intro4 => '…सुनहरे महलों और भूले हुए राज्यों तक।';
+
+  @override
+  String get intro5 =>
+      'लहरों के नीचे, महान नगरी द्वारका आज भी प्रतीक्षा में है।';
+
+  @override
+  String get intro6 => 'एक धावक। दस संसार। आपकी यात्रा अब शुरू होती है।';
+
+  @override
+  String levelShort(int level) {
+    return 'स्तर $level';
+  }
+
+  @override
+  String levelLabel(int level) {
+    return 'स्तर $level';
+  }
+
+  @override
+  String get worldsTitle => 'संसार';
+
+  @override
+  String get missionsTitle => 'मिशन';
+
+  @override
+  String get dailyTitle => 'दैनिक इनाम';
+
+  @override
+  String get shopTitle => 'दुकान';
+
+  @override
+  String get heroTitle => 'नायक';
+
+  @override
+  String get settingsTitle => 'सेटिंग्स';
+
+  @override
+  String get claim => 'लें';
+
+  @override
+  String dayN(int day) {
+    return 'दिन $day';
+  }
+
+  @override
+  String get dailyCome => 'अगला इनाम कल मिलेगा';
+
+  @override
+  String get dailyStreak => 'हर दिन आएँ, बड़े इनाम पाएँ';
+
+  @override
+  String missionCoinsInRun(int goal) {
+    return 'एक दौड़ में $goal मुद्रा जमा करें';
+  }
+
+  @override
+  String missionMetresInRun(int goal) {
+    return 'एक दौड़ में $goal मी. दौड़ें';
+  }
+
+  @override
+  String missionJumps(int goal) {
+    return '$goal बार कूदें';
+  }
+
+  @override
+  String missionSlides(int goal) {
+    return '$goal बार फिसलें';
+  }
+
+  @override
+  String missionNearMisses(int goal) {
+    return '$goal बार बाल-बाल बचें';
+  }
+
+  @override
+  String missionGems(int goal) {
+    return '$goal रत्न जमा करें';
+  }
+
+  @override
+  String missionBoosts(int goal) {
+    return '$goal गरुड़ पंखों से उड़ें';
+  }
+
+  @override
+  String get missionFinish => 'एक संसार पार करें';
+
+  @override
+  String missionRuns(int goal) {
+    return '$goal दौड़ें खेलें';
+  }
+
+  @override
+  String missionCoinsTotal(int goal) {
+    return 'कुल $goal मुद्रा जमा करें';
+  }
+
+  @override
+  String get missionsHint => 'मिशन पूरे करें, मुद्रा, रत्न और XP पाएँ';
+
+  @override
+  String get upgradeFeather => 'गरुड़ पंख उड़ान';
+
+  @override
+  String get upgradeLotus => 'कमल ताबीज़';
+
+  @override
+  String upgradeSeconds(String seconds) {
+    return '$seconds से. चलता है';
+  }
+
+  @override
+  String get upgradesTitle => 'पावर-अप सुधार';
+
+  @override
+  String get maxed => 'अधिकतम';
+
+  @override
+  String get heroKing => 'घुमंतू राजा';
+
+  @override
+  String get heroKingBlurb => 'युगों की यात्रा पर निकला एक युवा राजा।';
+
+  @override
+  String get heroSelected => 'चुना गया';
+
+  @override
+  String get heroComingSoon => 'और नायक जल्द आ रहे हैं';
+
+  @override
+  String get musicVolume => 'संगीत';
+
+  @override
+  String get sfxVolume => 'ध्वनि प्रभाव';
+
+  @override
+  String get muteAll => 'सारी ध्वनि बंद';
+
+  @override
+  String get replayIntro => 'कहानी फिर देखें';
+
+  @override
+  String get creditsLine => 'MMYP Technologies का एक खेल';
+
+  @override
+  String get worldCleared => 'पार किया';
+
+  @override
+  String get worldCurrent => 'आप यहाँ हैं';
+
+  @override
+  String worldLockedHint(String world) {
+    return 'खोलने के लिए $world पार करें';
+  }
+
+  @override
+  String get worldArtSoon => 'जल्द आ रहा है';
+
+  @override
+  String get worldPlay => 'यह संसार खेलें';
+
+  @override
+  String stageNumber(int number) {
+    return 'चरण $number';
+  }
+
+  @override
+  String get newWorldUnlocked => 'नया संसार खुला!';
+
+  @override
+  String get letsGo => 'चलो!';
+
+  @override
+  String get countdownGo => 'चलो!';
+
+  @override
+  String get nearMiss => 'बाल-बाल बचे!';
+
+  @override
+  String get distanceLabel => 'दूरी';
+
+  @override
+  String get gemsLabel => 'रत्न';
+
+  @override
+  String get missionsDone => 'पूरे हुए मिशन';
+
+  @override
+  String get revive => 'फिर उठें';
+
+  @override
+  String reviveFor(int count) {
+    return '$count रत्न देकर फिर उठें';
+  }
+
+  @override
+  String get homeLabel => 'होम';
+
+  @override
+  String get victoryTitle => 'संसार पार!';
+
+  @override
+  String get nextWorld => 'अगला संसार';
+
+  @override
+  String get levelUp => 'स्तर बढ़ा!';
+
+  @override
+  String xpEarned(int xp) {
+    return '+$xp XP';
+  }
+
+  @override
+  String get selectWorld => 'संसार चुनें';
+
+  @override
+  String get loading => 'लोड हो रहा है…';
 }

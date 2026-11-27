@@ -26,6 +26,9 @@ class TrackCamera {
   double camZ = 0;
   double camX = 0;
 
+  /// 1 normally; below 1 widens the view (used while flying).
+  double zoom = 1;
+
   /// Screen shake offset (pixels).
   double shakeX = 0;
   double shakeY = 0;
@@ -48,7 +51,7 @@ class TrackCamera {
   /// Pixels per metre at depth [z].
   double scaleAt(double z) {
     final dz = z - camZ;
-    return dz <= 0.3 ? 0 : focal / dz;
+    return dz <= 0.3 ? 0 : focal * zoom / dz;
   }
 
   double sx(double x, double z) => width / 2 + (x - camX) * scaleAt(z) + shakeX;

@@ -24,6 +24,15 @@ enum RunEvent {
   /// The run has reached open water, and later the bridge finale.
   riverStart,
   bridgeStart,
+
+  /// The hero dodged into a neighbouring lane just before an obstacle.
+  nearMiss,
+
+  /// The hero came back after a crash.
+  revive,
+
+  /// A footfall while running on the ground.
+  footstep,
 }
 
 enum RunState { running, crashed, finished }
@@ -32,8 +41,15 @@ enum RunState { running, crashed, finished }
 /// directly. It advances in fixed steps, so the same seed and inputs always
 /// play out the same way whatever the frame rate.
 class RunSimulation {
-  RunSimulation({required this.realm, required int seed, this.gentleStart = false, int? targetMetres, this.onEvent})
-    : targetMetres = targetMetres ?? realm.targetMetres,
+  RunSimulation({
+    required this.realm,
+    required int seed,
+    this.gentleStart = false,
+    int? targetMetres,
+    this.onEvent,
+    this.boostSeconds = baseBoostSeconds,
+    this.magnetSeconds = baseMagnetSeconds,
+  }) : targetMetres = targetMetres ?? realm.targetMetres,
       speed = gentleStart ? gentleSpeed : startSpeed {
     final t = this.targetMetres;
     waterStart = realm.waterFrom == null ? double.infinity : (realm.waterFrom! * t).roundToDouble();
@@ -68,9 +84,9 @@ class RunSimulation {
   static const double gravity = 28;
   static const double slideSeconds = 0.75;
   static const double laneChangeSpeed = 14;
-  static const double boostSeconds = 3.2;
+  static const double baseBoostSeconds = 3.2;
   static const double boostHeight = 2.8;
-  static const double magnetSeconds = 8;
+  static const double baseMagnetSeconds = 8;
   static const double viewAhead = 160;
   static const int maxBoostCharges = 3;
   static const int monkeyTakes = 5;
@@ -78,6 +94,13 @@ class RunSimulation {
 
   final Realm realm;
   final bool gentleStart;
+
+  /// How long a Garuda feather flight and a Lotus charm last; the shop's
+  /// upgrades lengthen them.
+  final double boostSeconds;
+  final double magnetSeconds;
+
+  int boostsUsed = 0;
   final int targetMetres;
   void Function(RunEvent event)? onEvent;
 
@@ -92,6 +115,15 @@ class RunSimulation {
   int coins = 0;
   int gems = 0;
   int boostCharges = 0;
+  int jumps = 0;
+  int slides = 0;
+  int nearMisses = 0;
+
+  /// How many times this run has been revived.
+  int revives = 0;
+
+  /// When the hero last changed lane (run time, seconds).
+  double _lastLaneChange = -10;
 
   /// Target lane (-1, 0, 1) and the hero's actual sideways position.
   int lane = 0;
@@ -114,6 +146,7 @@ class RunSimulation {
   static const double edgeGrace = 0.35;
 
   double _accumulator = 0;
+  double _stepTimer = 0;
 
   bool get onGround => y <= 0 && boostLeft <= 0;
   bool get sliding => slideLeft > 0;
@@ -134,6 +167,7 @@ class RunSimulation {
     final next = (lane + dir).clamp(-1, 1);
     if (next == lane) return;
     lane = next;
+    _lastLaneChange = time;
     onEvent?.call(RunEvent.laneChange);
   }
 
@@ -143,6 +177,7 @@ class RunSimulation {
     slideLeft = 0;
     vy = jumpVelocity;
     y = 0.001;
+    jumps++;
     onEvent?.call(RunEvent.jump);
   }
 
@@ -151,6 +186,7 @@ class RunSimulation {
     // Sliding while airborne pulls the hero down fast.
     if (y > 0) vy = -jumpVelocity * 1.4;
     slideLeft = slideSeconds;
+    slides++;
     onEvent?.call(RunEvent.slide);
   }
 
@@ -158,6 +194,7 @@ class RunSimulation {
   bool boost() {
     if (state != RunState.running || boostCharges <= 0 || boosting) return false;
     boostCharges--;
+    boostsUsed++;
     boostLeft = boostSeconds;
     slideLeft = 0;
     vy = 0;
@@ -205,6 +242,13 @@ class RunSimulation {
       if (y <= 0) {
         y = 0;
         vy = 0;
+      }
+    }
+    if (y <= 0 && !boosting && slideLeft <= 0) {
+      _stepTimer -= dt;
+      if (_stepTimer <= 0) {
+        _stepTimer = 0.34 - 0.12 * difficulty;
+        onEvent?.call(RunEvent.footstep);
       }
     }
     if (slideLeft > 0) slideLeft = math.max(0, slideLeft - dt);
@@ -299,10 +343,42 @@ class RunSimulation {
     }
   }
 
+  /// Brings the hero back after a crash: clears what is just ahead, gives a
+  /// short flight and carries on. Returns whether it did.
+  bool revive() {
+    if (state != RunState.crashed) return false;
+    for (final o in pools.obstacles) {
+      if (o.active && o.z - distance < 30) o.spent = true;
+    }
+    revives++;
+    crashedInto = null;
+    fellInWater = false;
+    state = RunState.running;
+    y = 0;
+    vy = 0;
+    slideLeft = 0;
+    boostLeft = boostSeconds * 0.75;
+    _accumulator = 0;
+    onEvent?.call(RunEvent.revive);
+    return true;
+  }
+
   void _checkObstacles() {
     for (final o in pools.obstacles) {
       if (!o.active || o.spent) continue;
       final dz = o.z - distance;
+      if (!o.passed && dz < -(o.kind.depth / 2 + 0.35)) {
+        o.passed = true;
+        // Just slipped past it in the next lane after a late lane change.
+        if (o.lane != lane &&
+            (o.lane - lane).abs() == 1 &&
+            o.kind.clearance != Clearance.steal &&
+            time - _lastLaneChange < 0.45) {
+          nearMisses++;
+          onEvent?.call(RunEvent.nearMiss);
+        }
+        continue;
+      }
       if (dz > o.kind.depth / 2 + 0.35 || dz < -(o.kind.depth / 2 + 0.35)) continue;
       if ((o.lane * laneWidth - x).abs() > laneWidth * 0.62) continue;
 

@@ -3,10 +3,12 @@ import 'dart:math' as math;
 
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../app_scope.dart';
+import '../audio/game_audio.dart';
+import '../data/player.dart';
 import '../game/art_library.dart';
 import '../game/dwarka_run_game.dart';
 import '../game/realm.dart';
@@ -15,16 +17,17 @@ import '../l10n/gen/app_localizations.dart';
 import 'dr_theme.dart';
 import 'run_hud.dart';
 import 'run_panels.dart';
+import 'ui/game_ui.dart';
 
 /// `?autopilot=1` on the web build lets a bot play, for recording videos.
 final bool _autopilot = kIsWeb && Uri.base.queryParameters['autopilot'] == '1';
 
-enum _Phase { playing, paused, gameOver, complete }
+enum _Phase { intro, playing, paused, revive, gameOver, complete }
 
-/// One run of a realm: the game, its HUD and the pause, game-over and
-/// realm-complete panels.
+/// One run of a realm: the stage intro and countdown, the game and its HUD,
+/// and the pause, revive and results panels.
 class RunScreen extends StatefulWidget {
-  const RunScreen({super.key, required this.realm, this.seed, this.gentleStart, this.targetMetres});
+  const RunScreen({super.key, required this.realm, this.seed, this.gentleStart, this.targetMetres, this.intro = true});
 
   final Realm realm;
 
@@ -37,6 +40,9 @@ class RunScreen extends StatefulWidget {
   /// Overrides the realm's distance target (tests).
   final int? targetMetres;
 
+  /// Whether the stage banner and countdown play first (tests can skip it).
+  final bool intro;
+
   @override
   State<RunScreen> createState() => _RunScreenState();
 }
@@ -46,9 +52,19 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
   late int _seed;
   late bool _gentle;
   _Phase _phase = _Phase.playing;
-  bool _newBest = false;
   int _attempt = 0;
   bool _started = false;
+
+  /// Countdown overlay: null when hidden; true with the stage banner.
+  bool? _countdown;
+  int _countdownKey = 0;
+
+  RunResult? _result;
+  String? _cause;
+
+  /// The run that is being shown on the results screen, so nothing records
+  /// it twice.
+  bool _recorded = false;
 
   /// The running simulation, for tests.
   @visibleForTesting
@@ -56,6 +72,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
 
   final FocusNode _focus = FocusNode(debugLabel: 'run');
   final ValueNotifier<String?> _toast = ValueNotifier(null);
+  final ValueNotifier<int> _nearMisses = ValueNotifier(0);
   Timer? _toastTimer;
 
   // Swipe tracking.
@@ -78,14 +95,18 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
       final scope = AppScope.read(context);
       _gentle = widget.gentleStart ?? !scope.progress.tutorialDone;
       _game = _newGame();
+      if (widget.intro) _startCountdown(banner: true);
     }
   }
 
   DwarkaRunGame _newGame() {
     final scope = AppScope.read(context);
+    final progress = scope.progress;
     final seed = _seed + _attempt;
     scope.analytics.runStart(realm: widget.realm.id, seed: seed);
     scope.audio.playMusic(widget.realm.id);
+    _recorded = false;
+    _result = null;
     return DwarkaRunGame(
       realm: widget.realm,
       seed: seed,
@@ -93,10 +114,28 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
       reduceMotion: reduceMotionOf(context),
       targetMetres: widget.targetMetres,
       onEvent: _onEvent,
-      onCrashed: () => _endRun('crash'),
-      onFinished: () => _endRun('finish'),
+      onCrashed: _onCrashed,
+      onFinished: () => _finishRun(finished: true),
       autopilot: _autopilot,
+      hold: widget.intro,
+      boostSeconds: Upgrade.feather.seconds(progress.upgradeLevel(Upgrade.feather)),
+      magnetSeconds: Upgrade.lotus.seconds(progress.upgradeLevel(Upgrade.lotus)),
     );
+  }
+
+  void _startCountdown({required bool banner}) {
+    _game.hold = true;
+    setState(() {
+      _phase = _Phase.intro;
+      _countdown = banner;
+      _countdownKey++;
+    });
+  }
+
+  void _go() {
+    _game.hold = false;
+    if (_phase == _Phase.intro) setState(() => _phase = _Phase.playing);
+    _focus.requestFocus();
   }
 
   @override
@@ -105,12 +144,13 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
     _toastTimer?.cancel();
     _focus.dispose();
     _toast.dispose();
+    _nearMisses.dispose();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed && _phase == _Phase.playing) _pause();
+    if (state != AppLifecycleState.resumed && (_phase == _Phase.playing || _phase == _Phase.intro)) _pause();
   }
 
   // ── events ──
@@ -126,6 +166,9 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
         _showToast(l.featherGot);
       case RunEvent.lotus:
         _showToast(l.lotusGot);
+      case RunEvent.nearMiss:
+        _nearMisses.value++;
+        HapticFeedback.selectionClick();
       case RunEvent.riverStart:
         _showToast(switch (widget.realm.gapStyle) {
           GapStyle.river => l.riverStart,
@@ -155,48 +198,143 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
     });
   }
 
-  Future<void> _endRun(String reason) async {
+  /// After a crash: offer a revive if the player has the gems, else end.
+  void _onCrashed() {
     if (!mounted || _phase == _Phase.gameOver || _phase == _Phase.complete) return;
+    final progress = AppScope.read(context).progress;
+    final cost = reviveCost(_game.sim.revives);
+    if (!_autopilot && _game.sim.revives < 3 && progress.gems >= cost) {
+      AppScope.read(context).audio.pauseMusic();
+      setState(() => _phase = _Phase.revive);
+    } else {
+      _finishRun(finished: false);
+    }
+  }
+
+  Future<void> _revive() async {
     final scope = AppScope.read(context);
+    final cost = reviveCost(_game.sim.revives);
+    if (!await scope.progress.spendGems(cost)) return;
+    if (!mounted) return;
+    _game.revive();
+    scope.audio.resumeMusic();
+    if (widget.intro) {
+      _startCountdown(banner: false);
+    } else {
+      setState(() => _phase = _Phase.playing);
+    }
+  }
+
+  Future<void> _finishRun({required bool finished}) async {
+    if (!mounted || _recorded) return;
+    _recorded = true;
+    final scope = AppScope.read(context);
+    final l = AppLocalizations.of(context);
     final sim = _game.sim;
-    final finished = reason == 'finish';
-    setState(() => _phase = finished ? _Phase.complete : _Phase.gameOver);
-    scope.analytics.runEnd(realm: widget.realm.id, reason: reason, metres: sim.metres, coins: sim.coins);
-    final best = await scope.progress.recordRun(metres: sim.metres, coins: sim.coins);
-    await scope.progress.markTutorialDone();
+    setState(() {
+      _phase = finished ? _Phase.complete : _Phase.gameOver;
+      _cause = finished
+          ? null
+          : sim.fellInWater
+          ? switch (widget.realm.gapStyle) {
+              GapStyle.river => l.gameOverSplash,
+              GapStyle.crevasse => l.gameOverCrevasse,
+              GapStyle.moat => l.gameOverMoat,
+              GapStyle.trench => l.gameOverTrench,
+            }
+          : null;
+    });
+    if (!finished) {
+      scope.audio.pauseMusic();
+      scope.audio.play(Sfx.gameOver);
+    }
+    scope.analytics.runEnd(
+      realm: widget.realm.id,
+      reason: finished ? 'finish' : 'crash',
+      metres: sim.metres,
+      coins: sim.coins,
+    );
+    final stats = _stats(finished);
+    final progress = scope.progress;
+    final levelBefore = progress.level;
+    final xp = Levels.xpFor(stats);
+    final best = await progress.recordRun(metres: sim.metres, coins: sim.coins, gems: sim.gems, xp: xp);
+    await progress.markTutorialDone();
     if (finished) {
-      await scope.progress.completeRealm(widget.realm);
+      await progress.completeRealm(widget.realm);
       scope.analytics.realmComplete(realm: widget.realm.id, coins: sim.coins);
     }
-    if (mounted) setState(() => _newBest = best);
+    final missions = await progress.applyRunToMissions(stats);
+    if (!mounted) return;
+    if (missions.isNotEmpty) scope.audio.play(Sfx.mission);
+    final levelAfter = progress.level;
+    if (levelAfter > levelBefore) scope.audio.play(Sfx.unlock);
+    setState(
+      () => _result = RunResult(
+        stats: stats,
+        newBest: best,
+        missions: missions,
+        xp: xp,
+        levelUpTo: levelAfter > levelBefore ? levelAfter : null,
+      ),
+    );
+  }
+
+  RunStats _stats(bool finished) {
+    final sim = _game.sim;
+    return (
+      realm: widget.realm.id,
+      metres: sim.metres,
+      coins: sim.coins,
+      gems: sim.gems,
+      jumps: sim.jumps,
+      slides: sim.slides,
+      nearMisses: sim.nearMisses,
+      boosts: sim.boostsUsed,
+      finished: finished,
+    );
   }
 
   // ── controls ──
   void _pause() {
-    if (_phase != _Phase.playing) return;
+    if (_phase != _Phase.playing && _phase != _Phase.intro) return;
     _game.pauseEngine();
     AppScope.read(context).audio.pauseMusic();
-    setState(() => _phase = _Phase.paused);
+    setState(() {
+      _phase = _Phase.paused;
+      _countdown = null;
+    });
   }
 
   void _resume() {
     _game.resumeEngine();
     AppScope.read(context).audio.resumeMusic();
-    setState(() => _phase = _Phase.playing);
+    // A short countdown so the player has their thumbs ready.
+    if (widget.intro) {
+      _startCountdown(banner: false);
+    } else {
+      _game.hold = false;
+      setState(() => _phase = _Phase.playing);
+    }
     _focus.requestFocus();
   }
 
   void _restart() {
     if (_phase == _Phase.paused) {
-      AppScope.read(context).analytics
-          .runEnd(realm: widget.realm.id, reason: 'restart', metres: _game.sim.metres, coins: _game.sim.coins);
+      AppScope.read(context).analytics.runEnd(
+        realm: widget.realm.id,
+        reason: 'restart',
+        metres: _game.sim.metres,
+        coins: _game.sim.coins,
+      );
     }
     setState(() {
       _attempt++;
       _game = _newGame();
       _phase = _Phase.playing;
-      _newBest = false;
+      _nearMisses.value = 0;
     });
+    if (widget.intro) _startCountdown(banner: false);
     _focus.requestFocus();
   }
 
@@ -205,7 +343,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
       final scope = AppScope.read(context);
       final sim = _game.sim;
       scope.analytics.runEnd(realm: widget.realm.id, reason: 'quit', metres: sim.metres, coins: sim.coins);
-      await scope.progress.recordRun(metres: sim.metres, coins: sim.coins);
+      await scope.progress.recordRun(metres: sim.metres, coins: sim.coins, gems: sim.gems);
     }
     _back();
   }
@@ -215,12 +353,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
     if (mounted) Navigator.of(context).maybePop();
   }
 
-  void _toggleMute() {
-    final scope = AppScope.read(context);
-    final muted = !scope.progress.muted;
-    scope.progress.setMuted(muted);
-    scope.audio.muted = muted;
-  }
+  bool get _steerable => _phase == _Phase.playing;
 
   KeyEventResult _onKey(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
@@ -229,7 +362,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
       _phase == _Phase.paused ? _resume() : _pause();
       return KeyEventResult.handled;
     }
-    if (_phase != _Phase.playing) return KeyEventResult.ignored;
+    if (!_steerable) return KeyEventResult.ignored;
     final sim = _game.sim;
     if (key == LogicalKeyboardKey.arrowLeft || key == LogicalKeyboardKey.keyA) {
       sim.moveLeft();
@@ -248,7 +381,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
   }
 
   void _onPanUpdate(DragUpdateDetails d) {
-    if (_swiped || _phase != _Phase.playing) return;
+    if (_swiped || !_steerable) return;
     _drag += d.delta;
     const threshold = 22.0;
     if (_drag.distance < threshold) return;
@@ -271,8 +404,9 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
     final l = AppLocalizations.of(context);
     final scope = AppScope.of(context);
     final target = widget.targetMetres ?? widget.realm.targetMetres;
+    final countdown = _countdown;
     return PopScope(
-      canPop: _phase != _Phase.playing,
+      canPop: _phase == _Phase.paused || _phase == _Phase.gameOver || _phase == _Phase.complete,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _pause();
       },
@@ -293,33 +427,43 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
                 onPanCancel: _onPanEnd,
                 child: GameWidget(key: ValueKey(_game), game: _game, autofocus: false),
               ),
-              RunHudOverlay(hud: _game.hud, targetMetres: target, onPause: _pause, onBoost: () => _game.sim.boost()),
+              RunHudOverlay(
+                hud: _game.hud,
+                targetMetres: target,
+                worldName: widget.realm.name(l),
+                onPause: _pause,
+                onBoost: () {
+                  if (_steerable) _game.sim.boost();
+                },
+              ),
               if (_game.gentleStart && _phase == _Phase.playing) TutorialHints(hud: _game.hud, sim: _game.sim),
+              NearMissPop(count: _nearMisses),
               _Toast(toast: _toast),
-              if (_phase == _Phase.paused)
-                PausePanel(
-                  muted: scope.progress.muted,
-                  onResume: _resume,
-                  onRestart: _restart,
-                  onQuit: _quit,
-                  onToggleMute: _toggleMute,
+              if (countdown != null)
+                StageIntroOverlay(
+                  key: ValueKey(_countdownKey),
+                  realm: widget.realm,
+                  banner: countdown,
+                  onGo: _go,
+                  onDone: () {
+                    if (mounted) setState(() => _countdown = null);
+                  },
                 ),
-              if (_phase == _Phase.gameOver)
-                GameOverPanel(
-                  score: _game.sim.metres,
-                  coins: _game.sim.coins,
-                  newBest: _newBest,
-                  splash: _game.sim.fellInWater,
-                  gapStyle: widget.realm.gapStyle,
+              if (_phase == _Phase.paused) PausePanel(onResume: _resume, onRestart: _restart, onQuit: _quit),
+              if (_phase == _Phase.revive)
+                RevivePanel(
+                  cost: reviveCost(_game.sim.revives),
+                  gems: scope.progress.gems,
+                  onRevive: _revive,
+                  onDecline: () => _finishRun(finished: false),
+                ),
+              if (_phase == _Phase.gameOver || _phase == _Phase.complete)
+                ResultsPanel(
+                  realm: widget.realm,
+                  result: _result,
+                  cause: _cause,
                   onRetry: _restart,
-                  onBack: _back,
-                ),
-              if (_phase == _Phase.complete)
-                RealmCompletePanel(
-                  title: l.realmCompleteTitle(widget.realm.name(l)),
-                  coins: _game.sim.coins,
-                  metres: _game.sim.metres,
-                  onContinue: _back,
+                  onHome: _back,
                 ),
             ],
           ),
@@ -335,24 +479,37 @@ class _Toast extends StatelessWidget {
   final ValueListenable<String?> toast;
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<String?>(
-    valueListenable: toast,
-    builder: (context, text, _) => text == null
-        ? const SizedBox.shrink()
-        : Align(
-            alignment: const Alignment(0, -0.55),
-            child: Semantics(
-              liveRegion: true,
-              child: Container(
-                key: const Key('run.toast'),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(color: const Color(0xE62B1A4A), borderRadius: BorderRadius.circular(18)),
-                child: Text(
-                  text,
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
+  Widget build(BuildContext context) => IgnorePointer(
+    child: ValueListenableBuilder<String?>(
+      valueListenable: toast,
+      builder: (context, text, _) => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 220),
+        transitionBuilder: (child, a) => ScaleTransition(scale: a, child: FadeTransition(opacity: a, child: child)),
+        child: text == null
+            ? const SizedBox.shrink()
+            : Align(
+                key: ValueKey(text),
+                alignment: const Alignment(0, -0.5),
+                child: Semantics(
+                  liveRegion: true,
+                  child: Container(
+                    key: const Key('run.toast'),
+                    margin: const EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(colors: [Color(0xE6331F8A), Color(0xE61F1452)]),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: GameColors.gold, width: 2),
+                    ),
+                    child: Text(
+                      text,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
+      ),
+    ),
   );
 }

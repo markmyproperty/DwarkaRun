@@ -8,9 +8,17 @@ import 'audio/game_audio.dart';
 import 'data/progress_repository.dart';
 import 'l10n/gen/app_localizations.dart';
 import 'presentation/dr_theme.dart';
-import 'presentation/hub_screen.dart';
+import 'presentation/launch_screen.dart';
 
-/// The Dwarka Run app. Services are passed in so tests can use fakes.
+/// Strings for the game and for the material and cupertino widgets.
+const appLocalizationsDelegates = <LocalizationsDelegate<Object>>[
+  AppLocalizations.delegate,
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+];
+
+/// The Odyssey of the Ages app. Services are passed in so tests can use fakes.
 class DwarkaRunApp extends StatelessWidget {
   const DwarkaRunApp({super.key, required this.progress, required this.analytics, required this.audio, this.locale});
 
@@ -21,7 +29,10 @@ class DwarkaRunApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    audio.muted = progress.muted;
+    audio
+      ..muted = progress.muted
+      ..setMusicVolume(progress.musicVolume)
+      ..setSfxVolume(progress.sfxVolume);
     return AppScope(
       progress: progress,
       analytics: analytics,
@@ -32,13 +43,8 @@ class DwarkaRunApp extends StatelessWidget {
         theme: buildDrTheme(),
         locale: locale,
         supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        home: const HubScreen(),
+        localizationsDelegates: appLocalizationsDelegates,
+        home: const LaunchScreen(),
       ),
     );
   }

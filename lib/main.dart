@@ -13,5 +13,6 @@ Future<void> main() async {
   // Art loads in the background; the game draws stand-ins until it is ready.
   ArtLibrary.instance.load();
   final progress = await ProgressRepository.load();
-  runApp(DwarkaRunApp(progress: progress, analytics: NoopAnalytics(), audio: MusicAudio()));
+  final audio = MusicAudio()..preload();
+  runApp(DwarkaRunApp(progress: progress, analytics: NoopAnalytics(), audio: audio));
 }

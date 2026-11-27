@@ -180,6 +180,9 @@ class Obstacle {
   /// Set once the hero has hit or been robbed by it, so it only counts once.
   bool spent = false;
 
+  /// Set once it has passed the hero, so a near miss only counts once.
+  bool passed = false;
+
   /// Per-obstacle variety for the painter (0..1).
   double variant = 0;
 
@@ -189,6 +192,7 @@ class Obstacle {
     lane = l;
     z = atZ;
     spent = false;
+    passed = false;
     variant = v;
   }
 }

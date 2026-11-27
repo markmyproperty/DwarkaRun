@@ -27,7 +27,7 @@ class TestServices {
   );
 
   /// Wraps [child] in everything a screen needs, without the hub.
-  Widget wrap(Widget child, {bool reduceMotion = false}) => MediaQuery(
+  Widget wrap(Widget child, {bool reduceMotion = false, Locale? locale}) => MediaQuery(
     data: MediaQueryData(size: const Size(400, 800), disableAnimations: reduceMotion),
     child: AppScope(
       progress: progress,
@@ -35,7 +35,8 @@ class TestServices {
       audio: audio,
       child: MaterialApp(
         theme: buildDrTheme(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        locale: locale,
+        localizationsDelegates: appLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: child,
       ),

@@ -21,20 +21,24 @@ class DrColors {
 
 ThemeData buildDrTheme() {
   final scheme = ColorScheme.fromSeed(
-    seedColor: DrColors.indigo,
-    primary: DrColors.indigo,
-    secondary: DrColors.saffron,
-    surface: DrColors.cream,
+    seedColor: const Color(0xFF6B42DE),
+    brightness: Brightness.dark,
+    primary: const Color(0xFFFFA31A),
+    secondary: const Color(0xFF19D3B8),
+    surface: const Color(0xFF2B1E70),
   );
   return ThemeData(
     colorScheme: scheme,
-    scaffoldBackgroundColor: DrColors.sand,
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: const Color(0xFF120A2E),
     useMaterial3: true,
-    fontFamily: 'serif',
-    textTheme: Typography.blackMountainView.apply(
-      bodyColor: DrColors.ink,
-      displayColor: DrColors.ink,
-      fontFamily: 'serif',
+    fontFamily: 'Baloo',
+    textTheme: Typography.whiteMountainView.apply(fontFamily: 'Baloo'),
+    sliderTheme: const SliderThemeData(
+      activeTrackColor: Color(0xFFFFA31A),
+      inactiveTrackColor: Color(0xFF140B36),
+      thumbColor: Color(0xFFFFD34A),
+      trackHeight: 8,
     ),
   );
 }

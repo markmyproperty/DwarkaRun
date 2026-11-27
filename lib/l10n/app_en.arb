@@ -139,7 +139,7 @@
   "pauseResume": "Resume",
   "pauseRestart": "Restart",
   "pauseQuit": "Quit to hub",
-  "gameOverTitle": "Your run ends here",
+  "gameOverTitle": "Run over!",
   "scoreLabel": "Score",
   "coinsCollected": "Mudra collected",
   "newBest": "New best run!",
@@ -188,8 +188,202 @@
   "seasonLabel": "Season {number}",
   "seasonJambudvipa": "Jambudvīpa",
   "seasonJambudvipaBlurb": "Ten legendary worlds, from Ayodhya to the sunken city of Dwarka",
-  "@seasonLabel": {"placeholders": {"number": {"type": "int"}}},
+  "@seasonLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "trenchStart": "The sea trench! Keep to the coral ledges",
   "coralBridgeStart": "The coral bridge! Race for the palace",
-  "gameOverTrench": "Whoosh! Down into the trench"
+  "gameOverTrench": "Whoosh! Down into the trench",
+  "play": "PLAY",
+  "skip": "Skip",
+  "beginOdyssey": "Begin the odyssey",
+  "presents": "presents",
+  "intro1": "Long ago, every age of the world was bound by one thread of golden light.",
+  "intro2": "Then the thread broke, and its relics scattered across Jambudvīpa.",
+  "intro3": "Along sacred rivers, through burning deserts and over frozen peaks…",
+  "intro4": "…into golden palaces and kingdoms the world forgot.",
+  "intro5": "Beneath the waves, the legendary city of Dwarka still waits.",
+  "intro6": "One runner. Ten worlds. Your odyssey begins now.",
+  "levelShort": "Lv {level}",
+  "@levelShort": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "levelLabel": "Level {level}",
+  "@levelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "worldsTitle": "Worlds",
+  "missionsTitle": "Missions",
+  "dailyTitle": "Daily reward",
+  "shopTitle": "Shop",
+  "heroTitle": "Heroes",
+  "settingsTitle": "Settings",
+  "claim": "Claim",
+  "dayN": "Day {day}",
+  "@dayN": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyCome": "Come back tomorrow for the next reward",
+  "dailyStreak": "Log in every day for bigger rewards",
+  "missionCoinsInRun": "Collect {goal} mudra in one run",
+  "@missionCoinsInRun": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionMetresInRun": "Run {goal} m in one run",
+  "@missionMetresInRun": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionJumps": "Jump {goal} times",
+  "@missionJumps": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionSlides": "Slide {goal} times",
+  "@missionSlides": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionNearMisses": "Make {goal} close calls",
+  "@missionNearMisses": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionGems": "Collect {goal} gems",
+  "@missionGems": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionBoosts": "Fly with {goal} Garuda feathers",
+  "@missionBoosts": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionFinish": "Cross a world",
+  "missionRuns": "Play {goal} runs",
+  "@missionRuns": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionCoinsTotal": "Collect {goal} mudra in total",
+  "@missionCoinsTotal": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionsHint": "Finish missions to earn mudra, gems and XP",
+  "upgradeFeather": "Garuda feather flight",
+  "upgradeLotus": "Lotus charm",
+  "upgradeSeconds": "Lasts {seconds} s",
+  "@upgradeSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "upgradesTitle": "Power-up upgrades",
+  "maxed": "Max",
+  "heroKing": "The Wandering King",
+  "heroKingBlurb": "A young king on a yatra through the ages.",
+  "heroSelected": "Selected",
+  "heroComingSoon": "More heroes are on the way",
+  "musicVolume": "Music",
+  "sfxVolume": "Sound effects",
+  "muteAll": "Mute all sound",
+  "replayIntro": "Replay the story",
+  "creditsLine": "A game by MMYP Technologies",
+  "worldCleared": "Cleared",
+  "worldCurrent": "You are here",
+  "worldLockedHint": "Cross {world} to unlock",
+  "@worldLockedHint": {
+    "placeholders": {
+      "world": {
+        "type": "String"
+      }
+    }
+  },
+  "worldArtSoon": "Arriving soon",
+  "worldPlay": "Play this world",
+  "stageNumber": "Stage {number}",
+  "@stageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "newWorldUnlocked": "New world unlocked!",
+  "letsGo": "Let's go!",
+  "countdownGo": "GO!",
+  "nearMiss": "Close call!",
+  "distanceLabel": "Distance",
+  "gemsLabel": "Gems",
+  "missionsDone": "Missions completed",
+  "revive": "Revive",
+  "reviveFor": "Revive for {count} gems",
+  "@reviveFor": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeLabel": "Home",
+  "victoryTitle": "World cleared!",
+  "nextWorld": "Next world",
+  "levelUp": "Level up!",
+  "xpEarned": "+{xp} XP",
+  "@xpEarned": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "selectWorld": "Choose a world",
+  "loading": "Loading…"
 }

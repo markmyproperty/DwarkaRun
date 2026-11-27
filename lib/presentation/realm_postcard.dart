@@ -8,9 +8,10 @@ import '../game/stage_art.dart';
 /// A small painted view of a realm for the hub: sky, hills and a path running
 /// into the distance, in the realm's colours.
 class RealmPostcard extends StatelessWidget {
-  const RealmPostcard({super.key, required this.realm});
+  const RealmPostcard({super.key, required this.realm, this.alignmentY = 0.2});
 
   final Realm realm;
+  final double alignmentY;
 
   /// Art-pack backdrops, where a realm has one.
   static const _art = {
@@ -29,7 +30,7 @@ class RealmPostcard extends StatelessWidget {
           : Image.asset(
               asset,
               fit: BoxFit.cover,
-              alignment: const Alignment(0, 0.2),
+              alignment: Alignment(0, alignmentY),
               width: double.infinity,
               height: double.infinity,
               errorBuilder: (_, _, _) => painted,

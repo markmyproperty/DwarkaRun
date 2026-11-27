@@ -42,6 +42,7 @@ dependencies:
   material_ui: ^1.11.1
   cupertino_ui: ^1.1.7
   audioplayers: ^6.8.1
+  lottie: ^3.8.2
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,7 @@ flutter:
     - assets/images/props/
     - assets/images/river/
     - assets/audio/
+    - assets/audio/sfx/
     - assets/images/hero/
     - assets/images/brand/
     - assets/images/pharaoh/backgrounds/
@@ -100,3 +102,16 @@ flutter:
     - assets/images/finale/env/
     - assets/images/finale/monuments/
     - assets/images/finale/props/
+    - assets/lottie/
+  fonts:
+    - family: Lilita
+      fonts:
+        - asset: assets/fonts/LilitaOne-Regular.ttf
+    - family: Baloo
+      fonts:
+        - asset: assets/fonts/Baloo2-500.ttf
+          weight: 500
+        - asset: assets/fonts/Baloo2-700.ttf
+          weight: 700
+        - asset: assets/fonts/Baloo2-800.ttf
+          weight: 800
