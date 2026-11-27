@@ -39,7 +39,14 @@ These parts are original and drawn in code by this project, with no image files:
 
 ## Audio
 
-No audio files yet. Sound effects and music per realm arrive in a later stage and will be listed here with their licences (original or CC0).
+Background music, supplied by the project owner (re-encoded to 128 kbps MP3 for the app):
+
+| Stage | File | Source upload |
+|---|---|---|
+| Ayodhya Run | `assets/audio/ayodhya_run.mp3` | `ayodharun.mp3` |
+| Ganga Run | `assets/audio/ganga_run.mp3` | `gangarun.mp3` |
+
+Playback uses the [audioplayers](https://pub.dev/packages/audioplayers) package (MIT). Sound effects are not recorded yet.
 
 ## Code libraries
 

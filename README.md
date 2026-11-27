@@ -73,7 +73,7 @@ lib/
   game/          Flame game, rules, seeded level generator, collisions, painting
   data/          progress repository (shared_preferences)
   presentation/  hub, run screen, HUD, pause, game over, realm complete
-  audio/         sound interface with mute (sound files arrive in stage 3)
+  audio/         looping music per stage (audioplayers), pause and mute; SilentAudio for tests
   analytics/     analytics interface with no-op and recording versions
   game/art_library.dart  loads the art pack in the background; code-drawn stand-ins until it is ready
   l10n/          ARB strings: English and Hindi, with Tamil, Bengali and Marathi files ready

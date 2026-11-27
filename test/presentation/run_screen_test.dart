@@ -63,10 +63,12 @@ void main() {
     final s = await TestServices.create({'dr.tutorialDone': true});
     await tester.pumpWidget(s.wrap(const RunScreen(realm: Realm.ayodhya, seed: 11)));
     await tester.pump(const Duration(milliseconds: 100));
+    expect(s.audio.music, 'audio/ayodhya_run.mp3');
 
     await tester.tap(find.byKey(const Key('hud.pause')));
     await tester.pump();
     expect(find.byKey(const Key('pause.menu')), findsOneWidget);
+    expect(s.audio.music, isNull, reason: 'music holds while paused');
     final pausedAt = hudDistance(tester);
     await tester.pump(const Duration(seconds: 1));
     expect(hudDistance(tester), pausedAt);
@@ -79,12 +81,16 @@ void main() {
     await tester.tap(find.byKey(const Key('pause.resume')));
     await tester.pump();
     expect(find.byKey(const Key('pause.menu')), findsNothing);
+    expect(s.audio.music, isNull, reason: 'still muted');
+    s.audio.muted = false;
+    expect(s.audio.music, 'audio/ayodhya_run.mp3');
 
     await tester.tap(find.byKey(const Key('hud.pause')));
     await tester.pump();
     await tester.tap(find.byKey(const Key('pause.quit')));
     await tester.pumpAndSettle();
     expect(s.analytics.events.last.params['reason'], 'quit');
+    expect(s.audio.music, isNull, reason: 'quitting stops the music');
   });
 
   testWidgets('reaching the target completes the realm and saves it', (tester) async {

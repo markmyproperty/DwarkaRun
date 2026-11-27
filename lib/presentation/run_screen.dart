@@ -163,11 +163,13 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
   void _pause() {
     if (_phase != _Phase.playing) return;
     _game.pauseEngine();
+    AppScope.read(context).audio.pauseMusic();
     setState(() => _phase = _Phase.paused);
   }
 
   void _resume() {
     _game.resumeEngine();
+    AppScope.read(context).audio.resumeMusic();
     setState(() => _phase = _Phase.playing);
     _focus.requestFocus();
   }

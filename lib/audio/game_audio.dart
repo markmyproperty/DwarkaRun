@@ -3,18 +3,28 @@ import '../game/run_simulation.dart';
 /// Sound effects the game can play.
 enum Sfx { coin, gem, jump, slide, crash, boost, monkey, fanfare }
 
-/// Game sound, behind an interface so tests and silent builds need no audio
-/// plugin. Real sound files arrive in a later stage; until then the game
-/// uses [SilentAudio], and the mute setting is already wired through.
+/// Game sound, behind an interface so tests need no audio plugin. The app
+/// uses [MusicAudio] (lib/audio/music_audio.dart); tests use [SilentAudio].
 abstract class GameAudio {
+  /// Background music per stage id, as asset paths under `assets/`.
+  static const musicTracks = {
+    'ayodhya': 'audio/ayodhya_run.mp3',
+    'ganga': 'audio/ganga_run.mp3',
+  };
+
   bool get muted;
   set muted(bool value);
 
   void play(Sfx sfx);
 
-  /// Starts the music for a realm (by realm id).
+  /// Starts the looping music for a realm (by realm id). Keeps playing,
+  /// without restarting, if that realm's track is already on.
   void playMusic(String realmId);
   void stopMusic();
+
+  /// Holds the music while the game is paused, and picks it up again.
+  void pauseMusic();
+  void resumeMusic();
 
   /// Maps a run event to its sound.
   void onRunEvent(RunEvent e) {
@@ -47,9 +57,23 @@ class SilentAudio extends GameAudio {
     if (!muted) played.add(sfx);
   }
 
-  @override
-  void playMusic(String realmId) {}
+  /// The track that would be heard now, or null.
+  String? get music => muted || _paused ? null : _track;
+  String? _track;
+  bool _paused = false;
 
   @override
-  void stopMusic() {}
+  void playMusic(String realmId) {
+    _track = GameAudio.musicTracks[realmId];
+    _paused = false;
+  }
+
+  @override
+  void stopMusic() => _track = null;
+
+  @override
+  void pauseMusic() => _paused = true;
+
+  @override
+  void resumeMusic() => _paused = false;
 }
