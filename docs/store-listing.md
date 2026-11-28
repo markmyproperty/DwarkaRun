@@ -113,7 +113,7 @@ The iOS app is set to iPhone only (portrait), so no iPad screenshots are needed.
 
 ## Contact details the stores need
 
-- Support email (both, shown publicly on Play): **to be supplied**
-- Support URL (Apple, required) and marketing URL (optional): **to be supplied**
+- Support email (both): support@markmyproperty.com
+- Support URL (Apple): https://markmyproperty.com/mmyp/odysseyoftheages · marketing URL: https://markmyproperty.com
 - App Review contact (Apple, private): name, phone and email of whoever answers Apple's reviewers
 - Sign-in required for review: No
