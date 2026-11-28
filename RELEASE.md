@@ -51,7 +51,7 @@ Then in App Store Connect: fill App Information, Pricing (Free), App Privacy ("D
 
 ## Every later release
 
-1. Bump `version:` in `pubspec.yaml` (for example `1.0.1+2`). Build numbers must always go up.
+1. Bump `version:` in `pubspec.yaml` (for example `1.0.1+3`). Build numbers must always go up.
 2. Run `flutter analyze` and `flutter test`.
 3. Build and upload as above (or start both Codemagic workflows).
 4. Update "What's new" in both stores.
