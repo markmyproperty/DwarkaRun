@@ -70,7 +70,7 @@ class _HeroRunnerState extends State<HeroRunner> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     final h = widget.height;
-    final w = h * 144 / 418;
+    final w = h * 160 / 428;
     final frames = HeroRunner.framesOf(widget.outfit, front: widget.front);
     return ExcludeSemantics(
       child: SizedBox(
