@@ -952,7 +952,9 @@ class TrackPainter {
     final own = stage?.obstacleArt[o.kind];
     final sprite = own?.name ?? o.kind.sprite;
     final spriteWidth = own?.width ?? o.kind.spriteWidth;
-    if (sprite != null && o.kind.clearance != Clearance.slide) {
+    // A stage's own slide art (a lintel or beam on posts) stands on the
+    // ground like the rest; the built-in slide obstacles are drawn below.
+    if (sprite != null && (o.kind.clearance != Clearance.slide || own != null)) {
       if (o.kind.speed > 0 && !reduceMotion && art[sprite] != null) {
         // Rolling boulders rock from side to side as they come.
         final w = spriteWidth * s;

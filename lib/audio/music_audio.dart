@@ -10,13 +10,19 @@ import 'game_audio.dart';
 /// can overlap.
 class MusicAudio extends GameAudio {
   MusicAudio({AudioPlayer? player}) : _player = player ?? AudioPlayer(playerId: 'music') {
-    // Effects mix with the music instead of taking audio focus from it.
-    _guard(
-      AudioPlayer.global.setAudioContext(AudioContextConfig(focus: AudioContextConfigFocus.mixWithOthers).build()),
-    );
+    // Every player mixes with the others instead of taking audio focus, so
+    // a coin or jump sound never pauses the music. The music player and the
+    // effect pools get the setting directly as well as through the global
+    // default, because the global default can arrive after they are made.
+    _guard(AudioPlayer.global.setAudioContext(_mix));
+    _guard(_player.setAudioContext(_mix));
     _guard(_player.setReleaseMode(ReleaseMode.loop));
     _guard(_player.setVolume(musicVolume));
+    // If the loop ever ends, start it again.
+    _player.onPlayerComplete.listen((_) => _sync());
   }
+
+  static final AudioContext _mix = AudioContextConfig(focus: AudioContextConfigFocus.mixWithOthers).build();
 
   final AudioPlayer _player;
   final Map<Sfx, Future<AudioPool>> _pools = {};
@@ -31,8 +37,10 @@ class MusicAudio extends GameAudio {
     }
   }
 
-  Future<AudioPool> _pool(Sfx s) =>
-      _pools.putIfAbsent(s, () => AudioPool.createFromAsset(path: s.asset, maxPlayers: s.voices, minPlayers: 1));
+  Future<AudioPool> _pool(Sfx s) => _pools.putIfAbsent(
+    s,
+    () => AudioPool.create(source: AssetSource(s.asset), maxPlayers: s.voices, minPlayers: 1, audioContext: _mix),
+  );
 
   @override
   bool get muted => _muted;
@@ -87,6 +95,15 @@ class MusicAudio extends GameAudio {
     _sync();
   }
 
+  @override
+  void keepMusicAlive(String trackId) {
+    if (_track == null) {
+      playMusic(trackId);
+    } else {
+      _sync();
+    }
+  }
+
   bool get _audible => !_muted && musicVolume > 0;
 
   /// Plays or holds the current track to match the mute and pause state.
@@ -94,7 +111,7 @@ class MusicAudio extends GameAudio {
     final track = _track;
     if (track == null) return;
     if (!_audible || _paused) {
-      _guard(_player.pause());
+      if (_player.state == PlayerState.playing) _guard(_player.pause());
     } else if (_player.state == PlayerState.paused) {
       _guard(_player.resume());
     } else if (_player.state != PlayerState.playing) {

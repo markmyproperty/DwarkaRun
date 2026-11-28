@@ -71,6 +71,10 @@ flutter:
     - assets/audio/
     - assets/audio/sfx/
     - assets/images/brand/
+    - assets/images/indus/props/
+    - assets/images/indus/obstacles/
+    - assets/images/sunken/obstacles/
+    - assets/images/finale/obstacles/
     - assets/images/tracks/ayodhya/
     - assets/images/tracks/ganga/
     - assets/images/tracks/pharaoh/

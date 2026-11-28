@@ -75,6 +75,10 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
   final ValueNotifier<int> _nearMisses = ValueNotifier(0);
   Timer? _toastTimer;
 
+  /// Checks every few seconds that the stage music is still playing while
+  /// the hero runs, and restarts it if anything stopped it.
+  Timer? _musicWatch;
+
   // Swipe tracking.
   Offset _drag = Offset.zero;
   bool _swiped = false;
@@ -85,6 +89,11 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _seed = widget.seed ?? math.Random().nextInt(1 << 31);
     ArtLibrary.instance.loadStage(widget.realm);
+    _musicWatch = Timer.periodic(const Duration(seconds: 2), (_) {
+      if (mounted && (_phase == _Phase.playing || _phase == _Phase.intro)) {
+        AppScope.read(context).audio.keepMusicAlive(widget.realm.id);
+      }
+    });
   }
 
   @override
@@ -142,6 +151,7 @@ class _RunScreenState extends State<RunScreen> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _toastTimer?.cancel();
+    _musicWatch?.cancel();
     _focus.dispose();
     _toast.dispose();
     _nearMisses.dispose();

@@ -108,6 +108,11 @@ abstract class GameAudio {
   void playMusic(String trackId);
   void stopMusic();
 
+  /// Called now and then during a run: if [trackId]'s music should be
+  /// heard but has stopped (another app or sound took the audio, or the
+  /// loop ended), it starts again.
+  void keepMusicAlive(String trackId) {}
+
   /// Holds the music while the game is paused, and picks it up again.
   void pauseMusic();
   void resumeMusic();
