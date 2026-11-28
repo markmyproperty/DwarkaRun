@@ -1,0 +1,397 @@
+{
+  "@@locale": "en",
+  "titleMain": "ODYSSEY",
+  "titleSub": "OF THE AGES",
+  "appTitle": "Odyssey of the Ages",
+  "hubTagline": "A quest through ten legendary worlds",
+  "hubNextStop": "NEXT STOP",
+  "hubStartYatra": "Start the adventure",
+  "hubContinueTo": "Continue to {realm}",
+  "@hubContinueTo": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      }
+    }
+  },
+  "hubRunAgain": "Play {realm} again",
+  "@hubRunAgain": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      }
+    }
+  },
+  "hubPlayLabel": "Play {realm}",
+  "@hubPlayLabel": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      }
+    }
+  },
+  "hubComingSoon": "{realm} opens in the next update. Until then, run {current} again.",
+  "@hubComingSoon": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "hubTarget": "Run {metres} m to cross the realm",
+  "@hubTarget": {
+    "placeholders": {
+      "metres": {
+        "type": "int"
+      }
+    }
+  },
+  "walletLabel": "Wallet",
+  "mudraCount": "{count} mudra",
+  "@mudraCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bestLabel": "Best run",
+  "metresValue": "{metres} m",
+  "@metresValue": {
+    "placeholders": {
+      "metres": {
+        "type": "int"
+      }
+    }
+  },
+  "routeTitle": "Your yatra",
+  "routeDone": "Done",
+  "routeTodo": "To do",
+  "routeComingSoon": "Coming soon",
+  "routeStateLabel": "{realm}: {state}",
+  "@routeStateLabel": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "howToTitle": "How to play",
+  "howToLanes": "Swipe left or right to change lanes",
+  "howToJump": "Swipe up to jump",
+  "howToSlide": "Swipe down to slide",
+  "howToKeys": "On a keyboard: arrow keys or WASD, and space for a boost",
+  "howToBoost": "Collect a Garuda feather, then tap it to fly over everything",
+  "howToLotus": "A Lotus charm pulls nearby mudra towards you",
+  "howToMonkey": "Cheeky monkeys snatch a few mudra. Jump over them!",
+  "soundOn": "Sound on",
+  "soundOff": "Sound off",
+  "realmAyodhya": "Ayodhya Run",
+  "realmGanga": "Ganga Run",
+  "realmPharaoh": "Thar Desert Run",
+  "realmHimalayan": "Himalayan Run",
+  "realmVijayanagar": "Vijayanagar Run",
+  "realmDragonValley": "Dragon Valley",
+  "realmLanka": "Lanka Run",
+  "realmIndus": "Indus Run",
+  "realmSunkenDwarka": "Dwarka: The Sunken Kingdom",
+  "realmFinalLegend": "Dwarka Run: The Final Legend",
+  "realmAyodhyaBlurb": "Temples, royal courtyards and market streets",
+  "realmGangaBlurb": "Riverside ghats, boats and floating platforms",
+  "realmPharaohBlurb": "Golden dunes, sandstone streets and hidden treasure",
+  "realmHimalayanBlurb": "Snowy passes, rope bridges and monasteries",
+  "realmVijayanagarBlurb": "Stone chariots, bazaars and boulder hills",
+  "realmDragonValleyBlurb": "Volcanoes, lava caves and dragon fortresses",
+  "realmLankaBlurb": "A golden island kingdom of palaces and gardens",
+  "realmIndusBlurb": "Brick cities, granaries and water channels",
+  "realmSunkenDwarkaBlurb": "Ocean temples and submerged palaces",
+  "realmFinalLegendBlurb": "The golden city and the final relic chamber",
+  "hudCoins": "Mudra: {count}",
+  "@hudCoins": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hudDistance": "Distance: {metres} metres",
+  "@hudDistance": {
+    "placeholders": {
+      "metres": {
+        "type": "int"
+      }
+    }
+  },
+  "hudPause": "Pause",
+  "hudBoost": "Garuda feather boost, {count} left",
+  "@hudBoost": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pauseTitle": "Paused",
+  "pauseResume": "Resume",
+  "pauseRestart": "Restart",
+  "pauseQuit": "Quit to hub",
+  "gameOverTitle": "Run over!",
+  "scoreLabel": "Score",
+  "coinsCollected": "Mudra collected",
+  "newBest": "New best run!",
+  "retry": "Retry",
+  "backToHub": "Back to hub",
+  "realmCompleteTitle": "{realm} crossed!",
+  "@realmCompleteTitle": {
+    "placeholders": {
+      "realm": {
+        "type": "String"
+      }
+    }
+  },
+  "realmCompleteBody": "You reached the far side of the realm. Your mudra are safe in your wallet.",
+  "continueLabel": "Continue",
+  "hintLanes": "Swipe left or right to dodge",
+  "hintJump": "Swipe up to jump",
+  "hintSlide": "Swipe down to slide",
+  "monkeyStole": "A monkey snatched {count} mudra!",
+  "@monkeyStole": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "featherGot": "Garuda feather! Tap the feather to fly",
+  "lotusGot": "Lotus charm! Mudra come to you",
+  "distanceToGo": "{metres} m to go",
+  "@distanceToGo": {
+    "placeholders": {
+      "metres": {
+        "type": "int"
+      }
+    }
+  },
+  "riverStart": "Open water! Jump the gaps between boats and planks",
+  "bridgeStart": "The current is rising! Race across the bridge",
+  "gameOverSplash": "Splash! Into the river",
+  "crevasseStart": "Ice crevasses! Keep to the ice and jump the gaps",
+  "ropeBridgeStart": "The rope bridge! Run across before the wind rises",
+  "gameOverCrevasse": "Whoosh! Down the crevasse",
+  "moatStart": "The palace moat! Hop across the golden platforms",
+  "fortressBridgeStart": "The fortress bridge! Race to the citadel",
+  "gameOverMoat": "Splash! Into the palace moat",
+  "seasonLabel": "Season {number}",
+  "seasonJambudvipa": "Jambudvīpa",
+  "seasonJambudvipaBlurb": "Ten legendary worlds, from Ayodhya to the sunken city of Dwarka",
+  "@seasonLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "trenchStart": "The sea trench! Keep to the coral ledges",
+  "coralBridgeStart": "The coral bridge! Race for the palace",
+  "gameOverTrench": "Whoosh! Down into the trench",
+  "play": "PLAY",
+  "skip": "Skip",
+  "beginOdyssey": "Begin the odyssey",
+  "presents": "presents",
+  "intro1": "Long ago, every age of the world was bound by one thread of golden light.",
+  "intro2": "Then the thread broke, and its relics scattered across Jambudvīpa.",
+  "intro3": "Along sacred rivers, through burning deserts and over frozen peaks…",
+  "intro4": "…into golden palaces and kingdoms the world forgot.",
+  "intro5": "Beneath the waves, the legendary city of Dwarka still waits.",
+  "intro6": "One runner. Ten worlds. Your odyssey begins now.",
+  "levelShort": "Lv {level}",
+  "@levelShort": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "levelLabel": "Level {level}",
+  "@levelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "worldsTitle": "Worlds",
+  "missionsTitle": "Missions",
+  "dailyTitle": "Daily reward",
+  "shopTitle": "Shop",
+  "heroTitle": "Heroes",
+  "settingsTitle": "Settings",
+  "claim": "Claim",
+  "dayN": "Day {day}",
+  "@dayN": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyCome": "Come back tomorrow for the next reward",
+  "dailyStreak": "Log in every day for bigger rewards",
+  "missionCoinsInRun": "Collect {goal} mudra in one run",
+  "@missionCoinsInRun": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionMetresInRun": "Run {goal} m in one run",
+  "@missionMetresInRun": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionJumps": "Jump {goal} times",
+  "@missionJumps": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionSlides": "Slide {goal} times",
+  "@missionSlides": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionNearMisses": "Make {goal} close calls",
+  "@missionNearMisses": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionGems": "Collect {goal} gems",
+  "@missionGems": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionBoosts": "Fly with {goal} Garuda feathers",
+  "@missionBoosts": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionFinish": "Cross a world",
+  "missionRuns": "Play {goal} runs",
+  "@missionRuns": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionCoinsTotal": "Collect {goal} mudra in total",
+  "@missionCoinsTotal": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionsHint": "Finish missions to earn mudra, gems and XP",
+  "upgradeFeather": "Garuda feather flight",
+  "upgradeLotus": "Lotus charm",
+  "upgradeSeconds": "Lasts {seconds} s",
+  "@upgradeSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "upgradesTitle": "Power-up upgrades",
+  "maxed": "Max",
+  "heroOutfitsHint": "Each world dresses the king in its own royal outfit. Reach a world to unlock its look.",
+  "heroKing": "The Wandering King",
+  "heroKingBlurb": "A young king on a yatra through the ages.",
+  "heroSelected": "Selected",
+  "heroComingSoon": "More heroes are on the way",
+  "musicVolume": "Music",
+  "sfxVolume": "Sound effects",
+  "muteAll": "Mute all sound",
+  "replayIntro": "Replay the story",
+  "creditsLine": "A game by MMYP Technologies",
+  "worldCleared": "Cleared",
+  "worldCurrent": "You are here",
+  "worldLockedHint": "Cross {world} to unlock",
+  "@worldLockedHint": {
+    "placeholders": {
+      "world": {
+        "type": "String"
+      }
+    }
+  },
+  "worldArtSoon": "Arriving soon",
+  "worldPlay": "Play this world",
+  "stageNumber": "Stage {number}",
+  "@stageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "newWorldUnlocked": "New world unlocked!",
+  "letsGo": "Let's go!",
+  "countdownGo": "GO!",
+  "nearMiss": "Close call!",
+  "distanceLabel": "Distance",
+  "gemsLabel": "Gems",
+  "missionsDone": "Missions completed",
+  "revive": "Revive",
+  "reviveForCoins": "Revive for {count} coins",
+  "@reviveForCoins": {"placeholders": {"count": {"type": "int"}}},
+  "reviveFor": "Revive for {count, plural, =1{1 gem} other{{count} gems}}",
+  "@reviveFor": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeLabel": "Home",
+  "victoryTitle": "World cleared!",
+  "nextWorld": "Next world",
+  "levelUp": "Level up!",
+  "xpEarned": "+{xp} XP",
+  "@xpEarned": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "selectWorld": "Choose a world",
+  "loading": "Loading…",
+  "updateRequiredTitle": "Update required",
+  "updateRequiredBody": "A new version of Odyssey of the Ages is out. Update now to keep playing.",
+  "updateNow": "Update now"
+}

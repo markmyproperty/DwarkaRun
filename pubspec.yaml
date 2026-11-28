@@ -1,0 +1,185 @@
+name: dwarka_run
+description: "Odyssey of the Ages - an original 3D-feel endless runner through legendary worlds."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+2
+
+environment:
+  sdk: ^3.14.0
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.8
+  flame: ^1.38.2
+  shared_preferences: ^2.5.6
+  intl: ^0.20.3
+  flutter_localizations:
+    sdk: flutter
+  material_ui: ^1.11.1
+  cupertino_ui: ^1.1.7
+  audioplayers: ^6.8.1
+  lottie: ^3.8.2
+  in_app_update: ^5.0.0
+  url_launcher: ^6.3.3
+  package_info_plus: ^10.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^6.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/images/backgrounds/
+    - assets/images/buildings/
+    - assets/images/monuments/
+    - assets/images/props/
+    - assets/images/river/
+    - assets/audio/
+    - assets/audio/sfx/
+    - assets/images/brand/
+    - assets/images/indus/props/
+    - assets/images/indus/obstacles/
+    - assets/images/sunken/obstacles/
+    - assets/images/finale/obstacles/
+    - assets/images/tracks/ayodhya/
+    - assets/images/tracks/ganga/
+    - assets/images/tracks/pharaoh/
+    - assets/images/tracks/himalayan/
+    - assets/images/tracks/vijayanagar/
+    - assets/images/tracks/dragon/
+    - assets/images/tracks/lanka/
+    - assets/images/tracks/indus/
+    - assets/images/tracks/sunken/
+    - assets/images/tracks/finale/
+    - assets/images/pharaoh/backgrounds/
+    - assets/images/pharaoh/buildings/
+    - assets/images/pharaoh/env/
+    - assets/images/pharaoh/monuments/
+    - assets/images/pharaoh/props/
+    - assets/images/himalayan/backgrounds/
+    - assets/images/himalayan/buildings/
+    - assets/images/himalayan/env/
+    - assets/images/himalayan/monuments/
+    - assets/images/himalayan/props/
+    - assets/images/vijayanagar/backgrounds/
+    - assets/images/vijayanagar/buildings/
+    - assets/images/vijayanagar/env/
+    - assets/images/vijayanagar/monuments/
+    - assets/images/vijayanagar/props/
+    - assets/images/lanka/backgrounds/
+    - assets/images/lanka/buildings/
+    - assets/images/lanka/env/
+    - assets/images/lanka/monuments/
+    - assets/images/lanka/props/
+    - assets/images/sunken/backgrounds/
+    - assets/images/sunken/buildings/
+    - assets/images/sunken/env/
+    - assets/images/sunken/monuments/
+    - assets/images/sunken/props/
+    - assets/images/finale/backgrounds/
+    - assets/images/finale/buildings/
+    - assets/images/finale/env/
+    - assets/images/finale/monuments/
+    - assets/images/finale/props/
+    - assets/images/hero/ayodhya/
+    - assets/images/hero/ganga/
+    - assets/images/hero/pharaoh/
+    - assets/images/hero/himalayan/
+    - assets/images/hero/vijayanagar/
+    - assets/images/hero/dragon/
+    - assets/images/hero/lanka/
+    - assets/images/hero/indus/
+    - assets/images/hero/sunken/
+    - assets/images/hero/finale/
+    - assets/images/ayodhya/backgrounds/
+    - assets/images/ayodhya/buildings/
+    - assets/images/ayodhya/decorations/
+    - assets/images/ayodhya/monuments/
+    - assets/images/ayodhya/obstacles/
+    - assets/images/ayodhya/props/
+    - assets/images/ayodhya/rewards/
+    - assets/images/ayodhya/vfx/
+    - assets/images/ganga/backgrounds/
+    - assets/images/ganga/buildings/
+    - assets/images/ganga/decorations/
+    - assets/images/ganga/monuments/
+    - assets/images/ganga/obstacles/
+    - assets/images/ganga/props/
+    - assets/images/ganga/rewards/
+    - assets/images/ganga/vfx/
+    - assets/images/pharaoh/vfx/
+    - assets/images/himalayan/decorations/
+    - assets/images/himalayan/obstacles/
+    - assets/images/himalayan/rewards/
+    - assets/images/himalayan/vfx/
+    - assets/images/vijayanagar/decorations/
+    - assets/images/vijayanagar/obstacles/
+    - assets/images/vijayanagar/rewards/
+    - assets/images/vijayanagar/vfx/
+    - assets/images/menu/
+    - assets/images/indus/backgrounds/
+    - assets/images/indus/buildings/
+    - assets/images/indus/env/
+    - assets/images/indus/monuments/
+    - assets/images/dragon/backgrounds/
+    - assets/images/dragon/buildings/
+    - assets/images/dragon/decorations/
+    - assets/images/dragon/monuments/
+    - assets/images/dragon/obstacles/
+    - assets/images/dragon/props/
+    - assets/images/dragon/rewards/
+    - assets/images/dragon/vfx/
+    - assets/images/lanka/decorations/
+    - assets/images/lanka/obstacles/
+    - assets/images/lanka/rewards/
+    - assets/images/lanka/vfx/
+    - assets/lottie/
+  fonts:
+    - family: Lilita
+      fonts:
+        - asset: assets/fonts/LilitaOne-Regular.ttf
+    - family: Baloo
+      fonts:
+        - asset: assets/fonts/Baloo2-500.ttf
+          weight: 500
+        - asset: assets/fonts/Baloo2-700.ttf
+          weight: 700
+        - asset: assets/fonts/Baloo2-800.ttf
+          weight: 800
