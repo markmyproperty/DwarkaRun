@@ -1,0 +1,65 @@
+# Codemagic CI: signed store builds for Odyssey of the Ages.
+# One-time setup in Codemagic is described in RELEASE.md.
+workflows:
+  ios-release:
+    name: iOS release (TestFlight)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: MMYP App Store Connect   # name of the API key added in Codemagic > Team integrations
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.mmyp.odysseyoftheages
+      vars:
+        APP_STORE_APPLE_ID: "0000000000"   # App Store Connect > App Information > Apple ID
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Use the signing profiles
+        script: xcode-project use-profiles
+      - name: Tests
+        script: flutter test
+      - name: Build IPA
+        script: |
+          BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
+          flutter build ipa --release --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false   # store review is submitted by hand from App Store Connect
+
+  android-release:
+    name: Android release (App Bundle)
+    max_build_duration: 60
+    instance_type: linux_x2
+    environment:
+      flutter: stable
+      android_signing:
+        - odyssey_upload_key   # the upload keystore added in Codemagic > Code signing identities
+      groups:
+        - google_play          # holds GCLOUD_SERVICE_ACCOUNT_CREDENTIALS once Play API access is set up
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Tests
+        script: flutter test
+      - name: Build AAB
+        script: |
+          BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "com.mmyp.odysseyoftheages" --tracks internal,alpha,beta,production) + 1))
+          flutter build appbundle --release --build-number=$BUILD_NUMBER
+    artifacts:
+      - build/app/outputs/bundle/release/*.aab
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true
