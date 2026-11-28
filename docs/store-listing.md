@@ -97,7 +97,7 @@ Answer **None** to every content row (cartoon or fantasy violence, realistic vio
 
 ### Play › Target audience and content
 
-Recommended age groups: **13–15, 16–17, 18+**. Answer "Could your app unintentionally appeal to children?" honestly: the game is colourful and child-friendly, so Play may treat it as appealing to children. Because it has no ads, no data collection and no purchases it already meets the Families policy, so including under-13 groups later is possible, but it adds a stricter review. Starting at 13+ is the faster first launch.
+Age groups: **9–12, 13–15, 16–17, 18+**. The game is child-friendly and already meets the Families policy (no ads, no ad SDKs, no data collection, no purchases), so the listing is declared suitable for children.
 
 ## Graphics
 
