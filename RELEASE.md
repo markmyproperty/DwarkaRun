@@ -55,3 +55,15 @@ Then in App Store Connect: fill App Information, Pricing (Free), App Privacy ("D
 2. Run `flutter analyze` and `flutter test`.
 3. Build and upload as above (or start both Codemagic workflows).
 4. Update "What's new" in both stores.
+
+## Forced updates
+
+Every release build checks for a newer version at launch and whenever the game returns to the foreground (`lib/update/`):
+
+- **Android**: Google Play In-App Updates, immediate flow. Only works for installs from Google Play (any track, including internal testing). Players who back out get a blocking "Update required" screen.
+- **iOS**: asks `itunes.apple.com/lookup?bundleId=…` for the live App Store version and compares it with the running version. If the store is newer, the blocking screen opens the App Store page. Apple's lookup can lag a few hours behind a release.
+- Offline, or any error: the game stays playable (it is an offline game).
+
+So every store release forces older installs to update. To ship a release that does not force anyone, there is no switch yet; ask for one (for example a minimum-version setting) if that is needed.
+
+To test on Android: upload build N to internal testing and install it from Play, then upload build N+1; when Play shows N+1 as available, opening the game shows Play's update screen.

@@ -1,3 +1,6 @@
 {
-  "@@locale": "bn"
+  "@@locale": "bn",
+  "updateRequiredTitle": "আপডেট প্রয়োজন",
+  "updateRequiredBody": "Odyssey of the Ages-এর নতুন সংস্করণ এসেছে। খেলা চালিয়ে যেতে এখনই আপডেট করুন।",
+  "updateNow": "এখনই আপডেট করুন"
 }

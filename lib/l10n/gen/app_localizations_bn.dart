@@ -579,4 +579,14 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get loading => 'Loading…';
+
+  @override
+  String get updateRequiredTitle => 'আপডেট প্রয়োজন';
+
+  @override
+  String get updateRequiredBody =>
+      'Odyssey of the Ages-এর নতুন সংস্করণ এসেছে। খেলা চালিয়ে যেতে এখনই আপডেট করুন।';
+
+  @override
+  String get updateNow => 'এখনই আপডেট করুন';
 }

@@ -159,5 +159,8 @@
   "levelUp": "स्तर बढ़ा!",
   "xpEarned": "+{xp} XP",
   "selectWorld": "संसार चुनें",
-  "loading": "लोड हो रहा है…"
+  "loading": "लोड हो रहा है…",
+  "updateRequiredTitle": "अपडेट ज़रूरी है",
+  "updateRequiredBody": "Odyssey of the Ages का नया संस्करण आ गया है। खेलते रहने के लिए अभी अपडेट करें।",
+  "updateNow": "अभी अपडेट करें"
 }

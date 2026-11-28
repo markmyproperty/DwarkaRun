@@ -567,4 +567,14 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get loading => 'लोड हो रहा है…';
+
+  @override
+  String get updateRequiredTitle => 'अपडेट ज़रूरी है';
+
+  @override
+  String get updateRequiredBody =>
+      'Odyssey of the Ages का नया संस्करण आ गया है। खेलते रहने के लिए अभी अपडेट करें।';
+
+  @override
+  String get updateNow => 'अभी अपडेट करें';
 }

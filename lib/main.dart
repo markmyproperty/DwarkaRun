@@ -6,6 +6,7 @@ import 'app.dart';
 import 'audio/music_audio.dart';
 import 'data/progress_repository.dart';
 import 'game/art_library.dart';
+import 'update/update_checker.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,5 +15,5 @@ Future<void> main() async {
   ArtLibrary.instance.load();
   final progress = await ProgressRepository.load();
   final audio = MusicAudio()..preload();
-  runApp(DwarkaRunApp(progress: progress, analytics: NoopAnalytics(), audio: audio));
+  runApp(DwarkaRunApp(progress: progress, analytics: NoopAnalytics(), audio: audio, updateChecker: UpdateChecker.forPlatform()));
 }

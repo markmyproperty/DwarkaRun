@@ -1,3 +1,6 @@
 {
-  "@@locale": "mr"
+  "@@locale": "mr",
+  "updateRequiredTitle": "अपडेट आवश्यक आहे",
+  "updateRequiredBody": "Odyssey of the Ages ची नवीन आवृत्ती आली आहे. खेळत राहण्यासाठी आत्ताच अपडेट करा.",
+  "updateNow": "आत्ताच अपडेट करा"
 }

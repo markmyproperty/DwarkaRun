@@ -390,5 +390,8 @@
     }
   },
   "selectWorld": "Choose a world",
-  "loading": "Loading…"
+  "loading": "Loading…",
+  "updateRequiredTitle": "Update required",
+  "updateRequiredBody": "A new version of Odyssey of the Ages is out. Update now to keep playing.",
+  "updateNow": "Update now"
 }

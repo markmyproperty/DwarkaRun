@@ -9,6 +9,8 @@ import 'data/progress_repository.dart';
 import 'l10n/gen/app_localizations.dart';
 import 'presentation/dr_theme.dart';
 import 'presentation/launch_screen.dart';
+import 'update/update_checker.dart';
+import 'update/update_gate.dart';
 
 /// Strings for the game and for the material and cupertino widgets.
 const appLocalizationsDelegates = <LocalizationsDelegate<Object>>[
@@ -20,12 +22,15 @@ const appLocalizationsDelegates = <LocalizationsDelegate<Object>>[
 
 /// The Odyssey of the Ages app. Services are passed in so tests can use fakes.
 class DwarkaRunApp extends StatelessWidget {
-  const DwarkaRunApp({super.key, required this.progress, required this.analytics, required this.audio, this.locale});
+  const DwarkaRunApp({super.key, required this.progress, required this.analytics, required this.audio, this.locale, this.updateChecker = const NoUpdateChecker()});
 
   final ProgressRepository progress;
   final GameAnalytics analytics;
   final GameAudio audio;
   final Locale? locale;
+
+  /// Blocks play until the player updates when the store has a newer version.
+  final UpdateChecker updateChecker;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +49,7 @@ class DwarkaRunApp extends StatelessWidget {
         locale: locale,
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: appLocalizationsDelegates,
+        builder: (context, child) => UpdateGate(checker: updateChecker, child: child ?? const SizedBox.shrink()),
         home: const LaunchScreen(),
       ),
     );

@@ -579,4 +579,14 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get loading => 'Loading…';
+
+  @override
+  String get updateRequiredTitle => 'புதுப்பிப்பு தேவை';
+
+  @override
+  String get updateRequiredBody =>
+      'Odyssey of the Ages-இன் புதிய பதிப்பு வந்துவிட்டது. தொடர்ந்து விளையாட இப்போதே புதுப்பிக்கவும்.';
+
+  @override
+  String get updateNow => 'இப்போது புதுப்பி';
 }

@@ -579,4 +579,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loading => 'Loading…';
+
+  @override
+  String get updateRequiredTitle => 'Update required';
+
+  @override
+  String get updateRequiredBody =>
+      'A new version of Odyssey of the Ages is out. Update now to keep playing.';
+
+  @override
+  String get updateNow => 'Update now';
 }
