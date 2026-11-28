@@ -59,7 +59,7 @@ The first release of Odyssey of the Ages: Season 1 Jambudvīpa with all ten worl
 
 | Form | Answer |
 | --- | --- |
-| Privacy policy URL | the hosted copy of `docs/privacy.html` (both stores require a public URL) |
+| Privacy policy URL | https://markmyproperty.com/mmyp/odysseyoftheages (the hosted copy of `docs/privacy.html`) |
 | Play › Data safety › Does your app collect or share any of the required user data types? | **No** |
 | Play › Data safety › Is all user data encrypted in transit? | Not applicable (no data leaves the device). Play still asks; answer Yes is not needed when "No data collected" is chosen |
 | Play › Data safety › Account deletion | Not applicable: the app has no accounts |
