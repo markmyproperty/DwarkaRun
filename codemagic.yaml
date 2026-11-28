@@ -15,7 +15,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.mmyp.odysseyoftheages
       vars:
-        APP_STORE_APPLE_ID: "0000000000"   # App Store Connect > App Information > Apple ID
+        APP_STORE_APPLE_ID: "6840317788"   # App Store Connect > App Information > Apple ID
     scripts:
       - name: Get packages
         script: flutter pub get
